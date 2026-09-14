@@ -34,6 +34,12 @@ Vérification end-to-end (Agent Browser) :
 - Lint final : 0 erreur (31 warnings mineurs)
 - Données de test créées pendant la vérification ensuite supprimées (article, message, commentaire, média)
 
+Correctif 15/09 — « on ne voit pas le site » :
+- Diagnostic : serveur tué par OOM kernel (2,2 GB au démarrage, tentatives multiples empilées) + `src/app/page.tsx` racine VIDE (fichier corrompu, jamais commité) créant un conflit de route `/` avec `(site)/page.tsx` (la vraie page d'accueil, intacte) → HTTP 500 « default export is not a React Component »
+- Fix : suppression du `app/page.tsx` vide ; le serveur relancé via `nohup setsid bun run dev` persiste entre les appels une fois la mémoire propre
+- Vérifié : 12 routes publiques HTTP 200, accueil rend le HERO_UNE réel, article 200, 404 éditoriale OK, login claire@lavigie.fr/admin2026 → dashboard (KPI 38 194 vues), 0 erreur console, lint 0 erreur
+- Code commité dans git (f3d3d47) pour éviter toute nouvelle perte
+
 Stage Summary:
 - Plateforme complète livrée : site public premium « La Vigie » + tableau de bord éditorial 100 % autonome, conformes aux 16 sections du cahier des charges (adaptation SQLite + stockage local à l'environnement sandbox ; email réel, 2FA et hébergement Vercel à câbler en production)
 - Identifiants de démonstration : claire@lavigie.fr / admin2026
