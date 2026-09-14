@@ -1,0 +1,78 @@
+import type { Metadata } from "next";
+import { Playfair_Display, Inter } from "next/font/google";
+import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/site/theme-provider";
+import { getSettings } from "@/lib/settings";
+
+const playfair = Playfair_Display({
+  variable: "--font-serif-display",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-sans-body",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+  return {
+    title: {
+      default: settings.seo_default_title || settings.site_name,
+      template: `%s — ${settings.site_name}`,
+    },
+    description: settings.seo_default_description,
+    icons: { icon: "/favicon.svg" },
+    openGraph: {
+      title: settings.seo_default_title,
+      description: settings.seo_default_description,
+      siteName: settings.site_name,
+      type: "website",
+      locale: "fr_FR",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: settings.seo_default_title,
+      description: settings.seo_default_description,
+    },
+  };
+}
+
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const settings = await getSettings();
+  const headScripts = settings.custom_head_scripts || "";
+
+  return (
+    <html lang="fr" suppressHydrationWarning>
+      <head>
+        {/* Couleur d'accent personnalisée depuis le dashboard (§6.9) */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `:root{--brand:${settings.accent_color || "#a03123"};}`,
+          }}
+        />
+        {headScripts ? (
+          <div
+            id="custom-head-scripts"
+            dangerouslySetInnerHTML={{ __html: headScripts }}
+          />
+        ) : null}
+      </head>
+      <body
+        className={`${playfair.variable} ${inter.variable} antialiased bg-background text-foreground font-body`}
+      >
+        <ThemeProvider>
+          {children}
+          <Toaster position="top-center" richColors />
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}

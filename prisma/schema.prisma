@@ -1,0 +1,240 @@
+// ============================================================
+// PLATEFORME MÉDIA DIGITALE — Modèle de données (§7 du CDC)
+// SQLite adaptation (serverless-compatible via Prisma)
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Comptes du tableau de bord ----------
+model User {
+  id             String       @id @default(cuid())
+  name           String
+  email          String       @unique
+  password       String // hashé (bcrypt)
+  role           String       @default("ADMIN") // ADMIN | EDITEUR | RELECTEUR | INVITE
+  avatar         String?
+  bio            String?
+  status         String       @default("ACTIF") // ACTIF | SUSPENDU
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  articles       Article[]
+  media          Media[]      @relation("MediaUploader")
+  versions       ArticleVersion[]
+  activityLogs   ActivityLog[]
+}
+
+// ---------- Rubriques (hiérarchie 2 niveaux possible) ----------
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  coverImage  String?
+  color       String? // couleur thématique (hex)
+  order       Int      @default(0)
+  visible     Boolean  @default(true)
+  parentId    String?
+  parent      Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[] @relation("CategoryTree")
+  articles    ArticleCategory[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ---------- Articles / reportages ----------
+model Article {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  subtitle        String? // sous-titre
+  chapo           String? // chapô
+  contentJson     String    @default("{}") // contenu structuré Tiptap JSON
+  contentText     String    @default("") // extrait texte brut (recherche full-text)
+  format          String    @default("ARTICLE") // ARTICLE | REPORTAGE | INTERVIEW | PORTFOLIO | VIDEO
+  status          String    @default("DRAFT") // DRAFT | REVIEW | SCHEDULED | PUBLISHED | ARCHIVED
+  publishedAt     DateTime?
+  scheduledAt     DateTime? // programmation
+  authorId        String
+  author          User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  coverImage      String? // URL image / média de une
+  coverCredit     String? // crédit photo de la une
+  seoTitle        String?
+  seoDescription  String?
+  ogImage         String?
+  readingTime     Int       @default(1) // minutes
+  views           Int       @default(0)
+  featured        Boolean   @default(false) // sélection « À la une »
+  commentsEnabled Boolean   @default(true)
+  deletedAt       DateTime? // corbeille (soft delete, 30 jours)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  categories      ArticleCategory[]
+  tags            ArticleTag[]
+  versions        ArticleVersion[]
+  comments        Comment[]
+  dailyViews      ArticleView[]
+
+  @@index([status, publishedAt])
+  @@index([slug])
+}
+
+// ---------- Liaison many-to-many articles ↔ rubriques ----------
+model ArticleCategory {
+  articleId  String
+  categoryId String
+  article    Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, categoryId])
+}
+
+// ---------- Tags ----------
+model Tag {
+  id       String        @id @default(cuid())
+  name     String
+  slug     String        @unique
+  articles ArticleTag[]
+  createdAt DateTime     @default(now())
+}
+
+model ArticleTag {
+  articleId String
+  tagId     String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, tagId])
+}
+
+// ---------- Médiathèque centrale ----------
+model Media {
+  id          String   @id @default(cuid())
+  url         String
+  filename    String
+  type        String   @default("IMAGE") // IMAGE | VIDEO | PDF | AUDIO | DOC
+  size        Int? // octets
+  width       Int?
+  height      Int?
+  alt         String?
+  caption     String? // légende
+  credit      String? // crédit photo
+  uploadedById String?
+  uploadedBy  User?    @relation("MediaUploader", fields: [uploadedById], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ---------- Pages statiques éditables ----------
+model Page {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  title          String
+  contentJson    String   @default("{}")
+  contentText    String   @default("")
+  heroImage      String?
+  seoTitle       String?
+  seoDescription String?
+  published      Boolean  @default(true)
+  system         Boolean  @default(false) // page système (à-propos, mentions…)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// ---------- Configuration des blocs de la page d'accueil ----------
+model HomepageBlock {
+  id        String  @id @default(cuid())
+  blockType String // HERO_UNE | FIL_ACTU | REPORTAGES_PHARES | RUBRIQUE_STRIP | NEWSLETTER | CITATION
+  order     Int     @default(0)
+  active    Boolean @default(true)
+  configJson String @default("{}")
+}
+
+// ---------- Commentaires (modération) ----------
+model Comment {
+  id         String   @id @default(cuid())
+  articleId  String
+  article    Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  authorName String
+  email      String
+  content    String
+  status     String   @default("PENDING") // PENDING | APPROVED | REJECTED
+  createdAt  DateTime @default(now())
+}
+
+// ---------- Messages du formulaire de contact ----------
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  isTip     Boolean  @default(false) // « proposer un sujet / une info »
+  status    String   @default("UNREAD") // UNREAD | READ | DONE
+  createdAt DateTime @default(now())
+}
+
+// ---------- Abonnés newsletter (double opt-in) ----------
+model NewsletterSubscriber {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  status        String    @default("PENDING") // PENDING | CONFIRMED | UNSUBSCRIBED
+  token         String    @unique
+  confirmedAt   DateTime?
+  createdAt     DateTime  @default(now())
+}
+
+// ---------- Réglages globaux du site (clé/valeur) ----------
+model SiteSetting {
+  key   String @id
+  value String
+}
+
+// ---------- Historique des versions d'un article ----------
+model ArticleVersion {
+  id          String   @id @default(cuid())
+  articleId   String
+  article     Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  title       String
+  contentJson String
+  editorId    String?
+  editor      User?    @relation(fields: [editorId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+}
+
+// ---------- Journal d'activité (audit log) ----------
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  target    String?
+  detail    String?
+  createdAt DateTime @default(now())
+}
+
+// ---------- Redirections d'URL (301) ----------
+model Redirect {
+  id         String   @id @default(cuid())
+  fromPath   String   @unique
+  toPath     String
+  statusCode Int      @default(301)
+  createdAt  DateTime @default(now())
+}
+
+// ---------- Statistiques de vues (agrégation quotidienne) ----------
+model ArticleView {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  date      String // YYYY-MM-DD
+  count     Int      @default(0)
+
+  @@unique([articleId, date])
+}
