@@ -32,7 +32,8 @@ export async function autoPublishScheduled(): Promise<void> {
 
 export const articleCardInclude = {
   author: { select: { id: true, name: true, avatar: true, bio: true } },
-  categories: { include: { category: true } },
+  // Ne révèle que les rubriques visibles — les badges pointent toujours vers une page existante
+  categories: { where: { category: { visible: true } }, include: { category: true } },
   tags: { include: { tag: true } },
 } satisfies Prisma.ArticleInclude
 

@@ -71,7 +71,8 @@ export function RichEditor({ value, onChange }: RichEditorProps) {
   }
 
   const insertImage = (url: string, alt: string, caption: string, credit: string) => {
-    editor.chain().focus().setImage({ src: url, alt, caption, credit }).run()
+    // L'extension ImageWithCaption ajoute caption/credit à l'exécution — le typage de base les ignore
+    editor.chain().focus().setImage({ src: url, alt, caption, credit } as unknown as { src: string }).run()
   }
 
   return (

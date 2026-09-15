@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getPublishedArticles, publicVisibilityWhere } from '@/lib/public-queries'
+import { db } from '@/lib/db'
 
 /** GET /api/articles — API publique : liste paginée, filtrable (§8.2) */
 export async function GET(req: Request) {

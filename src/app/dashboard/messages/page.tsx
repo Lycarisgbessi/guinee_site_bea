@@ -105,7 +105,7 @@ export default function MessagesPage() {
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="flex flex-wrap items-center gap-2 text-[14px] font-semibold">
-                    {m.isTip && <Lightbulb className="h-4 w-4 text-amber-500" title="Proposition de sujet" />}
+                    {m.isTip && <span title="Proposition de sujet"><Lightbulb className="h-4 w-4 text-amber-500" aria-label="Proposition de sujet" /></span>}
                     {m.subject}
                     <span className={`rounded-full px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${BADGE[m.status]}`}>{LABEL[m.status]}</span>
                   </p>
