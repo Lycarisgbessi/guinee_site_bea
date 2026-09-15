@@ -25,8 +25,8 @@ export async function PUT(req: Request) {
   const allowedKeys = [
     'site_name', 'site_slogan', 'site_logo', 'site_favicon', 'accent_color',
     'seo_default_title', 'seo_default_description', 'seo_og_image',
-    'social_twitter', 'social_instagram', 'social_linkedin', 'social_youtube',
-    'contact_email', 'contact_intro', 'tips_enabled',
+    'social_twitter', 'social_instagram', 'social_linkedin', 'social_youtube', 'social_facebook',
+    'contact_email', 'contact_phone', 'contact_intro', 'tips_enabled',
     'custom_head_scripts', 'maintenance_mode', 'maintenance_message',
     'footer_text', 'newsletter_intro', 'comments_moderation',
     // Bandeaux de la page d'accueil

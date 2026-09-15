@@ -56,6 +56,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           copyright: settings.footer_copyright,
           logoUrl: settings.site_logo || undefined,
           social: {
+            facebook: settings.social_facebook || undefined,
             twitter: settings.social_twitter || undefined,
             instagram: settings.social_instagram || undefined,
             linkedin: settings.social_linkedin || undefined,

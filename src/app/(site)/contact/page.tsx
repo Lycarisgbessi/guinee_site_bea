@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Lightbulb, Mail, MessageSquare, Send } from 'lucide-react'
+import { Facebook, Lightbulb, Mail, MessageSquare, Phone, Send } from 'lucide-react'
 
 import { getSettings } from '@/lib/settings'
 import { ContactForm } from '@/components/site/contact-form'
@@ -37,6 +37,15 @@ export default async function ContactPage() {
             <a href={`mailto:${settings.contact_email}`} className="mt-2 block text-sm font-medium text-foreground hover:text-brand">
               {settings.contact_email}
             </a>
+            {settings.contact_phone && (
+              <a
+                href={`tel:${settings.contact_phone.replace(/\s+/g, '')}`}
+                className="mt-2 flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-brand"
+              >
+                <Phone className="h-3.5 w-3.5 text-brand" />
+                {settings.contact_phone}
+              </a>
+            )}
             <p className="mt-1 text-xs text-muted-foreground">{settings.contact_delay}</p>
           </div>
 
@@ -56,6 +65,13 @@ export default async function ContactPage() {
               <h2 className="eyebrow text-muted-foreground">Réseaux</h2>
             </div>
             <ul className="mt-2 space-y-1.5 text-sm">
+              {settings.social_facebook && (
+                <li>
+                  <a href={settings.social_facebook} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-brand">
+                    <Facebook className="h-3.5 w-3.5" /> Facebook
+                  </a>
+                </li>
+              )}
               {settings.social_twitter && (
                 <li><a href={settings.social_twitter} target="_blank" rel="noopener noreferrer" className="hover:text-brand">X / Twitter</a></li>
               )}

@@ -80,9 +80,12 @@
   --sidebar-accent-foreground: oklch(0.25 0.01 75);
   --sidebar-border: oklch(0.885 0.008 80);
   --sidebar-ring: oklch(0.21 0.01 75);
-  /* Couleur d'accent forte, personnalisable depuis le dashboard (§6.9) */
-  --brand: #a03123;
+  /* Couleur d'accent forte, personnalisable depuis le dashboard (§6.9)
+     Identité Guinée+ : rouge du logo + vert et or officiels en accents secondaires */
+  --brand: #e02310;
   --brand-foreground: #faf8f4;
+  --brand-green: #01b458;
+  --brand-gold: #edb405;
 }
 
 .dark {
@@ -117,8 +120,10 @@
   --sidebar-accent-foreground: oklch(0.925 0.006 85);
   --sidebar-border: oklch(0.31 0.01 75);
   --sidebar-ring: oklch(0.55 0.01 75);
-  --brand: #d4573f;
+  --brand: #ff5a45;
   --brand-foreground: #1a1512;
+  --brand-green: #02c963;
+  --brand-gold: #ffc81e;
 }
 
 @layer base {

@@ -10,7 +10,13 @@ export interface FooterData {
   newsletterText: string
   copyright: string
   logoUrl?: string
-  social: { twitter?: string; instagram?: string; linkedin?: string; youtube?: string }
+  social: {
+    twitter?: string
+    instagram?: string
+    linkedin?: string
+    youtube?: string
+    facebook?: string
+  }
   categories: { name: string; slug: string }[]
 }
 
@@ -18,6 +24,7 @@ export interface FooterData {
 export function SiteFooter({ data }: { data: FooterData }) {
   const monogram = siteMonogram(data.siteName)
   const socials = [
+    { href: data.social.facebook, label: 'Facebook', icon: Facebook },
     { href: data.social.twitter, label: 'X / Twitter', icon: Twitter },
     { href: data.social.instagram, label: 'Instagram', icon: Instagram },
     { href: data.social.linkedin, label: 'LinkedIn', icon: Linkedin },

@@ -23,6 +23,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       userName={session.name}
       userRole={ROLE_LABELS[session.role] ?? session.role}
       siteName={settings.site_name}
+      logoUrl={settings.site_logo || undefined}
     >
       {children}
     </DashboardShell>

@@ -17,7 +17,7 @@ export default async function CategoriesPage() {
       <Breadcrumb items={[{ label: 'Rubriques' }]} />
       <h1 className="mt-4 font-display text-4xl font-bold">Toutes les rubriques</h1>
       <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
-        Explorez les grands chantiers de La Vigie, rubrique par rubrique. Chaque espace réunit nos articles,
+        Explorez les grands chantiers de Guinée+, rubrique par rubrique. Chaque espace réunit nos articles,
         reportages et interviews sur un même territoire éditorial.
       </p>
 

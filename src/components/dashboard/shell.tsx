@@ -31,11 +31,13 @@ export function DashboardShell({
   userName,
   userRole,
   siteName,
+  logoUrl,
 }: {
   children: React.ReactNode
   userName: string
   userRole: string
   siteName: string
+  logoUrl?: string
 }) {
   const pathname = usePathname()
   const router = useRouter()
@@ -68,9 +70,13 @@ export function DashboardShell({
       {/* Sidebar desktop */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-border bg-card lg:flex">
         <div className="flex h-16 items-center gap-2.5 border-b border-border px-5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-md font-display text-lg font-bold" style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}>
-            {siteMonogram(siteName)}
-          </span>
+          {logoUrl ? (
+            <img src={logoUrl} alt={`${siteName} — logo`} className="h-8 w-8 rounded-md object-cover" />
+          ) : (
+            <span className="flex h-8 w-8 items-center justify-center rounded-md font-display text-lg font-bold" style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}>
+              {siteMonogram(siteName)}
+            </span>
+          )}
           <div>
             <p className="font-display text-[15px] font-bold leading-none">{siteName}</p>
             <p className="mt-0.5 text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground">Rédaction</p>

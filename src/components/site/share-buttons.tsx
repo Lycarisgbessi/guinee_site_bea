@@ -11,7 +11,7 @@ interface ShareProps {
 }
 
 /** Partage réseaux sociaux (§5.5) */
-export function ShareButtons({ url, title, siteName = 'La Vigie', variant = 'row' }: ShareProps) {
+export function ShareButtons({ url, title, siteName = 'Guinée+', variant = 'row' }: ShareProps) {
   const u = encodeURIComponent(url)
   const t = encodeURIComponent(`${title} — ${siteName}`)
   const rail = variant === 'rail'

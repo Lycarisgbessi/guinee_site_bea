@@ -163,6 +163,9 @@ export default function SettingsPage() {
               <Field label="Email de la rédaction">
                 <input value={settings.contact_email ?? ''} onChange={(e) => set('contact_email', e.target.value)} className={inputCls} />
               </Field>
+              <Field label="Facebook">
+                <input value={settings.social_facebook ?? ''} onChange={(e) => set('social_facebook', e.target.value)} className={inputCls} />
+              </Field>
             </div>
             <div className="mt-4">
               <Field label="Texte du pied de page">
@@ -191,7 +194,7 @@ export default function SettingsPage() {
                 <input value={settings.social_youtube ?? ''} onChange={(e) => set('social_youtube', e.target.value)} className={inputCls} />
               </Field>
             </div>
-            <div className="mt-4">{saveBtn(['site_name', 'site_slogan', 'site_logo', 'contact_email', 'footer_text', 'footer_newsletter_text', 'footer_copyright', 'social_twitter', 'social_instagram', 'social_linkedin', 'social_youtube'])}</div>
+            <div className="mt-4">{saveBtn(['site_name', 'site_slogan', 'site_logo', 'contact_email', 'social_facebook', 'footer_text', 'footer_newsletter_text', 'footer_copyright', 'social_twitter', 'social_instagram', 'social_linkedin', 'social_youtube'])}</div>
           </div>
         </TabsContent>
 
@@ -248,6 +251,9 @@ export default function SettingsPage() {
               Activer le formulaire « Proposer un sujet / une info »
             </label>
             <div className="mt-4 grid gap-4">
+              <Field label="Téléphone de la rédaction" hint="Affiché sur la page Contact. Laissez vide pour masquer.">
+                <input value={settings.contact_phone ?? ''} onChange={(e) => set('contact_phone', e.target.value)} className={inputCls} />
+              </Field>
               <Field label="Titre de l’encart « Proposer un sujet »">
                 <input value={settings.contact_tips_title ?? ''} onChange={(e) => set('contact_tips_title', e.target.value)} className={inputCls} />
               </Field>
@@ -255,7 +261,7 @@ export default function SettingsPage() {
                 <textarea value={settings.contact_tips_text ?? ''} onChange={(e) => set('contact_tips_text', e.target.value)} rows={3} className={`${inputCls} resize-y`} />
               </Field>
             </div>
-            <div className="mt-4">{saveBtn(['contact_title', 'contact_delay', 'contact_intro', 'tips_enabled', 'contact_tips_title', 'contact_tips_text'])}</div>
+            <div className="mt-4">{saveBtn(['contact_title', 'contact_delay', 'contact_intro', 'contact_phone', 'tips_enabled', 'contact_tips_title', 'contact_tips_text'])}</div>
           </div>
         </TabsContent>
 

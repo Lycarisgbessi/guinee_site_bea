@@ -2,28 +2,31 @@ import { db } from '@/lib/db'
 
 // Réglages par défaut — tous modifiables depuis le dashboard (§6.9)
 export const DEFAULT_SETTINGS: Record<string, string> = {
-  site_name: 'La Vigie',
-  site_slogan: 'Un regard exigeant sur le monde',
-  site_logo: '', // vide = monogramme dérivé du nom du site
-  site_favicon: '/favicon.svg',
-  accent_color: '#A03123',
-  seo_default_title: 'La Vigie — Média indépendant',
+  site_name: 'Guinée+',
+  site_slogan: 'Avec Guinée+, vivez l’info en continu',
+  site_logo: '/brand/logo-guineeplus-round.png', // logo officiel (version circulaire)
+  site_favicon: '/brand/favicon-48.png',
+  accent_color: '#E02310', // rouge officiel du logo Guinée+
+  seo_default_title: 'Guinée+ — Site web d’actualités',
   seo_default_description:
-    'La Vigie, média digital indépendant : reportages, enquêtes, interviews et analyses au format long. Un journalisme exigeant, au service du débat public.',
+    'Guinée+, site web d’actualités : toute l’info en continu — politique, société, économie, sport et culture. Avec Guinée+, vivez l’info en continu.',
   seo_og_image: '',
-  social_twitter: 'https://twitter.com/lavigie',
-  social_instagram: 'https://instagram.com/lavigie',
-  social_linkedin: 'https://linkedin.com/company/lavigie',
+  social_facebook: 'https://www.facebook.com/guineeplus',
+  social_twitter: '',
+  social_instagram: '',
+  social_linkedin: '',
   social_youtube: '',
-  contact_email: 'redaction@lavigie.fr',
+  contact_email: 'contact@guineeplus.com',
+  contact_phone: '+224 625 37 54 09',
   contact_intro:
-    'Une question, une réaction, une information à nous transmettre ? L’équipe de La Vigie vous lit attentivement et répond sous 48 heures ouvrées.',
+    'Une question, une réaction, une information à nous transmettre ? L’équipe de Guinée+ vous lit attentivement et répond sous 48 heures ouvrées.',
   tips_enabled: 'true',
   custom_head_scripts: '',
   maintenance_mode: 'false',
   maintenance_message:
-    'La Vigie fait peau neuve. Nous revenons dans quelques instants avec un site encore plus beau. Merci de votre patience.',
-  footer_text: 'La Vigie est un média indépendant financé par ses lecteurs. Chaque article est vérifié, sourcé et relu avant publication.',
+    'Guinée+ fait peau neuve. Nous revenons dans quelques instants avec un site encore plus beau. Merci de votre patience.',
+  footer_text:
+    'Guinée+ est un site web d’actualités indépendant. Chaque information est vérifiée, sourcée et relue avant publication. Avec Guinée+, vivez l’info en continu.',
   footer_newsletter_text: 'La sélection de la rédaction, chaque vendredi.',
   footer_copyright: 'Tous droits réservés.',
   newsletter_intro: 'Recevez chaque vendredi la sélection de la rédaction : nos meilleurs reportages, enquêtes et interviews, directement dans votre boîte mail. Sans spam, désinscription en un clic.',

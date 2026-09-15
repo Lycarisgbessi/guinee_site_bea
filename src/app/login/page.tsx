@@ -81,9 +81,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-secondary/50 px-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl font-display text-2xl font-bold" style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}>
-            V
-          </div>
+          <img src="/brand/logo-guineeplus-round.png" alt="Guinée+ — logo officiel" className="mx-auto h-14 w-14 rounded-xl object-cover" />
           <h1 className="mt-4 font-display text-3xl font-bold">Espace rédaction</h1>
           <p className="mt-1 text-sm text-muted-foreground">Tableau de bord éditorial — accès réservé</p>
         </div>

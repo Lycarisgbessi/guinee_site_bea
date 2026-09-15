@@ -26,7 +26,13 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s — ${settings.site_name}`,
     },
     description: settings.seo_default_description,
-    icons: { icon: "/favicon.svg" },
+    icons: {
+      icon: [
+        { url: '/brand/favicon-32.png', sizes: '32x32', type: 'image/png' },
+        { url: '/brand/favicon-48.png', sizes: '48x48', type: 'image/png' },
+      ],
+      apple: '/brand/apple-touch-icon.png',
+    },
     openGraph: {
       title: settings.seo_default_title,
       description: settings.seo_default_description,
@@ -56,7 +62,7 @@ export default async function RootLayout({
         {/* Couleur d'accent personnalisée depuis le dashboard (§6.9) */}
         <style
           dangerouslySetInnerHTML={{
-            __html: `:root{--brand:${settings.accent_color || "#a03123"};}`,
+            __html: `:root{--brand:${settings.accent_color || "#E02310"};--brand-green:#01B458;--brand-gold:#EDB405;}`,
           }}
         />
         {headScripts ? (
