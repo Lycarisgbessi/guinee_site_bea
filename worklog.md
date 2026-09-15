@@ -80,3 +80,24 @@ Stage Summary:
 - Plateforme complète livrée : site public premium « La Vigie » + tableau de bord éditorial 100 % autonome, conformes aux 16 sections du cahier des charges (adaptation SQLite + stockage local à l'environnement sandbox ; email réel, 2FA et hébergement Vercel à câbler en production)
 - Identifiants de démonstration : claire@lavigie.fr / admin2026
 - Stack : Next.js 16 (App Router, Turbopack), TypeScript, Prisma/SQLite, Tailwind 4 + shadcn/ui, Tiptap, Framer Motion, Recharts, jose/bcryptjs
+
+---
+Task ID: 5
+Agent: Super Z (agent principal)
+Task: Diagnostic « je n'arrive pas à accéder au dashboard »
+
+Work Log:
+- Vérifié serveur en ligne (bun run dev, port 3000, mémoire OK)
+- /login → HTTP 200, page rendue correctement
+- Compte admin présent en base : claire@lavigie.fr, role ADMIN, status ACTIF
+- Identifiants seed confirmés : claire@lavigie.fr / admin2026 (scripts/seed.ts)
+- API POST /api/auth/login testée en curl → HTTP 200 + session
+- Parcours complet retesté au navigateur (agent-browser) : login → redirection /dashboard OK, 0 erreur JS
+- Balayage des 10 pages dashboard authentifié (articles, rubriques, tags, pages, medias, commentaires, messages, newsletter, parametres) : toutes OK, 0 erreur JS
+- Attributs cookie session vérifiés (secure uniquement en prod, sameSite lax) → aucun blocage en dev
+- Captures : .zshots/dash-home.png
+
+Stage Summary:
+- Aucune panne technique : le dashboard fonctionne de bout en bout
+- Cause probable de l'incident : identifiants inconnus de l'utilisatrice
+- Accès à communiquer : claire@lavigie.fr / admin2026
