@@ -126,3 +126,25 @@ Stage Summary:
 - Aucune page en cache côté public → toute modification dashboard est visible à la requête suivante
 - 1 cas limite corrigé (badges rubriques masquées), 3 erreurs TS corrigées
 - Matrice de couverture CMS confirmée : articles, rubriques, tags, pages CMS, blocs d'accueil, paramètres (10 onglets), médias, commentaires, messages, newsletter
+
+---
+Task ID: 7
+Agent: Super Z (agent principal)
+Task: Rebrandisation complète du site avec l'identité officielle Guinée+ (logo + infos fournies par l'utilisatrice)
+
+Work Log:
+- Analysé les 2 images fournies : logo officiel GUINÉE+ (G en arc dégradé, GU rouge, INÉE+ blanc) + page Facebook (nom, site médiaGuinéeplus.com, catégorie « Site web d'actualités », tél +224 625 37 54 09, bio tronquée)
+- Échantillonné les couleurs officielles du logo (PIL) : vert #01B458, or #EDB405/#FFDA00, rouge #F31B06, rouge « GU » #FE0000, rouge profond #A51306
+- Produit les assets : public/brand/ (logo carré 512, version circulaire comme l'avatar FB, favicon 32/48, apple-touch-icon, icônes 192/512)
+- Couleurs : --brand #E02310 (rouge officiel harmonisé) clair + #FF5A45 sombre, --brand-green/--brand-gold ; rubriques recolorées dans la palette (politique #D6220F, international #A51306, société #EDB405, culture #C29200, environnement #01B458, sciences-tech #0B9A50)
+- Réglages (DB + DEFAULT_SETTINGS) : site_name Guinée+, slogan, SEO, logo/favicon, contact_email contact@guineeplus.com, contact_phone (NOUVEAU champ), social_facebook (NOUVEAU champ), footer_text, maintenance ; retiré les faux comptes Twitter/IG/LinkedIn
+- Dashboard : nouveaux champs « Téléphone de la rédaction » (onglet Contact) et « Facebook » (onglet Identité) + whitelist API étendue
+- Pages publiques : page contact affiche téléphone cliquable (tel:) + lien Facebook ; footer affiche l'icône Facebook ; page login avec logo officiel ; sidebar dashboard avec logo officiel
+- Migration base (scripts/rebrand-guineeplus.js) : 17 réglages, 3 pages CMS (dont SEO), 10 articles (contenus + crédits photo), 6 rubriques, 6 médias, bio autrice — plus aucune mention « La Vigie » sur les 11 routes publiques (vérifié)
+- Incident : OOM a tué next-server 2× → relances avec NODE_OPTIONS=--max-old-space-size=1400 et vérifications groupées en une commande
+- Commits : 5b08fc3 (+ précédents)
+
+Stage Summary:
+- Site entièrement rebrandisé Guinée+ de façon fidèle (logo officiel, palette officielle, coordonnées officielles)
+- Aucune mention de l'ancienne marque dans le rendu
+- À confirmer par l'utilisatrice : fin du slogan (tronqué dans la capture, j'ai mis « en continu »), adresse Facebook exacte, email (contact@guineeplus.com supposé), et si besoin renommer le compte admin
