@@ -57,6 +57,25 @@ Amélioration interface 15/09 — « plus professionnelle » (commit aa8e3a4) :
 - extractToc + ancres id sur les H2 (dédoublonnage déterministe partagé), articleCardInclude enrichi (bio)
 - Vérifié agent-browser : desktop 1440 + iPhone 14, 0 erreur console, scroll-spy 01→02→03, palette fonctionnelle, lint 0 erreur
 
+Audit « contrôle total » 15/09 — tout le site pilotable depuis le dashboard :
+- Audit complet des contenus non éditables ; 10 écarts identifiés puis comblés :
+  1. Ticker « Le fil » : interrupteur + libellé (settings ticker_enabled, ticker_label)
+  2. Badge de la grande une : config heroLabel du bloc HERO_UNE
+  3. Bloc Reportages : sur-titre (eyebrow) + nombre d'articles configurables
+  4. Bloc Citation : citation libre (quoteText, quoteAuthor, quoteArticleSlug avec sélecteur d'articles, quoteLinkLabel) + repli automatique sur le chapô du dernier article si vide
+  5. Bloc Newsletter de l'accueil : sur-titre + titre configurables
+  6. Bandeau de confiance : interrupteur + titre + sous-titre (trust_enabled, trust_title, trust_subtitle)
+  7. Page Contact : titre, délai de réponse, encart « Proposer un sujet » (titre + texte) éditables (contact_title, contact_delay, contact_tips_title, contact_tips_text) + generateMetadata dynamique
+  8. Footer : texte colonne newsletter + mention de copyright éditables (footer_newsletter_text, footer_copyright)
+  9. Monogramme de marque : fonction siteMonogram() (ignore Le/La/Les/L'/The → « La Vigie » affiche « V ») ; support d'un logo image via Paramètres → Identité (header, footer, sidebar dashboard) ; nom du site dynamique dans la sidebar
+  10. Mots-clés (tags) : nouvelle page dashboard/tags (liste avec compteurs d'articles, création, renommage avec slug auto, suppression avec confirmation) + API PUT/DELETE ajoutées ; entrée de navigation ajoutée
+- Éditeur « Page d'accueil » : ajout et retrait de blocs (API POST existante + DELETE nouvelle) — un même type de bloc peut être utilisé plusieurs fois
+- Paramètres réorganisés : nouveaux onglets « Accueil & bandeaux » et « Contact » ; Identité enrichie (footer newsletter + copyright)
+- FIX IMPORTANT : la whitelist allowedKeys de l'API PUT /api/admin/settings ignorait silencieusement les 11 nouvelles clés → ajoutées (cause racine d'un échec de sauvegarde pendant les tests)
+- Vérifié end-to-end (agent-browser) : cycle tags créer→renommer→supprimer OK ; citation personnalisée visible immédiatement sur / puis repli auto OK ; ticker on/off + libellé OK ; titre/délai contact OK ; ajout/suppression bloc OK (8→7 blocs) ; 16 routes publiques 200 ; 11 pages dashboard 0 erreur console ; lint 0 erreur
+- Piège outil de test : agent-browser fill('') ne déclenche pas le onChange React (effacement par Backspace clavier fonctionne) — artefact outil, pas un bug app
+- Serveur : résilience — le processus peut mourir entre les appels ; relancer via (setsid nohup bun run dev &) et re-vérifier
+
 Stage Summary:
 - Plateforme complète livrée : site public premium « La Vigie » + tableau de bord éditorial 100 % autonome, conformes aux 16 sections du cahier des charges (adaptation SQLite + stockage local à l'environnement sandbox ; email réel, 2FA et hébergement Vercel à câbler en production)
 - Identifiants de démonstration : claire@lavigie.fr / admin2026
