@@ -46,6 +46,17 @@ Correctif 15/09 (2) — « toujours page blanche » + erreur d'hydratation :
 - Vérifié : 0 erreur console/hydratation, 24 Reveal instrumentés, animation au scroll fonctionnelle (2→4 révélés), noscript présent dans le HTML servi, règles CSS confirmées dans la feuille live, lint 0 erreur
 - Commit f935bb6
 
+Amélioration interface 15/09 — « plus professionnelle » (commit aa8e3a4) :
+- Reveal : déclenchement anticipé (marge 420px avant entrée écran) — plus de sections vides perçues ; support impression (print) ajouté
+- Fil direct : ticker défilant des 6 derniers titres sous le header (pause au survol, doublon aria-hidden)
+- Méga-menu desktop : description + compteur + 3 derniers articles par rubrique (CSS group-hover + focus-within, données servies par le layout)
+- Palette de commande ⌘K/Ctrl+K : recherche instantanée /api/search débouncée, vignettes, navigation clavier ↑↓↵, liens d'accès rapide
+- Bandeau de confiance pré-footer (fond brand) : articles publiés, rubriques, lectures cumulées, abonnés newsletter (compteurs réels en base)
+- Hero : badge « À la une », zoom image au survol, fetchPriority=high (LCP)
+- Page article grille magazine : rail de partage vertical collant (xl), sommaire collant avec scroll-spy (dernier intertitre passé = actif), sommaire en carte repliable (mobile), encart auteur avec bio
+- extractToc + ancres id sur les H2 (dédoublonnage déterministe partagé), articleCardInclude enrichi (bio)
+- Vérifié agent-browser : desktop 1440 + iPhone 14, 0 erreur console, scroll-spy 01→02→03, palette fonctionnelle, lint 0 erreur
+
 Stage Summary:
 - Plateforme complète livrée : site public premium « La Vigie » + tableau de bord éditorial 100 % autonome, conformes aux 16 sections du cahier des charges (adaptation SQLite + stockage local à l'environnement sandbox ; email réel, 2FA et hébergement Vercel à câbler en production)
 - Identifiants de démonstration : claire@lavigie.fr / admin2026
