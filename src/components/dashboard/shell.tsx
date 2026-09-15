@@ -5,15 +5,17 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import {
   FileText, FolderTree, Home, Image as ImageIcon, Inbox, LayoutDashboard,
-  LogOut, Mail, Menu, MessageSquare, Moon, Newspaper, Settings, Sun, X,
+  LogOut, Mail, Menu, MessageSquare, Moon, Newspaper, Settings, Sun, Tag, X,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { toast } from 'sonner'
+import { siteMonogram } from '@/lib/shared'
 
 const NAV = [
   { href: '/dashboard', label: 'Vue d’ensemble', icon: LayoutDashboard },
   { href: '/dashboard/articles', label: 'Articles', icon: FileText },
   { href: '/dashboard/rubriques', label: 'Rubriques', icon: FolderTree },
+  { href: '/dashboard/tags', label: 'Mots-clés', icon: Tag },
   { href: '/dashboard/pages', label: 'Pages', icon: Newspaper },
   { href: '/dashboard/accueil', label: 'Page d’accueil', icon: Home },
   { href: '/dashboard/medias', label: 'Médiathèque', icon: ImageIcon },
@@ -28,10 +30,12 @@ export function DashboardShell({
   children,
   userName,
   userRole,
+  siteName,
 }: {
   children: React.ReactNode
   userName: string
   userRole: string
+  siteName: string
 }) {
   const pathname = usePathname()
   const router = useRouter()
@@ -65,10 +69,10 @@ export function DashboardShell({
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-border bg-card lg:flex">
         <div className="flex h-16 items-center gap-2.5 border-b border-border px-5">
           <span className="flex h-8 w-8 items-center justify-center rounded-md font-display text-lg font-bold" style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}>
-            V
+            {siteMonogram(siteName)}
           </span>
           <div>
-            <p className="font-display text-[15px] font-bold leading-none">La Vigie</p>
+            <p className="font-display text-[15px] font-bold leading-none">{siteName}</p>
             <p className="mt-0.5 text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground">Rédaction</p>
           </div>
         </div>
@@ -102,7 +106,7 @@ export function DashboardShell({
           <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
           <aside className="absolute inset-y-0 left-0 w-64 bg-card p-3 shadow-xl">
             <div className="mb-3 flex items-center justify-between px-2 py-2">
-              <span className="font-display font-bold">La Vigie — Rédaction</span>
+              <span className="font-display font-bold">{siteName} — Rédaction</span>
               <button onClick={() => setMobileOpen(false)} aria-label="Fermer le menu" className="p-1.5">
                 <X className="h-5 w-5" />
               </button>

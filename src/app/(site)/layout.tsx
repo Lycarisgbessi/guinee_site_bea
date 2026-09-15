@@ -45,12 +45,16 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         slogan={settings.site_slogan}
         categories={categories}
         today={today}
+        logoUrl={settings.site_logo || undefined}
       />
       <main className="flex-1">{children}</main>
       <SiteFooter
         data={{
           siteName: settings.site_name,
           footerText: settings.footer_text,
+          newsletterText: settings.footer_newsletter_text,
+          copyright: settings.footer_copyright,
+          logoUrl: settings.site_logo || undefined,
           social: {
             twitter: settings.social_twitter || undefined,
             instagram: settings.social_instagram || undefined,

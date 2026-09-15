@@ -23,7 +23,7 @@ export default async function HomePage() {
 
   /* ---------- Fil direct (ticker) ---------- */
   const tickerItems = latest.items.slice(0, 6)
-  if (tickerItems.length >= 3) {
+  if (settings.ticker_enabled !== 'false' && tickerItems.length >= 3) {
     rendered.push(
       <div key="ticker" className="ticker border-b border-border/60 bg-secondary/40">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 md:px-6">
@@ -31,7 +31,7 @@ export default async function HomePage() {
             className="shrink-0 rounded-sm px-2 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em]"
             style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
           >
-            Le fil
+            {settings.ticker_label || 'Le fil'}
           </span>
           <div className="min-w-0 flex-1 overflow-hidden" aria-label="Derniers titres">
             <div className="ticker-track flex w-max items-center gap-10 py-2">
@@ -81,12 +81,12 @@ export default async function HomePage() {
                       />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-                    {/* Badge À la une */}
+                    {/* Badge À la une (libellé configurable) */}
                     <span
                       className="absolute left-5 top-5 rounded-sm px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] text-white shadow-lg"
                       style={{ background: 'var(--brand)' }}
                     >
-                      À la une
+                      {config.heroLabel || 'À la une'}
                     </span>
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white md:p-8">
@@ -161,7 +161,7 @@ export default async function HomePage() {
         <section key={block.id} className="mx-auto max-w-6xl px-4 py-16 md:px-6">
           <Reveal>
             <div className="mb-8">
-              <span className="eyebrow text-brand">Formats longs</span>
+              <span className="eyebrow text-brand">{config.eyebrow || 'Formats longs'}</span>
               <h2 className="mt-1 font-display text-2xl font-bold md:text-3xl">{config.title || 'Reportages phares'}</h2>
             </div>
           </Reveal>
@@ -212,18 +212,30 @@ export default async function HomePage() {
     }
 
     if (block.blockType === 'CITATION') {
-      const withQuote = latest.items.find((a) => a.id !== featured?.id)
-      if (!withQuote?.chapo) continue
+      // Mode personnalisé : citation libre saisie dans le dashboard ; sinon chapô du dernier article
+      const customText = typeof config.quoteText === 'string' ? config.quoteText.trim() : ''
+      const linked = config.quoteArticleSlug
+        ? latest.items.find((a) => a.slug === config.quoteArticleSlug)
+        : latest.items.find((a) => a.id !== featured?.id && a.chapo)
+      if (!customText && !linked?.chapo) continue
+      const quoteAuthor = typeof config.quoteAuthor === 'string' ? config.quoteAuthor.trim() : ''
       rendered.push(
         <section key={block.id} className="border-y border-border/60 bg-secondary/30">
           <div className="mx-auto max-w-4xl px-6 py-16 text-center">
             <Reveal>
+              {config.eyebrow && <p className="eyebrow mb-4 text-brand">{config.eyebrow}</p>}
               <p className="font-display text-2xl italic leading-snug text-foreground/90 md:text-[28px]">
-                «&nbsp;{withQuote.chapo}&nbsp;»
+                «&nbsp;{customText || linked?.chapo}&nbsp;»
               </p>
-              <Link href={`/article/${withQuote.slug}`} className="eyebrow mt-5 inline-block text-brand hover:opacity-80">
-                {withQuote.title} →
-              </Link>
+              {quoteAuthor && <p className="mt-4 text-[13px] uppercase tracking-wider text-muted-foreground">— {quoteAuthor}</p>}
+              {linked && (
+                <Link
+                  href={`/article/${linked.slug}`}
+                  className="eyebrow mt-5 inline-block text-brand hover:opacity-80"
+                >
+                  {config.quoteLinkLabel || linked.title} →
+                </Link>
+              )}
             </Reveal>
           </div>
         </section>
@@ -238,8 +250,10 @@ export default async function HomePage() {
               <div className="paper-texture absolute inset-0" />
               <div className="relative grid items-center gap-8 md:grid-cols-2">
                 <div>
-                  <span className="eyebrow text-brand">Newsletter</span>
-                  <h2 className="mt-2 font-display text-3xl font-bold">Ne manquez rien de nos enquêtes</h2>
+                  <span className="eyebrow text-brand">{config.eyebrow || 'Newsletter'}</span>
+                  <h2 className="mt-2 font-display text-3xl font-bold">
+                    {config.title || 'Ne manquez rien de nos enquêtes'}
+                  </h2>
                   <p className="mt-3 max-w-md text-[15px] leading-relaxed text-muted-foreground">
                     {settings.newsletter_intro}
                   </p>
@@ -258,45 +272,46 @@ export default async function HomePage() {
     }
   }
 
-  /* ---------- Bandeau de confiance (pré-footer) ---------- */
-  const [totalArticles, totalRubriques, vuesSum, abonnes] = await Promise.all([
-    db.article.count({ where: publicVisibilityWhere() }),
-    getVisibleCategories().then((c) => c.length),
-    db.article.aggregate({ _sum: { views: true } }),
-    db.newsletterSubscriber.count({ where: { status: 'CONFIRMED' } }),
-  ])
-  const stats = [
-    { icon: Newspaper, value: String(totalArticles), label: 'articles & enquêtes publiés' },
-    { icon: Feather, value: String(totalRubriques), label: 'rubriques éditoriales' },
-    { icon: Eye, value: (vuesSum._sum.views ?? 0).toLocaleString('fr-FR'), label: 'lectures depuis le lancement' },
-    { icon: Mail, value: String(abonnes), label: 'abonnés à la newsletter' },
-  ]
-  rendered.push(
-    <section key="trust-band" className="border-t border-border/60" style={{ background: 'var(--brand)' }}>
-      <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
-        <Reveal>
-          <p className="text-center font-display text-2xl font-bold text-white md:text-[28px]">
-            Un journalisme indépendant, financé par ses lecteurs
-          </p>
-          <p className="mx-auto mt-2 max-w-2xl text-center text-[14px] leading-relaxed text-white/75">
-            Aucun actionnaire, aucune publicité dissimulée — uniquement des enquêtes de terrain et des
-            interviews exigeantes, libres d’accès.
-          </p>
-        </Reveal>
-        <div className="mt-9 grid grid-cols-2 gap-6 md:grid-cols-4">
-          {stats.map(({ icon: Icon, value, label }, i) => (
-            <Reveal key={label} delay={i * 0.06}>
-              <div className="text-center">
-                <Icon className="mx-auto h-5 w-5 text-white/70" aria-hidden="true" />
-                <p className="mt-2 font-display text-3xl font-bold text-white">{value}</p>
-                <p className="mt-1 text-[12px] uppercase tracking-wider text-white/70">{label}</p>
-              </div>
-            </Reveal>
-          ))}
+  /* ---------- Bandeau de confiance (pré-footer, réglages §6.9) ---------- */
+  if (settings.trust_enabled !== 'false') {
+    const [totalArticles, totalRubriques, vuesSum, abonnes] = await Promise.all([
+      db.article.count({ where: publicVisibilityWhere() }),
+      getVisibleCategories().then((c) => c.length),
+      db.article.aggregate({ _sum: { views: true } }),
+      db.newsletterSubscriber.count({ where: { status: 'CONFIRMED' } }),
+    ])
+    const stats = [
+      { icon: Newspaper, value: String(totalArticles), label: 'articles & enquêtes publiés' },
+      { icon: Feather, value: String(totalRubriques), label: 'rubriques éditoriales' },
+      { icon: Eye, value: (vuesSum._sum.views ?? 0).toLocaleString('fr-FR'), label: 'lectures depuis le lancement' },
+      { icon: Mail, value: String(abonnes), label: 'abonnés à la newsletter' },
+    ]
+    rendered.push(
+      <section key="trust-band" className="border-t border-border/60" style={{ background: 'var(--brand)' }}>
+        <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
+          <Reveal>
+            <p className="text-center font-display text-2xl font-bold text-white md:text-[28px]">
+              {settings.trust_title}
+            </p>
+            <p className="mx-auto mt-2 max-w-2xl text-center text-[14px] leading-relaxed text-white/75">
+              {settings.trust_subtitle}
+            </p>
+          </Reveal>
+          <div className="mt-9 grid grid-cols-2 gap-6 md:grid-cols-4">
+            {stats.map(({ icon: Icon, value, label }, i) => (
+              <Reveal key={label} delay={i * 0.06}>
+                <div className="text-center">
+                  <Icon className="mx-auto h-5 w-5 text-white/70" aria-hidden="true" />
+                  <p className="mt-2 font-display text-3xl font-bold text-white">{value}</p>
+                  <p className="mt-1 text-[12px] uppercase tracking-wider text-white/70">{label}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>,
-  )
+      </section>,
+    )
+  }
 
   return <>{rendered}</>
 }

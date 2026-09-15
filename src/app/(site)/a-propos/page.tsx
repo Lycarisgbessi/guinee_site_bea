@@ -6,9 +6,13 @@ import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = {
-  title: 'À propos',
-  description: 'La Vigie, média digital indépendant : ligne éditoriale, équipe et distinctions.',
+/** Métadonnées SEO pilotées par la page CMS (éditable dans Dashboard → Pages) */
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await db.page.findFirst({ where: { slug: 'a-propos', published: true } })
+  return {
+    title: page?.seoTitle || page?.title || 'À propos',
+    description: page?.seoDescription || undefined,
+  }
 }
 
 /** Page « À propos » 100 % éditable depuis le dashboard (§5.2, §6.5) */

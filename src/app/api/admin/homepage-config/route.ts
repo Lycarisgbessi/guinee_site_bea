@@ -40,6 +40,24 @@ export async function PUT(req: Request) {
   return NextResponse.json({ blocks: updated })
 }
 
+// ---------- DELETE — supprimer un bloc (ré-ajoutable ensuite via POST) ----------
+export async function DELETE(req: Request) {
+  const session = await requireAdmin()
+  if (!session) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+
+  const { searchParams } = new URL(req.url)
+  const id = searchParams.get('id') ?? ''
+  if (!id) return NextResponse.json({ error: 'Identifiant requis.' }, { status: 400 })
+
+  const block = await db.homepageBlock.findUnique({ where: { id } })
+  if (!block) return NextResponse.json({ error: 'Bloc introuvable.' }, { status: 404 })
+
+  await db.homepageBlock.delete({ where: { id } })
+  await logActivity('HOMEPAGE_BLOCK_REMOVE', block.blockType, `Bloc « ${block.blockType} » retiré de l'accueil`)
+  const updated = await db.homepageBlock.findMany({ orderBy: { order: 'asc' } })
+  return NextResponse.json({ blocks: updated })
+}
+
 // ---------- POST — ajout d’un nouveau bloc ----------
 export async function POST(req: Request) {
   const session = await requireAdmin()

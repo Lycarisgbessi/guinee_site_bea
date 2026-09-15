@@ -29,6 +29,13 @@ export async function PUT(req: Request) {
     'contact_email', 'contact_intro', 'tips_enabled',
     'custom_head_scripts', 'maintenance_mode', 'maintenance_message',
     'footer_text', 'newsletter_intro', 'comments_moderation',
+    // Bandeaux de la page d'accueil
+    'ticker_enabled', 'ticker_label',
+    'trust_enabled', 'trust_title', 'trust_subtitle',
+    // Page contact
+    'contact_title', 'contact_delay', 'contact_tips_title', 'contact_tips_text',
+    // Pied de page
+    'footer_newsletter_text', 'footer_copyright',
   ]
   const updates: Record<string, string> = {}
   for (const key of allowedKeys) {

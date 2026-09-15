@@ -1,5 +1,18 @@
 /** Utilitaires partagés */
 
+/**
+ * Monogramme de marque dérivé du nom du site.
+ * Ignore les articles (Le, La, Les, L', The) : « La Vigie » → « V », « Le Monde » → « M », « Libération » → « L ».
+ */
+export function siteMonogram(siteName: string): string {
+  const cleaned = (siteName || '')
+    .trim()
+    .replace(/^(le|la|les|the|l')\s+/i, '')
+    .replace(/^l'/i, '')
+    .trim()
+  return (cleaned || siteName || 'M').charAt(0).toUpperCase()
+}
+
 /** Génère un slug URL propre depuis un titre (accents français gérés) */
 export function slugify(text: string): string {
   return text

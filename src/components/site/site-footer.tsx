@@ -1,17 +1,22 @@
 import Link from 'next/link'
 import { Facebook, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react'
 
+import { siteMonogram } from '@/lib/shared'
 import { NewsletterForm } from './newsletter-form'
 
 export interface FooterData {
   siteName: string
   footerText: string
+  newsletterText: string
+  copyright: string
+  logoUrl?: string
   social: { twitter?: string; instagram?: string; linkedin?: string; youtube?: string }
   categories: { name: string; slug: string }[]
 }
 
 /** Footer riche : rubriques, liens légaux, réseaux sociaux, newsletter (§5.8) */
 export function SiteFooter({ data }: { data: FooterData }) {
+  const monogram = siteMonogram(data.siteName)
   const socials = [
     { href: data.social.twitter, label: 'X / Twitter', icon: Twitter },
     { href: data.social.instagram, label: 'Instagram', icon: Instagram },
@@ -24,12 +29,17 @@ export function SiteFooter({ data }: { data: FooterData }) {
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-2 lg:grid-cols-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <span
-              className="flex h-9 w-9 items-center justify-center rounded-md font-display text-xl font-bold"
-              style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
-            >
-              V
-            </span>
+            {data.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={data.logoUrl} alt={`${data.siteName} — logo`} className="h-9 w-auto max-w-[180px] object-contain" />
+            ) : (
+              <span
+                className="flex h-9 w-9 items-center justify-center rounded-md font-display text-xl font-bold"
+                style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
+              >
+                {monogram}
+              </span>
+            )}
             <span className="font-display text-2xl font-bold">{data.siteName}</span>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{data.footerText}</p>
@@ -79,16 +89,14 @@ export function SiteFooter({ data }: { data: FooterData }) {
 
         <div>
           <h3 className="eyebrow mb-4 text-muted-foreground">Newsletter</h3>
-          <p className="mb-4 text-sm text-muted-foreground">
-            La sélection de la rédaction, chaque vendredi.
-          </p>
+          <p className="mb-4 text-sm text-muted-foreground">{data.newsletterText}</p>
           <NewsletterForm compact />
         </div>
       </div>
 
       <div className="border-t border-border/60">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-5 text-xs text-muted-foreground md:flex-row">
-          <span>© {new Date().getFullYear()} {data.siteName}. Tous droits réservés.</span>
+          <span>© {new Date().getFullYear()} {data.siteName}. {data.copyright}</span>
           <div className="flex gap-4">
             <Link href="/p/mentions-legales" className="hover:text-foreground">Mentions légales</Link>
             <Link href="/p/politique-de-confidentialite" className="hover:text-foreground">Confidentialité</Link>

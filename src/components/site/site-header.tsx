@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, Menu, Search, X } from 'lucide-react'
+import { siteMonogram } from '@/lib/shared'
 import { ThemeToggle } from './theme-toggle'
 import { CommandPalette } from './command-palette'
 
@@ -22,12 +23,15 @@ export function SiteHeader({
   slogan,
   categories,
   today,
+  logoUrl,
 }: {
   siteName: string
   slogan: string
   categories: HeaderCategory[]
   today: string
+  logoUrl?: string
 }) {
+  const monogram = siteMonogram(siteName)
   const [open, setOpen] = useState(false)
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -100,14 +104,19 @@ export function SiteHeader({
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
 
-          {/* Logo */}
+          {/* Logo (image personnalisée si définie dans les paramètres, sinon monogramme) */}
           <Link href="/" className="flex items-center gap-2.5 py-3" aria-label={`${siteName} — Accueil`}>
-            <span
-              className="flex h-9 w-9 items-center justify-center rounded-md font-display text-xl font-bold"
-              style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
-            >
-              V
-            </span>
+            {logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={logoUrl} alt={`${siteName} — logo`} className="h-9 w-auto max-w-[180px] object-contain" />
+            ) : (
+              <span
+                className="flex h-9 w-9 items-center justify-center rounded-md font-display text-xl font-bold"
+                style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
+              >
+                {monogram}
+              </span>
+            )}
             <span className="font-display text-[25px] font-bold leading-none tracking-tight">{siteName}</span>
           </Link>
 

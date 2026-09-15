@@ -4,7 +4,7 @@ import { db } from '@/lib/db'
 export const DEFAULT_SETTINGS: Record<string, string> = {
   site_name: 'La Vigie',
   site_slogan: 'Un regard exigeant sur le monde',
-  site_logo: '/logo.svg',
+  site_logo: '', // vide = monogramme dérivé du nom du site
   site_favicon: '/favicon.svg',
   accent_color: '#A03123',
   seo_default_title: 'La Vigie — Média indépendant',
@@ -24,8 +24,24 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   maintenance_message:
     'La Vigie fait peau neuve. Nous revenons dans quelques instants avec un site encore plus beau. Merci de votre patience.',
   footer_text: 'La Vigie est un média indépendant financé par ses lecteurs. Chaque article est vérifié, sourcé et relu avant publication.',
+  footer_newsletter_text: 'La sélection de la rédaction, chaque vendredi.',
+  footer_copyright: 'Tous droits réservés.',
   newsletter_intro: 'Recevez chaque vendredi la sélection de la rédaction : nos meilleurs reportages, enquêtes et interviews, directement dans votre boîte mail. Sans spam, désinscription en un clic.',
   comments_moderation: 'true',
+  // Bandeau « Le fil » (ticker sous le header de l'accueil)
+  ticker_enabled: 'true',
+  ticker_label: 'Le fil',
+  // Bandeau de confiance pré-footer
+  trust_enabled: 'true',
+  trust_title: 'Un journalisme indépendant, financé par ses lecteurs',
+  trust_subtitle:
+    'Aucun actionnaire, aucune publicité dissimulée — uniquement des enquêtes de terrain et des interviews exigeantes, libres d’accès.',
+  // Page contact
+  contact_title: 'Contact',
+  contact_delay: 'Réponse sous 48 h ouvrées',
+  contact_tips_title: 'Proposer un sujet',
+  contact_tips_text:
+    'Une information, un document, un fait de société méconnu ? Utilisez le formulaire en sélectionnant « Proposition de sujet ». La confidentialité de vos envois est respectée.',
 }
 
 type SettingsCache = {

@@ -136,6 +136,8 @@ export default function SettingsPage() {
       <Tabs defaultValue="identite">
         <TabsList className="flex-wrap">
           <TabsTrigger value="identite">Identité</TabsTrigger>
+          <TabsTrigger value="accueil">Accueil &amp; bandeaux</TabsTrigger>
+          <TabsTrigger value="contact">Contact</TabsTrigger>
           <TabsTrigger value="seo">SEO</TabsTrigger>
           <TabsTrigger value="apparence">Apparence</TabsTrigger>
           <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
@@ -155,7 +157,7 @@ export default function SettingsPage() {
               <Field label="Slogan">
                 <input value={settings.site_slogan ?? ''} onChange={(e) => set('site_slogan', e.target.value)} className={inputCls} />
               </Field>
-              <Field label="Logo (URL)" hint="Laissez vide pour le logo par défaut">
+              <Field label="Logo (URL)" hint="Laissez vide pour un monogramme dérivé du nom du site. Importez une image dans la Médiathèque puis collez son URL.">
                 <input value={settings.site_logo ?? ''} onChange={(e) => set('site_logo', e.target.value)} className={inputCls} />
               </Field>
               <Field label="Email de la rédaction">
@@ -165,6 +167,14 @@ export default function SettingsPage() {
             <div className="mt-4">
               <Field label="Texte du pied de page">
                 <textarea value={settings.footer_text ?? ''} onChange={(e) => set('footer_text', e.target.value)} rows={2} className={`${inputCls} resize-y`} />
+              </Field>
+            </div>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <Field label="Texte de la colonne Newsletter (footer)" hint="Affiché au-dessus du formulaire dans le pied de page.">
+                <input value={settings.footer_newsletter_text ?? ''} onChange={(e) => set('footer_newsletter_text', e.target.value)} className={inputCls} />
+              </Field>
+              <Field label="Mention de copyright" hint="Affichée après © année — nom du site.">
+                <input value={settings.footer_copyright ?? ''} onChange={(e) => set('footer_copyright', e.target.value)} className={inputCls} />
               </Field>
             </div>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -181,6 +191,53 @@ export default function SettingsPage() {
                 <input value={settings.social_youtube ?? ''} onChange={(e) => set('social_youtube', e.target.value)} className={inputCls} />
               </Field>
             </div>
+            <div className="mt-4">{saveBtn(['site_name', 'site_slogan', 'site_logo', 'contact_email', 'footer_text', 'footer_newsletter_text', 'footer_copyright', 'social_twitter', 'social_instagram', 'social_linkedin', 'social_youtube'])}</div>
+          </div>
+        </TabsContent>
+
+        {/* Accueil & bandeaux */}
+        <TabsContent value="accueil" className="mt-4 space-y-4">
+          <div className="rounded-lg border border-border bg-card p-5">
+            <p className="text-sm font-semibold">Bandeau « Le fil » (défilement des titres, sous le header de l’accueil)</p>
+            <div className="mt-3 grid gap-4 sm:grid-cols-[auto_1fr]">
+              <label className="flex items-center gap-2.5 text-sm">
+                <Switch checked={settings.ticker_enabled === 'true'} onCheckedChange={(v) => set('ticker_enabled', v ? 'true' : 'false')} />
+                Activer le bandeau
+              </label>
+              <Field label="Libellé du bandeau">
+                <input value={settings.ticker_label ?? ''} onChange={(e) => set('ticker_label', e.target.value)} className={inputCls} placeholder="Le fil" />
+              </Field>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-5">
+            <p className="text-sm font-semibold">Bandeau de confiance (fond coloré avant le pied de page)</p>
+            <div className="mt-3 space-y-4">
+              <label className="flex items-center gap-2.5 text-sm">
+                <Switch checked={settings.trust_enabled === 'true'} onCheckedChange={(v) => set('trust_enabled', v ? 'true' : 'false')} />
+                Activer le bandeau
+              </label>
+              <Field label="Titre du bandeau">
+                <input value={settings.trust_title ?? ''} onChange={(e) => set('trust_title', e.target.value)} className={inputCls} />
+              </Field>
+              <Field label="Sous-titre" hint="Les 4 compteurs (articles, rubriques, lectures, abonnés) sont calculés automatiquement.">
+                <textarea value={settings.trust_subtitle ?? ''} onChange={(e) => set('trust_subtitle', e.target.value)} rows={2} className={`${inputCls} resize-y`} />
+              </Field>
+            </div>
+          </div>
+          <div className="mt-4">{saveBtn(['ticker_enabled', 'ticker_label', 'trust_enabled', 'trust_title', 'trust_subtitle'])}</div>
+        </TabsContent>
+
+        {/* Contact */}
+        <TabsContent value="contact" className="mt-4 space-y-4">
+          <div className="rounded-lg border border-border bg-card p-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Titre de la page" hint="Affiché aussi dans le menu et l’onglet du navigateur.">
+                <input value={settings.contact_title ?? ''} onChange={(e) => set('contact_title', e.target.value)} className={inputCls} />
+              </Field>
+              <Field label="Indication de délai de réponse">
+                <input value={settings.contact_delay ?? ''} onChange={(e) => set('contact_delay', e.target.value)} className={inputCls} />
+              </Field>
+            </div>
             <div className="mt-4">
               <Field label="Introduction de la page Contact">
                 <textarea value={settings.contact_intro ?? ''} onChange={(e) => set('contact_intro', e.target.value)} rows={2} className={`${inputCls} resize-y`} />
@@ -190,7 +247,15 @@ export default function SettingsPage() {
               <Switch checked={settings.tips_enabled === 'true'} onCheckedChange={(v) => set('tips_enabled', v ? 'true' : 'false')} />
               Activer le formulaire « Proposer un sujet / une info »
             </label>
-            <div className="mt-4">{saveBtn(['site_name', 'site_slogan', 'site_logo', 'contact_email', 'footer_text', 'social_twitter', 'social_instagram', 'social_linkedin', 'social_youtube', 'contact_intro', 'tips_enabled'])}</div>
+            <div className="mt-4 grid gap-4">
+              <Field label="Titre de l’encart « Proposer un sujet »">
+                <input value={settings.contact_tips_title ?? ''} onChange={(e) => set('contact_tips_title', e.target.value)} className={inputCls} />
+              </Field>
+              <Field label="Texte de l’encart">
+                <textarea value={settings.contact_tips_text ?? ''} onChange={(e) => set('contact_tips_text', e.target.value)} rows={3} className={`${inputCls} resize-y`} />
+              </Field>
+            </div>
+            <div className="mt-4">{saveBtn(['contact_title', 'contact_delay', 'contact_intro', 'tips_enabled', 'contact_tips_title', 'contact_tips_text'])}</div>
           </div>
         </TabsContent>
 
