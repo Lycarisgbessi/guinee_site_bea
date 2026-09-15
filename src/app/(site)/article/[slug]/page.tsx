@@ -5,9 +5,10 @@ import { Clock, MessageSquare, PencilLine } from 'lucide-react'
 
 import { db } from '@/lib/db'
 import { articleCardInclude, getRelatedArticles, publicVisibilityWhere } from '@/lib/public-queries'
-import { RichContent } from '@/components/article/rich-content'
+import { RichContent, extractToc } from '@/components/article/rich-content'
 import { CategoryBadge, ArticleCard } from '@/components/site/article-card'
 import { ShareButtons } from '@/components/site/share-buttons'
+import { TocNav } from '@/components/site/toc-nav'
 import { Reveal } from '@/components/site/reveal'
 import { ReadingProgress } from '@/components/site/reading-progress'
 import { CommentsSection } from '@/components/site/comments-section'
@@ -70,6 +71,7 @@ export default async function ArticlePage({ params }: Props) {
   const related = await getRelatedArticles(article.id, article.categories.map((c) => c.categoryId), 3)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const doc = JSON.parse(article.contentJson || '{}')
+  const toc = extractToc(doc)
 
   // Données structurées Schema.org NewsArticle (§12.2)
   const jsonLd = {
@@ -162,27 +164,78 @@ export default async function ArticlePage({ params }: Props) {
           </figure>
         )}
 
-        {/* Corps de l’article */}
-        <div className="mx-auto max-w-3xl px-4 md:px-6">
-          <RichContent doc={doc} dropcap={isLong} />
-
-          {/* Tags */}
-          {article.tags.length > 0 && (
-            <div className="mt-12 flex flex-wrap gap-2">
-              {article.tags.map(({ tag }) => (
-                <Link
-                  key={tag.id}
-                  href={`/tag/${tag.slug}`}
-                  className="rounded-full border border-border/80 px-3.5 py-1.5 text-[13px] text-foreground/75 transition-colors hover:border-brand hover:text-brand"
-                >
-                  #{tag.name}
-                </Link>
-              ))}
+        {/* Corps de l’article — grille éditoriale : rail partage / contenu / sommaire */}
+        <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+          <div className="xl:grid xl:grid-cols-[56px_minmax(0,720px)_240px] xl:gap-8">
+            {/* Rail de partage vertical (desktop) */}
+            <div className="hidden xl:block">
+              <div className="sticky top-28 flex flex-col items-center gap-3 border-l border-border/60 pl-4">
+                <span className="eyebrow text-muted-foreground">Partager</span>
+                <ShareButtons url={`/article/${article.slug}`} title={article.title} siteName={settings.site_name} variant="rail" />
+              </div>
             </div>
-          )}
 
-          <div className="mt-8 border-t border-border/60 pt-6">
-            <ShareButtons url={`/article/${article.slug}`} title={article.title} siteName={settings.site_name} />
+            {/* Contenu */}
+            <div className="min-w-0">
+              {/* Sommaire replié (mobile/tablette) */}
+              {toc.length >= 3 && <TocNav items={toc} variant="card" />}
+              <RichContent doc={doc} dropcap={isLong} />
+
+              {/* Tags */}
+              {article.tags.length > 0 && (
+                <div className="mt-12 flex flex-wrap gap-2">
+                  {article.tags.map(({ tag }) => (
+                    <Link
+                      key={tag.id}
+                      href={`/tag/${tag.slug}`}
+                      className="rounded-full border border-border/80 px-3.5 py-1.5 text-[13px] text-foreground/75 transition-colors hover:border-brand hover:text-brand"
+                    >
+                      #{tag.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+
+              {/* Partage + encart auteur (mobile : le rail est masqué) */}
+              <div className="mt-8 border-t border-border/60 pt-6 xl:hidden">
+                <ShareButtons url={`/article/${article.slug}`} title={article.title} siteName={settings.site_name} />
+              </div>
+
+              {/* Encart auteur avec bio */}
+              {article.author && (
+                <aside className="mt-8 flex flex-col gap-4 rounded-lg border border-border/70 bg-secondary/30 p-5 sm:flex-row sm:items-start">
+                  {article.author.avatar ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={article.author.avatar}
+                      alt=""
+                      className="h-16 w-16 shrink-0 rounded-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span
+                      className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full font-display text-2xl font-bold"
+                      style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
+                      aria-hidden="true"
+                    >
+                      {article.author.name?.charAt(0) ?? '·'}
+                    </span>
+                  )}
+                  <div className="min-w-0">
+                    <p className="eyebrow text-muted-foreground">Écrit par</p>
+                    <p className="mt-0.5 font-display text-lg font-bold">{article.author.name}</p>
+                    {article.author.bio && (
+                      <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted-foreground">{article.author.bio}</p>
+                    )}
+                  </div>
+                </aside>
+              )}
+            </div>
+
+            {/* Sommaire collant avec suivi de lecture (desktop) */}
+            <div>
+              {toc.length >= 3 && <TocNav items={toc} variant="rail" />}
+            </div>
           </div>
         </div>
 

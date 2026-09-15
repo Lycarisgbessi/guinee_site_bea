@@ -31,7 +31,7 @@ export async function autoPublishScheduled(): Promise<void> {
 }
 
 export const articleCardInclude = {
-  author: { select: { id: true, name: true, avatar: true } },
+  author: { select: { id: true, name: true, avatar: true, bio: true } },
   categories: { include: { category: true } },
   tags: { include: { tag: true } },
 } satisfies Prisma.ArticleInclude

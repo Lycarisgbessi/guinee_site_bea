@@ -243,6 +243,32 @@
   }
 }
 
+/* ---------- Impression : tout visible ---------- */
+@media print {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ---------- Fil direct (ticker) ---------- */
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ticker-track {
+  animation: ticker-scroll 46s linear infinite;
+}
+.ticker:hover .ticker-track,
+.ticker:focus-within .ticker-track {
+  animation-play-state: paused;
+}
+
+/* ---------- Sommaire : compensation du header collant ---------- */
+.rt-content h2[id] {
+  scroll-margin-top: 110px;
+}
+
 /* ---------- Tiptap éditeur (dashboard) ---------- */
 .tiptap {
   outline: none;

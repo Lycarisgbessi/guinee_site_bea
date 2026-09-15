@@ -8,6 +8,52 @@ import { Fragment } from 'react'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Node = any
 
+function nodeText(node: Node): string {
+  if (!node) return ''
+  if (node.type === 'text') return node.text ?? ''
+  return (node.content ?? []).map(nodeText).join('')
+}
+
+/** Slug stable pour les ancres de sommaire (accents français inclus) */
+function slugifyHeading(text: string): string {
+  const base = text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+  return base || 'section'
+}
+
+export interface TocItem {
+  id: string
+  text: string
+}
+
+/**
+ * Extrait les intertitres H2 pour le sommaire de l'article.
+ * Utilise le même algorithme de dédoublonnage (ordre de parcours identique)
+ * que renderNode → les ancres correspondent toujours.
+ */
+export function extractToc(doc: Node): TocItem[] {
+  const seen = new Map<string, number>()
+  const items: TocItem[] = []
+  const walk = (node: Node) => {
+    if (!node) return
+    if (node.type === 'heading' && node.attrs?.level !== 3) {
+      const text = nodeText(node).trim()
+      if (!text) return
+      const base = slugifyHeading(text)
+      const n = (seen.get(base) ?? 0) + 1
+      seen.set(base, n)
+      items.push({ id: n === 1 ? base : `${base}-${n}`, text })
+    }
+    for (const child of node.content ?? []) walk(child)
+  }
+  walk(doc)
+  return items
+}
+
 function renderMarks(node: Node, keyPrefix: string): React.ReactNode {
   if (node.type !== 'text') return null
   let content: React.ReactNode = node.text
@@ -26,6 +72,34 @@ function renderMarks(node: Node, keyPrefix: string): React.ReactNode {
   return <Fragment key={keyPrefix}>{content}</Fragment>
 }
 
+/** H2 avec ancre de sommaire (dédoublonnage déterministe, même ordre que extractToc) */
+function HeadingAnchor({
+  Tag,
+  node,
+  keyPrefix,
+  children,
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Tag: any
+  node: Node
+  keyPrefix: string
+  children: React.ReactNode
+}) {
+  const text = nodeText(node).trim()
+  const base = slugifyHeading(text)
+  const n = (headingSeen.get(base) ?? 0) + 1
+  headingSeen.set(base, n)
+  const id = n === 1 ? base : `${base}-${n}`
+  return (
+    <Tag key={keyPrefix} id={id}>
+      {children}
+    </Tag>
+  )
+}
+
+// Compteur par rendu (reset à chaque arbre rendu grâce au parcours racine unique)
+const headingSeen = new Map<string, number>()
+
 function renderNode(node: Node, key: string): React.ReactNode {
   if (!node) return null
   switch (node.type) {
@@ -36,6 +110,14 @@ function renderNode(node: Node, key: string): React.ReactNode {
     case 'heading': {
       const level = node.attrs?.level === 3 ? 3 : 2
       const Tag = level === 2 ? 'h2' : 'h3'
+      if (level === 2) {
+        // Ancre pour le sommaire (même dédoublonnage que extractToc)
+        return (
+          <HeadingAnchor key={key} Tag={Tag} node={node} keyPrefix={key}>
+            {(node.content ?? []).map((c: Node, i: number) => renderMarks(c, `${key}-${i}`))}
+          </HeadingAnchor>
+        )
+      }
       return <Tag key={key}>{(node.content ?? []).map((c: Node, i: number) => renderMarks(c, `${key}-${i}`))}</Tag>
     }
     case 'blockquote':
@@ -105,6 +187,7 @@ function renderNode(node: Node, key: string): React.ReactNode {
 
 export function RichContent({ doc, dropcap = false }: { doc: Node; dropcap?: boolean }) {
   if (!doc) return null
+  headingSeen.clear()
   return (
     <div className={`rt-content article-body ${dropcap ? '[&>p:first-of-type]:dropcap' : ''}`}>
       {renderNode(doc, 'root')}

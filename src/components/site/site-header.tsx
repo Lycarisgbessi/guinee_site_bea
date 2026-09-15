@@ -4,12 +4,17 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Menu, Search, X } from 'lucide-react'
+import { ArrowRight, Menu, Search, X } from 'lucide-react'
 import { ThemeToggle } from './theme-toggle'
+import { CommandPalette } from './command-palette'
 
 export interface HeaderCategory {
   name: string
   slug: string
+  color?: string | null
+  description?: string | null
+  count?: number
+  latest?: { title: string; slug: string }[]
 }
 
 export function SiteHeader({
@@ -24,8 +29,7 @@ export function SiteHeader({
   today: string
 }) {
   const [open, setOpen] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [query, setQuery] = useState('')
+  const [paletteOpen, setPaletteOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
 
@@ -43,10 +47,22 @@ export function SiteHeader({
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
       setOpen(false)
-      setSearchOpen(false)
+      setPaletteOpen(false)
     })
     return () => cancelAnimationFrame(raf)
   }, [pathname])
+
+  // Raccourci global ⌘K / Ctrl+K
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setPaletteOpen((v) => !v)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   return (
     <>
@@ -62,11 +78,18 @@ export function SiteHeader({
       </div>
 
       <header
-        className={`sticky top-0 z-50 border-b border-border/60 backdrop-blur-md transition-shadow ${
-          scrolled ? 'bg-background/95 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.15)]' : 'bg-background/85'
+        className={`sticky top-0 z-50 border-b border-border/60 backdrop-blur-md transition-all duration-300 ${
+          scrolled
+            ? 'bg-background/95 shadow-[0_2px_24px_-10px_rgba(0,0,0,0.22)]'
+            : 'bg-background/85'
         }`}
       >
-        <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 md:px-6">
+        <div
+          className={`mx-auto flex max-w-6xl items-center gap-4 px-4 transition-all duration-300 md:px-6 ${
+            scrolled ? 'scale-y-[0.96]' : ''
+          }`}
+          style={{ transformOrigin: 'top' }}
+        >
           {/* Menu mobile */}
           <button
             className="inline-flex h-10 w-10 items-center justify-center md:hidden"
@@ -78,41 +101,102 @@ export function SiteHeader({
           </button>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 py-3.5" aria-label={`${siteName} — Accueil`}>
+          <Link href="/" className="flex items-center gap-2.5 py-3" aria-label={`${siteName} — Accueil`}>
             <span
               className="flex h-9 w-9 items-center justify-center rounded-md font-display text-xl font-bold"
               style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
             >
               V
             </span>
-            <span className="font-display text-[26px] font-bold leading-none tracking-tight">{siteName}</span>
+            <span className="font-display text-[25px] font-bold leading-none tracking-tight">{siteName}</span>
           </Link>
 
-          {/* Navigation desktop */}
-          <nav className="ml-6 hidden flex-1 items-center gap-1 lg:flex" aria-label="Rubriques">
+          {/* Navigation desktop avec méga-menu */}
+          <nav className="ml-4 hidden flex-1 items-center gap-0.5 lg:flex" aria-label="Rubriques">
             {categories.map((c) => {
               const active = pathname === `/rubrique/${c.slug}`
+              const hasPanel = (c.description || (c.latest && c.latest.length > 0)) ?? false
               return (
-                <Link
-                  key={c.slug}
-                  href={`/rubrique/${c.slug}`}
-                  className={`rounded-sm px-3 py-2 text-[13.5px] font-medium transition-colors hover:text-foreground ${
-                    active ? 'text-brand' : 'text-foreground/75'
-                  }`}
-                >
-                  {c.name}
-                </Link>
+                <div key={c.slug} className="group relative">
+                  <Link
+                    href={`/rubrique/${c.slug}`}
+                    className={`block rounded-sm px-3 py-2 text-[13.5px] font-medium transition-colors group-hover:text-foreground ${
+                      active ? 'text-brand' : 'text-foreground/75'
+                    }`}
+                  >
+                    {c.name}
+                    {/* Trait d'accent au survol */}
+                    <span
+                      className="absolute inset-x-3 bottom-0 h-0.5 origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100"
+                      style={{ background: c.color || 'var(--brand)' }}
+                      aria-hidden="true"
+                    />
+                  </Link>
+
+                  {hasPanel && (
+                    <div
+                      className="invisible absolute left-1/2 top-full z-50 w-[520px] -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
+                      role="menu"
+                      aria-label={`Rubrique ${c.name}`}
+                    >
+                      <div className="overflow-hidden rounded-lg border border-border/70 bg-background shadow-[0_20px_50px_-20px_rgba(0,0,0,0.3)]">
+                        <div className="grid grid-cols-[1fr_1.1fr]">
+                          {/* Colonne description */}
+                          <div className="border-r border-border/60 bg-secondary/30 p-5">
+                            <p className="eyebrow" style={{ color: c.color || 'var(--brand)' }}>
+                              {c.name}
+                            </p>
+                            {c.description && (
+                              <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{c.description}</p>
+                            )}
+                            {typeof c.count === 'number' && (
+                              <p className="mt-3 text-[11.5px] uppercase tracking-wider text-muted-foreground/80">
+                                {c.count} article{c.count > 1 ? 's' : ''} publié{c.count > 1 ? 's' : ''}
+                              </p>
+                            )}
+                            <Link
+                              href={`/rubrique/${c.slug}`}
+                              className="mt-4 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-foreground transition-colors hover:text-brand"
+                            >
+                              Voir la rubrique <ArrowRight className="h-3.5 w-3.5" />
+                            </Link>
+                          </div>
+                          {/* Colonne derniers articles */}
+                          <div className="p-4">
+                            <p className="eyebrow px-1 pb-2 text-muted-foreground">Derniers articles</p>
+                            {(c.latest ?? []).map((a) => (
+                              <Link
+                                key={a.slug}
+                                href={`/article/${a.slug}`}
+                                className="block rounded-md px-1 py-2 text-[13px] font-medium leading-snug text-foreground/85 transition-colors hover:text-brand"
+                              >
+                                {a.title}
+                              </Link>
+                            ))}
+                            {!c.latest?.length && (
+                              <p className="px-1 py-2 text-[13px] text-muted-foreground">Aucun article pour le moment.</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               )
             })}
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
             <button
-              onClick={() => setSearchOpen(true)}
-              aria-label="Rechercher"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 text-foreground/70 transition-colors hover:text-foreground"
+              onClick={() => setPaletteOpen(true)}
+              aria-label="Rechercher (Ctrl+K)"
+              title="Rechercher (Ctrl+K)"
+              className="inline-flex h-9 items-center gap-2 rounded-full border border-border/60 pl-3 pr-2 text-foreground/70 transition-colors hover:text-foreground"
             >
               <Search className="h-4 w-4" />
+              <kbd className="hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text-[10px] text-muted-foreground lg:block">
+                Ctrl K
+              </kbd>
             </button>
             <ThemeToggle />
           </div>
@@ -164,51 +248,7 @@ export function SiteHeader({
         </AnimatePresence>
       </header>
 
-      {/* Overlay de recherche */}
-      <AnimatePresence>
-        {searchOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-sm"
-            onClick={() => setSearchOpen(false)}
-          >
-            <div className="mx-auto max-w-2xl px-6 pt-28" onClick={(e) => e.stopPropagation()}>
-              <motion.div
-                initial={{ y: -16, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.05 }}
-              >
-                <form
-                  action="/recherche"
-                  className="flex items-center gap-3 border-b-2 border-foreground pb-3"
-                  onSubmit={(e) => {
-                    if (!query.trim()) e.preventDefault()
-                  }}
-                >
-                  <Search className="h-6 w-6 text-muted-foreground" />
-                  <input
-                    autoFocus
-                    name="q"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Rechercher un article, un reportage…"
-                    aria-label="Recherche"
-                    className="w-full bg-transparent font-display text-2xl outline-none placeholder:text-muted-foreground/60"
-                  />
-                  <button type="submit" className="eyebrow text-brand hover:opacity-80">
-                    OK
-                  </button>
-                </form>
-                <p className="mt-4 text-sm text-muted-foreground">
-                  Astuce : appuyez sur Entrée pour lancer la recherche dans tous les contenus.
-                </p>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </>
   )
 }

@@ -1,7 +1,7 @@
 import { SiteHeader } from '@/components/site/site-header'
 import { SiteFooter } from '@/components/site/site-footer'
 import { getSettings } from '@/lib/settings'
-import { getVisibleCategories } from '@/lib/public-queries'
+import { getPublishedArticles, getVisibleCategories } from '@/lib/public-queries'
 import { BackToTop } from '@/components/site/back-to-top'
 import { MaintenanceScreen } from '@/components/site/maintenance-screen'
 
@@ -13,12 +13,28 @@ const MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet'
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSettings()
 
-  // Mode maintenance (§6.9) : écran d’attente sauf pour le dashboard
+  // Mode maintenance (§6.9) : écran d'attente sauf pour le dashboard
   if (settings.maintenance_mode === 'true') {
     return <MaintenanceScreen siteName={settings.site_name} message={settings.maintenance_message} />
   }
 
-  const categories = await getVisibleCategories()
+  const cats = await getVisibleCategories()
+
+  // Méga-menu : description + 3 derniers articles par rubrique
+  const categories = await Promise.all(
+    cats.map(async (c) => {
+      const { items } = await getPublishedArticles({ categorySlug: c.slug, perPage: 3 })
+      return {
+        name: c.name,
+        slug: c.slug,
+        color: c.color,
+        description: c.description,
+        count: c._count.articles,
+        latest: items.map((a) => ({ title: a.title, slug: a.slug })),
+      }
+    }),
+  )
+
   const now = new Date()
   const today = `${DAYS[now.getDay()]} ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`
 
@@ -27,8 +43,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <SiteHeader
         siteName={settings.site_name}
         slogan={settings.site_slogan}
+        categories={categories}
         today={today}
-        categories={categories.map((c) => ({ name: c.name, slug: c.slug }))}
       />
       <main className="flex-1">{children}</main>
       <SiteFooter
@@ -41,7 +57,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             linkedin: settings.social_linkedin || undefined,
             youtube: settings.social_youtube || undefined,
           },
-          categories: categories.map((c) => ({ name: c.name, slug: c.slug })),
+          categories: cats.map((c) => ({ name: c.name, slug: c.slug })),
         }}
       />
       <BackToTop />

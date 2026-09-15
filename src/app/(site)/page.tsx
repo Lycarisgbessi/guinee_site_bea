@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { Clock } from 'lucide-react'
+import { Clock, Eye, Feather, Mail, Newspaper } from 'lucide-react'
 import { db } from '@/lib/db'
-import { getFeaturedArticle, getPublishedArticles } from '@/lib/public-queries'
+import { getFeaturedArticle, getPublishedArticles, getVisibleCategories, publicVisibilityWhere } from '@/lib/public-queries'
 import { ArticleCard, ArticleCardLarge, ArticleCardRow, CategoryBadge } from '@/components/site/article-card'
 import { Reveal } from '@/components/site/reveal'
 import { NewsletterForm } from '@/components/site/newsletter-form'
@@ -20,6 +20,39 @@ export default async function HomePage() {
   const reportages = latest.items.filter((a) => a.format === 'REPORTAGE' || a.format === 'PORTFOLIO')
 
   const rendered: React.ReactNode[] = []
+
+  /* ---------- Fil direct (ticker) ---------- */
+  const tickerItems = latest.items.slice(0, 6)
+  if (tickerItems.length >= 3) {
+    rendered.push(
+      <div key="ticker" className="ticker border-b border-border/60 bg-secondary/40">
+        <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 md:px-6">
+          <span
+            className="shrink-0 rounded-sm px-2 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em]"
+            style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
+          >
+            Le fil
+          </span>
+          <div className="min-w-0 flex-1 overflow-hidden" aria-label="Derniers titres">
+            <div className="ticker-track flex w-max items-center gap-10 py-2">
+              {[...tickerItems, ...tickerItems].map((a, i) => (
+                <Link
+                  key={`${a.id}-${i}`}
+                  href={`/article/${a.slug}`}
+                  className="flex items-center gap-2.5 whitespace-nowrap text-[13px] text-foreground/80 transition-colors hover:text-brand"
+                  aria-hidden={i >= tickerItems.length}
+                  tabIndex={i >= tickerItems.length ? -1 : 0}
+                >
+                  <span className="h-1 w-1 rounded-full" style={{ background: 'var(--brand)' }} aria-hidden="true" />
+                  {a.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>,
+    )
+  }
 
   for (const block of blocks) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,11 +74,20 @@ export default async function HomePage() {
                       <img
                         src={featured.coverImage}
                         alt={featured.title}
-                        className="w-full object-cover"
+                        className="w-full object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.03]"
                         style={{ aspectRatio: '16/9' }}
+                        loading="eager"
+                        fetchPriority="high"
                       />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                    {/* Badge À la une */}
+                    <span
+                      className="absolute left-5 top-5 rounded-sm px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] text-white shadow-lg"
+                      style={{ background: 'var(--brand)' }}
+                    >
+                      À la une
+                    </span>
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white md:p-8">
                     {cat && (
@@ -215,6 +257,46 @@ export default async function HomePage() {
       )
     }
   }
+
+  /* ---------- Bandeau de confiance (pré-footer) ---------- */
+  const [totalArticles, totalRubriques, vuesSum, abonnes] = await Promise.all([
+    db.article.count({ where: publicVisibilityWhere() }),
+    getVisibleCategories().then((c) => c.length),
+    db.article.aggregate({ _sum: { views: true } }),
+    db.newsletterSubscriber.count({ where: { status: 'CONFIRMED' } }),
+  ])
+  const stats = [
+    { icon: Newspaper, value: String(totalArticles), label: 'articles & enquêtes publiés' },
+    { icon: Feather, value: String(totalRubriques), label: 'rubriques éditoriales' },
+    { icon: Eye, value: (vuesSum._sum.views ?? 0).toLocaleString('fr-FR'), label: 'lectures depuis le lancement' },
+    { icon: Mail, value: String(abonnes), label: 'abonnés à la newsletter' },
+  ]
+  rendered.push(
+    <section key="trust-band" className="border-t border-border/60" style={{ background: 'var(--brand)' }}>
+      <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
+        <Reveal>
+          <p className="text-center font-display text-2xl font-bold text-white md:text-[28px]">
+            Un journalisme indépendant, financé par ses lecteurs
+          </p>
+          <p className="mx-auto mt-2 max-w-2xl text-center text-[14px] leading-relaxed text-white/75">
+            Aucun actionnaire, aucune publicité dissimulée — uniquement des enquêtes de terrain et des
+            interviews exigeantes, libres d’accès.
+          </p>
+        </Reveal>
+        <div className="mt-9 grid grid-cols-2 gap-6 md:grid-cols-4">
+          {stats.map(({ icon: Icon, value, label }, i) => (
+            <Reveal key={label} delay={i * 0.06}>
+              <div className="text-center">
+                <Icon className="mx-auto h-5 w-5 text-white/70" aria-hidden="true" />
+                <p className="mt-2 font-display text-3xl font-bold text-white">{value}</p>
+                <p className="mt-1 text-[12px] uppercase tracking-wider text-white/70">{label}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>,
+  )
 
   return <>{rendered}</>
 }
