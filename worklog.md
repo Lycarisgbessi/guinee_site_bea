@@ -101,3 +101,28 @@ Stage Summary:
 - Aucune panne technique : le dashboard fonctionne de bout en bout
 - Cause probable de l'incident : identifiants inconnus de l'utilisatrice
 - Accès à communiquer : claire@lavigie.fr / admin2026
+
+---
+Task ID: 6
+Agent: Super Z (agent principal)
+Task: Audit de la communication dashboard ↔ site public (fluidité, temps réel)
+
+Work Log:
+- Architecture vérifiée : toutes les pages publiques en force-dynamic (rendu frais à chaque requête) ; cache settings 5 s max avec invalidation immédiate à l'écriture ; dashboard → API REST /api/admin/* → Prisma → SQLite
+- Test E2E n°1 (article) : édition du titre via l'éditeur dashboard → enregistrement en base en ~200 ms → H1 article + hero accueil mis à jour immédiatement. Restauration OK. (Balise <title> utilise le champ SEO séparé : normal)
+- Test E2E n°2a (citation) : saisie citation + auteur dans /dashboard/accueil → auto-save (PUT immédiat) → visible sur l'accueil public en < 2 s
+- Test E2E n°2b (blocs) : switch OFF du bloc CITATION → disparition du site en ~1 s ; réactivation OK ; retour au mode auto (quoteText vide = chapô du dernier article non-à-la-une) vérifié
+- Test E2E n°3a (footer) : footer_text modifié dans Paramètres → visible sur l'accueil public en ~2,5 s ; restauré
+- Test E2E n°3b (contact) : contact_title + contact_delay modifiés → page /contact publique mise à jour en ~2,5 s ; restauré
+- Test E2E n°4 (rubriques) : masquage de « Politique » → disparue de /rubriques, du header, du footer, page détail en 404 propre ; restaurée. Cas limite trouvé : badges de rubrique sur cartes d'articles pointaient vers 404
+- Correctif : articleCardInclude filtre désormais categories par visible:true → les badges ne s'affichent que pour les rubriques visibles (vérifié : 5 badges → 0 après masquage)
+- Test E2E n°5 (pages CMS) : titre « Mentions légales » modifié → H1 de /p/mentions-legales mis à jour immédiatement ; restauré
+- Test E2E n°6 (sens inverse) : formulaire de contact public soumis (navigateur) → message présent dans dashboard/messages en ~2 s ; message de test supprimé de la base
+- Bonus qualité : 3 erreurs TypeScript préexistantes corrigées (import db manquant dans /api/articles HEAD, prop title invalide sur Lightbulb, cast setImage caption/credit) → 0 erreur tsc dans src/, lint OK
+- Commit : 0013c27
+
+Stage Summary:
+- Communication dashboard ↔ site : fluide, temps réel, tous les tests < 10 s (en pratique < 3 s)
+- Aucune page en cache côté public → toute modification dashboard est visible à la requête suivante
+- 1 cas limite corrigé (badges rubriques masquées), 3 erreurs TS corrigées
+- Matrice de couverture CMS confirmée : articles, rubriques, tags, pages CMS, blocs d'accueil, paramètres (10 onglets), médias, commentaires, messages, newsletter
