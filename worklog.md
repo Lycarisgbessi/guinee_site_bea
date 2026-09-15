@@ -40,6 +40,12 @@ Correctif 15/09 — « on ne voit pas le site » :
 - Vérifié : 12 routes publiques HTTP 200, accueil rend le HERO_UNE réel, article 200, 404 éditoriale OK, login claire@lavigie.fr/admin2026 → dashboard (KPI 38 194 vues), 0 erreur console, lint 0 erreur
 - Code commité dans git (f3d3d47) pour éviter toute nouvelle perte
 
+Correctif 15/09 (2) — « toujours page blanche » + erreur d'hydratation :
+- Cause : `Reveal` branlait sur `useReducedMotion()` pour choisir l'élément rendu (div vs motion.div). Avec prefers-reduced-motion activé côté utilisateur, le client rendait un div simple alors que le serveur avait rendu motion.div opacity:0 → mismatch d'hydratation, contenu bloqué invisible → page blanche
+- Fix 3 couches : (1) Reveal rend désormais un markup strictement identique SSR/client (motion.div + data-reveal, jamais de branchement sur useReducedMotion) ; (2) globals.css force [data-reveal] visible (opacity:1 !important) sous prefers-reduced-motion et scripting:none ; (3) layout racine : MotionConfig reducedMotion="user" (nouveau composant motion-config.tsx) + <noscript> de secours
+- Vérifié : 0 erreur console/hydratation, 24 Reveal instrumentés, animation au scroll fonctionnelle (2→4 révélés), noscript présent dans le HTML servi, règles CSS confirmées dans la feuille live, lint 0 erreur
+- Commit f935bb6
+
 Stage Summary:
 - Plateforme complète livrée : site public premium « La Vigie » + tableau de bord éditorial 100 % autonome, conformes aux 16 sections du cahier des charges (adaptation SQLite + stockage local à l'environnement sandbox ; email réel, 2FA et hébergement Vercel à câbler en production)
 - Identifiants de démonstration : claire@lavigie.fr / admin2026
