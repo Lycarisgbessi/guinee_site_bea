@@ -3,6 +3,7 @@ import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/site/theme-provider";
+import { MotionConfigProvider } from "@/components/site/motion-config";
 import { getSettings } from "@/lib/settings";
 
 const playfair = Playfair_Display({
@@ -64,13 +65,19 @@ export default async function RootLayout({
             dangerouslySetInnerHTML={{ __html: headScripts }}
           />
         ) : null}
+        {/* Filet de sécurité : sans JS, le contenu animé par Reveal doit rester visible */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1 !important;transform:none !important}`}</style>
+        </noscript>
       </head>
       <body
         className={`${playfair.variable} ${inter.variable} antialiased bg-background text-foreground font-body`}
       >
         <ThemeProvider>
-          {children}
-          <Toaster position="top-center" richColors />
+          <MotionConfigProvider>
+            {children}
+            <Toaster position="top-center" richColors />
+          </MotionConfigProvider>
         </ThemeProvider>
       </body>
     </html>

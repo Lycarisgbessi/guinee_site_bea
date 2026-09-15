@@ -226,6 +226,21 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  /* Les Reveals (framer-motion, styles inline JS) restent à opacity:0 tant que
+     l'animation ne tourne pas — on force la visibilité immédiate pour ces
+     utilisateurs. !important CSS prime sur les styles inline. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ---------- Filet de sécurité sans JS ---------- */
+@media (scripting: none) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* ---------- Tiptap éditeur (dashboard) ---------- */
