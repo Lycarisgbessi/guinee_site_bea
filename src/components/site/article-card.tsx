@@ -8,7 +8,7 @@ function firstCategory(article: ArticleCardData) {
   return article.categories[0]?.category ?? null
 }
 
-/** Badge rubrique coloré */
+/** Badge rubrique coloré avec pastille de couleur */
 export function CategoryBadge({
   name,
   slug,
@@ -23,9 +23,14 @@ export function CategoryBadge({
   return (
     <Link
       href={`/rubrique/${slug}`}
-      className={`eyebrow inline-block transition-opacity hover:opacity-75 ${size === 'lg' ? 'text-xs' : ''}`}
+      className={`eyebrow inline-flex items-center gap-1.5 transition-opacity hover:opacity-75 ${size === 'lg' ? 'text-xs' : ''}`}
       style={{ color: color || 'var(--brand)' }}
     >
+      <span
+        className="h-1.5 w-1.5 rounded-full"
+        style={{ background: color || 'var(--brand)' }}
+        aria-hidden="true"
+      />
       {name}
     </Link>
   )
@@ -52,7 +57,7 @@ function Meta({ article, className = '' }: { article: ArticleCardData; className
 export function ArticleCardRow({ article }: { article: ArticleCardData }) {
   const cat = firstCategory(article)
   return (
-    <article className="group grid grid-cols-[110px_1fr] gap-4 border-b border-border/60 pb-5 sm:grid-cols-[160px_1fr]">
+    <article className="card-lift group grid grid-cols-[110px_1fr] gap-4 rounded-md border-b border-border/60 pb-5 sm:grid-cols-[160px_1fr]">
       <Link href={`/article/${article.slug}`} className="block overflow-hidden rounded-md" tabIndex={-1} aria-hidden="true">
         {article.coverImage ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -84,7 +89,7 @@ export function ArticleCardRow({ article }: { article: ArticleCardData }) {
 export function ArticleCard({ article, priority = false }: { article: ArticleCardData; priority?: boolean }) {
   const cat = firstCategory(article)
   return (
-    <article className="group flex h-full flex-col">
+    <article className="card-lift group flex h-full flex-col rounded-md">
       <Link href={`/article/${article.slug}`} className="relative block overflow-hidden rounded-md" tabIndex={-1} aria-hidden="true">
         {article.coverImage ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -120,6 +125,11 @@ export function ArticleCardLarge({ article }: { article: ArticleCardData }) {
   const cat = firstCategory(article)
   return (
     <article className="group relative flex min-h-[300px] flex-col justify-end overflow-hidden rounded-lg">
+      {/* Barre tricolore qui glisse au survol */}
+      <span
+        className="absolute inset-x-0 top-0 z-10 h-1 origin-left scale-x-0 tri-gradient transition-transform duration-500 group-hover:scale-x-100"
+        aria-hidden="true"
+      />
       {article.coverImage ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img

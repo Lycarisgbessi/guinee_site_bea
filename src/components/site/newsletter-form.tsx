@@ -53,14 +53,14 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="votre@email.fr"
+          placeholder="votre@email.gn"
           className="h-11 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm outline-none transition-colors focus:border-brand"
         />
       </div>
       <button
         type="submit"
         disabled={state === 'loading'}
-        className="inline-flex h-11 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-all hover:opacity-90 disabled:opacity-60"
+        className="inline-flex h-11 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-all duration-200 hover:scale-[1.03] hover:opacity-95 active:scale-[0.98] disabled:opacity-60"
         style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
       >
         {state === 'loading' ? <Loader2 className="h-4 w-4 animate-spin" /> : null}

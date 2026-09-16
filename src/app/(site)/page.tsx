@@ -4,6 +4,7 @@ import { db } from '@/lib/db'
 import { getFeaturedArticle, getPublishedArticles, getVisibleCategories, publicVisibilityWhere } from '@/lib/public-queries'
 import { ArticleCard, ArticleCardLarge, ArticleCardRow, CategoryBadge } from '@/components/site/article-card'
 import { Reveal } from '@/components/site/reveal'
+import { AnimatedCounter } from '@/components/site/animated-counter'
 import { NewsletterForm } from '@/components/site/newsletter-form'
 import { getSettings } from '@/lib/settings'
 import { formatDateFr } from '@/lib/shared'
@@ -21,16 +22,18 @@ export default async function HomePage() {
 
   const rendered: React.ReactNode[] = []
 
-  /* ---------- Fil direct (ticker) ---------- */
+  /* ---------- Fil direct (ticker) — marquee infini ---------- */
   const tickerItems = latest.items.slice(0, 6)
   if (settings.ticker_enabled !== 'false' && tickerItems.length >= 3) {
     rendered.push(
-      <div key="ticker" className="ticker border-b border-border/60 bg-secondary/40">
+      <div key="ticker" className="ticker relative border-b border-border/60 bg-secondary/40">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 md:px-6">
           <span
-            className="shrink-0 rounded-sm px-2 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em]"
+            className="my-2 flex shrink-0 items-center gap-2 rounded-sm px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] shadow-sm"
             style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
           >
+            {/* Point « en direct » pulsant */}
+            <span className="live-dot h-1.5 w-1.5 rounded-full bg-white" aria-hidden="true" />
             {settings.ticker_label || 'Le fil'}
           </span>
           <div className="min-w-0 flex-1 overflow-hidden" aria-label="Derniers titres">
@@ -43,7 +46,13 @@ export default async function HomePage() {
                   aria-hidden={i >= tickerItems.length}
                   tabIndex={i >= tickerItems.length ? -1 : 0}
                 >
-                  <span className="h-1 w-1 rounded-full" style={{ background: 'var(--brand)' }} aria-hidden="true" />
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{
+                      background: ['var(--brand)', 'var(--brand-gold)', 'var(--brand-green)'][i % 3],
+                    }}
+                    aria-hidden="true"
+                  />
                   {a.title}
                 </Link>
               ))}
@@ -81,21 +90,21 @@ export default async function HomePage() {
                       />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-                    {/* Badge À la une (libellé configurable) */}
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white md:p-8">
+                    {/* Badge À la une (libellé configurable), dans le flux pour éviter tout chevauchement */}
                     <span
-                      className="absolute left-5 top-5 rounded-sm px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] text-white shadow-lg"
+                      className="mb-3 mr-3 inline-block rounded-sm px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] text-white shadow-lg"
                       style={{ background: 'var(--brand)' }}
                     >
                       {config.heroLabel || 'À la une'}
                     </span>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white md:p-8">
                     {cat && (
                       <span className="eyebrow" style={{ color: cat.color || '#fff' }}>
                         {cat.name}
                       </span>
                     )}
-                    <h1 className="mt-2 max-w-3xl font-display text-3xl font-bold leading-[1.12] md:text-5xl">
+                    <h1 className="mt-2 line-clamp-3 max-w-3xl font-display text-3xl font-bold leading-[1.12] md:text-4xl">
                       {featured.title}
                     </h1>
                     {featured.chapo && (
@@ -136,7 +145,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl px-4 py-14 md:px-6">
             <Reveal>
               <div className="mb-8 flex items-baseline justify-between">
-                <h2 className="font-display text-2xl font-bold md:text-3xl">{config.title || 'L’actualité'}</h2>
+                <h2 className="tri-underline font-display text-2xl font-bold md:text-3xl">{config.title || 'L’actualité'}</h2>
                 <Link href="/archives" className="eyebrow text-muted-foreground transition-colors hover:text-foreground">
                   Toutes les archives →
                 </Link>
@@ -162,7 +171,7 @@ export default async function HomePage() {
           <Reveal>
             <div className="mb-8">
               <span className="eyebrow text-brand">{config.eyebrow || 'Formats longs'}</span>
-              <h2 className="mt-1 font-display text-2xl font-bold md:text-3xl">{config.title || 'Reportages phares'}</h2>
+              <h2 className="tri-underline mt-1 font-display text-2xl font-bold md:text-3xl">{config.title || 'Reportages phares'}</h2>
             </div>
           </Reveal>
           <div className="grid gap-5 md:grid-cols-3">
@@ -189,7 +198,7 @@ export default async function HomePage() {
               <div className="mb-8 flex items-center justify-between">
                 <div>
                   {cat && <CategoryBadge {...cat} size="lg" />}
-                  <h2 className="mt-1 font-display text-2xl font-bold md:text-3xl">{config.title || cat?.name}</h2>
+                  <h2 className="tri-underline mt-1 font-display text-2xl font-bold md:text-3xl">{config.title || cat?.name}</h2>
                 </div>
                 <Link
                   href={`/rubrique/${catSlug}`}
@@ -281,32 +290,41 @@ export default async function HomePage() {
       db.newsletterSubscriber.count({ where: { status: 'CONFIRMED' } }),
     ])
     const stats = [
-      { icon: Newspaper, value: String(totalArticles), label: 'articles & enquêtes publiés' },
-      { icon: Feather, value: String(totalRubriques), label: 'rubriques éditoriales' },
-      { icon: Eye, value: (vuesSum._sum.views ?? 0).toLocaleString('fr-FR'), label: 'lectures depuis le lancement' },
-      { icon: Mail, value: String(abonnes), label: 'abonnés à la newsletter' },
+      { icon: Newspaper, value: totalArticles, label: 'articles & enquêtes publiés' },
+      { icon: Feather, value: totalRubriques, label: 'rubriques éditoriales' },
+      { icon: Eye, value: vuesSum._sum.views ?? 0, label: 'lectures depuis le lancement' },
+      { icon: Mail, value: abonnes, label: 'abonnés à la newsletter' },
     ]
     rendered.push(
-      <section key="trust-band" className="border-t border-border/60" style={{ background: 'var(--brand)' }}>
-        <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
-          <Reveal>
-            <p className="text-center font-display text-2xl font-bold text-white md:text-[28px]">
-              {settings.trust_title}
-            </p>
-            <p className="mx-auto mt-2 max-w-2xl text-center text-[14px] leading-relaxed text-white/75">
-              {settings.trust_subtitle}
-            </p>
-          </Reveal>
-          <div className="mt-9 grid grid-cols-2 gap-6 md:grid-cols-4">
-            {stats.map(({ icon: Icon, value, label }, i) => (
-              <Reveal key={label} delay={i * 0.06}>
-                <div className="text-center">
-                  <Icon className="mx-auto h-5 w-5 text-white/70" aria-hidden="true" />
-                  <p className="mt-2 font-display text-3xl font-bold text-white">{value}</p>
-                  <p className="mt-1 text-[12px] uppercase tracking-wider text-white/70">{label}</p>
-                </div>
-              </Reveal>
-            ))}
+      <section key="trust-band" className="relative border-t border-border/60">
+        {/* Barre tricolore signature */}
+        <div className="tri-bar h-1" aria-hidden="true" />
+        <div
+          className="min-h-full"
+          style={{ background: 'linear-gradient(135deg, var(--brand-deep) 0%, var(--brand) 55%, #d6340f 100%)' }}
+        >
+          <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
+            <Reveal>
+              <p className="text-center font-display text-2xl font-bold text-white md:text-[28px]">
+                {settings.trust_title}
+              </p>
+              <p className="mx-auto mt-2 max-w-2xl text-center text-[14px] leading-relaxed text-white/75">
+                {settings.trust_subtitle}
+              </p>
+            </Reveal>
+            <div className="mt-9 grid grid-cols-2 gap-6 md:grid-cols-4">
+              {stats.map(({ icon: Icon, value, label }, i) => (
+                <Reveal key={label} delay={i * 0.06}>
+                  <div className="text-center">
+                    <Icon className="mx-auto h-5 w-5 text-white/70" aria-hidden="true" />
+                    <p className="mt-2 font-display text-3xl font-bold text-white">
+                      <AnimatedCounter value={value} />
+                    </p>
+                    <p className="mt-1 text-[12px] uppercase tracking-wider text-white/70">{label}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </div>
       </section>,

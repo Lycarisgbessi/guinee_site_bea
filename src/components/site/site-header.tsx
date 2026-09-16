@@ -70,6 +70,8 @@ export function SiteHeader({
 
   return (
     <>
+      {/* Barre tricolore signature (rouge → or → vert) */}
+      <div className="tri-bar h-[3px]" aria-hidden="true" />
       {/* Barre supérieure */}
       <div className="hidden border-b border-border/60 bg-secondary/40 md:block">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5 text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
@@ -193,6 +195,30 @@ export function SiteHeader({
                 </div>
               )
             })}
+
+            {/* Séparateur + liens éditoriaux permanents */}
+            <span className="mx-2.5 hidden h-5 w-px bg-border/70 xl:block" aria-hidden="true" />
+            {[
+              { href: '/a-propos', label: 'À propos' },
+              { href: '/contact', label: 'Contact' },
+            ].map((l) => {
+              const active = pathname === l.href
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className={`group relative block rounded-sm px-3 py-2 text-[13.5px] font-medium transition-colors group-hover:text-foreground ${
+                    active ? 'text-brand' : 'text-foreground/75'
+                  }`}
+                >
+                  {l.label}
+                  <span
+                    className="absolute inset-x-3 bottom-0 h-0.5 origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100 tri-gradient"
+                    aria-hidden="true"
+                  />
+                </Link>
+              )
+            })}
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
@@ -244,6 +270,9 @@ export function SiteHeader({
                 </Link>
                 <Link href="/tags" className="block rounded-md px-3 py-2.5 text-sm hover:bg-secondary">
                   Mots-clés
+                </Link>
+                <Link href="/a-propos" className="block rounded-md px-3 py-2.5 text-sm hover:bg-secondary">
+                  À propos
                 </Link>
                 <Link href="/contact" className="block rounded-md px-3 py-2.5 text-sm hover:bg-secondary">
                   Contact

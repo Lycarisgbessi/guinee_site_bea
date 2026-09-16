@@ -48,82 +48,92 @@
 
 :root {
   --radius: 0.375rem;
-  /* Palette éditoriale premium — papier & encre */
-  --background: oklch(0.978 0.004 85);
-  --foreground: oklch(0.185 0.008 75);
-  --card: oklch(0.995 0.002 85);
-  --card-foreground: oklch(0.185 0.008 75);
-  --popover: oklch(0.995 0.002 85);
-  --popover-foreground: oklch(0.185 0.008 75);
-  --primary: oklch(0.21 0.01 75);
-  --primary-foreground: oklch(0.98 0.004 85);
-  --secondary: oklch(0.945 0.006 85);
-  --secondary-foreground: oklch(0.25 0.01 75);
-  --muted: oklch(0.945 0.006 85);
-  --muted-foreground: oklch(0.475 0.012 75);
-  --accent: oklch(0.945 0.006 85);
-  --accent-foreground: oklch(0.25 0.01 75);
+  /* Palette officielle Guinée+ : blanc dominant, encre chaude, rouge d'interaction,
+     vert et or du drapeau en accents — dérivée du logo officiel */
+  --background: oklch(0.995 0.002 85);
+  --foreground: oklch(0.19 0.012 60);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.19 0.012 60);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.19 0.012 60);
+  /* Boutons et actions : rouge officiel approfondi pour la lisibilité (AA) */
+  --primary: oklch(0.545 0.213 28.5);
+  --primary-foreground: #ffffff;
+  --primary-hover: oklch(0.475 0.19 27);
+  --secondary: oklch(0.955 0.006 85);
+  --secondary-foreground: oklch(0.26 0.015 60);
+  --muted: oklch(0.958 0.005 85);
+  --muted-foreground: oklch(0.47 0.014 60);
+  --accent: oklch(0.955 0.006 85);
+  --accent-foreground: oklch(0.26 0.015 60);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.885 0.008 80);
-  --input: oklch(0.87 0.008 80);
-  --ring: oklch(0.21 0.01 75);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
+  --border: oklch(0.9 0.008 80);
+  --input: oklch(0.885 0.008 80);
+  --ring: oklch(0.545 0.213 28.5);
+  --chart-1: oklch(0.577 0.245 27.325);
+  --chart-2: oklch(0.68 0.17 155);
+  --chart-3: oklch(0.79 0.17 90);
+  --chart-4: oklch(0.55 0.1 230);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0.003 85);
-  --sidebar-foreground: oklch(0.185 0.008 75);
-  --sidebar-primary: oklch(0.21 0.01 75);
-  --sidebar-primary-foreground: oklch(0.98 0.004 85);
-  --sidebar-accent: oklch(0.945 0.006 85);
-  --sidebar-accent-foreground: oklch(0.25 0.01 75);
-  --sidebar-border: oklch(0.885 0.008 80);
-  --sidebar-ring: oklch(0.21 0.01 75);
-  /* Couleur d'accent forte, personnalisable depuis le dashboard (§6.9)
-     Identité Guinée+ : rouge du logo + vert et or officiels en accents secondaires */
+  --sidebar: oklch(0.99 0.002 85);
+  --sidebar-foreground: oklch(0.19 0.012 60);
+  --sidebar-primary: oklch(0.545 0.213 28.5);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: oklch(0.955 0.006 85);
+  --sidebar-accent-foreground: oklch(0.26 0.015 60);
+  --sidebar-border: oklch(0.9 0.008 80);
+  --sidebar-ring: oklch(0.545 0.213 28.5);
+  /* Couleurs de marque — échantillonnées du logo officiel Guinée+ (§6.9) */
   --brand: #e02310;
-  --brand-foreground: #faf8f4;
+  --brand-foreground: #ffffff;
+  --brand-deep: #b71808;
   --brand-green: #01b458;
+  --brand-green-deep: #009a4b;
   --brand-gold: #edb405;
+  --brand-gold-deep: #d1a004;
 }
 
 .dark {
-  --background: oklch(0.165 0.006 75);
-  --foreground: oklch(0.925 0.006 85);
-  --card: oklch(0.205 0.008 75);
-  --card-foreground: oklch(0.925 0.006 85);
-  --popover: oklch(0.205 0.008 75);
-  --popover-foreground: oklch(0.925 0.006 85);
-  --primary: oklch(0.925 0.006 85);
-  --primary-foreground: oklch(0.185 0.008 75);
-  --secondary: oklch(0.255 0.01 75);
-  --secondary-foreground: oklch(0.925 0.006 85);
-  --muted: oklch(0.255 0.01 75);
-  --muted-foreground: oklch(0.68 0.01 80);
-  --accent: oklch(0.255 0.01 75);
-  --accent-foreground: oklch(0.925 0.006 85);
+  --background: oklch(0.17 0.008 60);
+  --foreground: oklch(0.93 0.005 85);
+  --card: oklch(0.21 0.01 60);
+  --card-foreground: oklch(0.93 0.005 85);
+  --popover: oklch(0.21 0.01 60);
+  --popover-foreground: oklch(0.93 0.005 85);
+  /* En mode sombre : rouge vif, lisible sur fond sombre */
+  --primary: oklch(0.62 0.21 27.5);
+  --primary-foreground: #ffffff;
+  --primary-hover: oklch(0.68 0.21 28);
+  --secondary: oklch(0.26 0.012 60);
+  --secondary-foreground: oklch(0.93 0.005 85);
+  --muted: oklch(0.26 0.012 60);
+  --muted-foreground: oklch(0.7 0.012 75);
+  --accent: oklch(0.26 0.012 60);
+  --accent-foreground: oklch(0.93 0.005 85);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.31 0.01 75);
-  --input: oklch(0.33 0.01 75);
-  --ring: oklch(0.55 0.01 75);
+  --border: oklch(0.32 0.012 60);
+  --input: oklch(0.34 0.012 60);
+  --ring: oklch(0.62 0.21 27.5);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.19 0.007 75);
-  --sidebar-foreground: oklch(0.925 0.006 85);
-  --sidebar-primary: oklch(0.925 0.006 85);
-  --sidebar-primary-foreground: oklch(0.185 0.008 75);
-  --sidebar-accent: oklch(0.255 0.01 75);
-  --sidebar-accent-foreground: oklch(0.925 0.006 85);
-  --sidebar-border: oklch(0.31 0.01 75);
-  --sidebar-ring: oklch(0.55 0.01 75);
+  --sidebar: oklch(0.19 0.009 60);
+  --sidebar-foreground: oklch(0.93 0.005 85);
+  --sidebar-primary: oklch(0.62 0.21 27.5);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: oklch(0.26 0.012 60);
+  --sidebar-accent-foreground: oklch(0.93 0.005 85);
+  --sidebar-border: oklch(0.32 0.012 60);
+  --sidebar-ring: oklch(0.62 0.21 27.5);
   --brand: #ff5a45;
   --brand-foreground: #1a1512;
+  --brand-deep: #e02310;
   --brand-green: #02c963;
+  --brand-green-deep: #01b458;
   --brand-gold: #ffc81e;
+  --brand-gold-deep: #edb405;
 }
 
 @layer base {
@@ -221,6 +231,64 @@
   background: var(--brand);
 }
 
+/* ---------- Signature tricolore (rouge → or → vert) ---------- */
+.tri-bar {
+  background: linear-gradient(
+    90deg,
+    var(--brand) 0%,
+    var(--brand) 33.4%,
+    var(--brand-gold) 33.4%,
+    var(--brand-gold) 66.7%,
+    var(--brand-green) 66.7%,
+    var(--brand-green) 100%
+  );
+}
+/* Variante dégradée douce, pour ornement discret sous les titres */
+.tri-gradient {
+  background: linear-gradient(90deg, var(--brand), var(--brand-gold) 52%, var(--brand-green));
+}
+
+/* ---------- Soulignement tricolore des titres de section ---------- */
+.tri-underline::after {
+  content: '';
+  display: block;
+  width: 34px;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--brand) 0 34%, var(--brand-gold) 34% 67%, var(--brand-green) 67% 100%);
+}
+
+/* ---------- Carte article : élévation au survol ---------- */
+.card-lift {
+  transition: transform 0.35s cubic-bezier(0.21, 0.47, 0.32, 0.98), box-shadow 0.35s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -18px oklch(0.3 0.03 50 / 0.35);
+}
+
+/* ---------- Point « en direct » pulsant ---------- */
+@keyframes live-pulse {
+  0% { box-shadow: 0 0 0 0 var(--brand); opacity: 1; }
+  70% { box-shadow: 0 0 0 7px transparent; opacity: 0.85; }
+  100% { box-shadow: 0 0 0 0 transparent; opacity: 1; }
+}
+.live-dot {
+  animation: live-pulse 1.6s ease-out infinite;
+}
+
+/* ---------- Ornement dégradé animé (barres de progression du hero) ---------- */
+@keyframes tri-slide {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.tri-flow {
+  background: linear-gradient(90deg, var(--brand), var(--brand-gold), var(--brand-green), var(--brand));
+  background-size: 200% 100%;
+  animation: tri-slide 6s linear infinite;
+}
+
 /* ---------- Respect de prefers-reduced-motion (§10.3) ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -256,13 +324,15 @@
   }
 }
 
-/* ---------- Fil direct (ticker) ---------- */
+/* ---------- Fil direct (ticker) — marquee infini robuste ---------- */
 @keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
 }
 .ticker-track {
-  animation: ticker-scroll 46s linear infinite;
+  animation: ticker-scroll 42s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 .ticker:hover .ticker-track,
 .ticker:focus-within .ticker-track {
