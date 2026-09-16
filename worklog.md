@@ -204,3 +204,23 @@ Stage Summary:
 - Interface nettement plus riche et vivante : hero cinématique, méga-menu magazine avec vignettes, cascades partout, micro-interactions sur toutes les cartes, citation/newsletter/trust-band ornés
 - Le Flash info défile désormais DANS TOUS LES CAS (même avec animations système réduites) — cause racine du retour utilisateur traitée
 - Menu enrichi sur tous les supports : mega-menu desktop (vignettes, description, compteurs), mobile structuré en deux sections animées
+
+---
+Task ID: 7
+Agent: Super Z (principal)
+Task: « on ne voit pas le site » → relance serveur + exécution des demandes en attente (flash info défilant, menu enrichi, interface + animations)
+
+Work Log:
+- Diagnostic : serveur dev tué par le sandbox (HTTP 000) → relance `nohup setsid bun run dev`, HTTP 200 confirmé.
+- Diagnostic ticker : le marquee du hautfonctionnait techniquement (playState running) MAIS le bloc FIL_ACTU était une grille statique → c'est lui qui « ne défilait pas ».
+- globals.css : ajout keyframes feed-scroll (défilement vertical), marquee-x (générique horizontal), ken-burns, flash-progress + exceptions prefers-reduced-motion pour les 3 marquees (contenu essentiel).
+- NOUVEAU composant flash-live.tsx : carte « Dernière minute » en rotation auto (5,6 s, fondu croisé AnimatePresence initial={false} — correction du vide mode="wait"), zoom Ken Burns, barre de progression tricolore, pastilles cliquables, horloge live Conakry (Intl, tz Africa/Conakry, monté client uniquement) + feed vertical continu « Ça vient de tomber » (durée proportionnelle, pause survol, masque fondu haut/bas).
+- page.tsx : ticker du haut enrichi (chips de rubrique colorées, texte 13,5 px, vitesse ~55 px/s) ; bloc FIL_ACTU remplacé par <FlashLive> ; NOUVEAU bandeau défilant « Sujets d'actualité » (14 tags populaires triés par count, chips animées hover).
+- site-header.tsx : categoryIcon() — icône déduite du nom/slug (Landmark, TrendingUp, Users, Palette, Trophy, Globe2, HeartPulse, Leaf, Cpu, GraduationCap, Shield, Newspaper, BookOpen) ; NOUVEAU menu déroulant « Explorer » desktop (Rubriques, Archives, Mots-clés, Plan, Newsletter) avec cascade animée ; bouton doré « S'abonner » (sheen) ; menu mobile enrichi avec icônes colorées par rubrique.
+- NOUVEAU scroll-progress.tsx : barre de progression de lecture globale (useScroll + useSpring, fixée en haut, tri-gradient).
+- Vérifs : tsc 0 erreur src/, lint OK, tests navigateur (ticker running 48 s, feed running 36 s, ken-burns actif, explorer + mega-menu + mobile 390 px capturés).
+
+Stage Summary:
+- Commit : interface enrichie (7 fichiers, +672) — FlashLive + scroll-progress créés.
+- Le flash info défile maintenant à TROIS endroits : ticker haut, feed vertical du bloc En direct, bandeau tags.
+- Serveur : relancé sur port 3000 (nohup setsid).
