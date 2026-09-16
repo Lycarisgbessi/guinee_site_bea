@@ -176,3 +176,31 @@ Stage Summary:
 - Identité visuelle officielle déployée partout : rouge/or/vert/blanc du logo (barres tricolores signature, soulignements, pastilles, dashboard rouge), blanc premium
 - Flash info défile horizontalement (mesuré), menu complet (À propos + Contact), animations riches partout
 - Scripts réutilisables : scripts/dl-guinee-images.py, guinee-migrate.js (+ données part1/part2) — relançables après un re-seed
+
+---
+Task ID: 9
+Agent: Super Z (agent principal)
+Task: « Interface plus riche, beaucoup d'animations fluides, flash info qui défile, menu enrichi »
+
+Work Log:
+- CAUSE RACINE du « ça ne défile pas » identifiée : prefers-reduced-motion actif côté utilisatrice tuait TOUTES les animations (règle CSS globale *.01ms). Le ticker est du contenu essentiel → exempté du kill-switch (règle .ticker-track plus spécifique dans le media query) : défile 2× plus lentement en reduced-motion, pause au survol conservée (WCAG 2.3.3). Vérifié dans le bundle CSS servi (curl).
+- Ticker enrichi : durée proportionnelle au contenu via var CSS --ticker-dur (vitesse constante ~80 px/s mesurée à 82 px/s), masque de fondu horizontal (ticker-mask), heures relatives (timeAgoFr : « à l'instant », « il y a X min », « hier »…), puces qui grossissent au survol, badge FLASH INFO à reflet balayant (sheen).
+- Nouveau composant hero-une.tsx (client) : entrée en cascade Framer Motion (badge → rubrique → titre → chapô → méta → CTA, staggerChildren 0.11), parallaxe au scroll (image +8 %, texte +30 %, fondu), image en fond absolu h-full (fix grid-stretch qui poussait l'overlay à 1900 px sous la ligne de flotte), eyebrow avec drop-shadow de lisibilité, CTA « Lire le reportage » avec reflet.
+- Cartes secondaires du hero passées en rows compacts (4×ArticleCardRow) : colonnes gauche/droite équilibrées, style « une des grands médias », séparateurs fins.
+- Méga-menu réécrit en Framer Motion : délai de grâce 170 ms (pas de clignotement), ouverture opacity/y/scale, barre tricolore en tête de panel, NOUVELLES vignettes images des 3 derniers articles (layout passe coverImage dans HeaderCategory.latest), stagger des items, soulignement à la couleur de la rubrique piloté par le hover JS.
+- Menu mobile restructuré : sections « Rubriques » (pastilles couleur + compteurs d'articles) et « Explorer » (rubriques, archives, mots-clés, à propos, contact) + Espace rédaction rouge, items en cascade animée (stagger 0.035).
+- Reveal enrichi : directions up/down/left/right/scale/blur/fade + nouveau couple Stagger/StaggerItem (cascades whileInView). Filter blur n'animé que pour la variante blur (perf).
+- Cascades déployées : FIL_ACTU, REPORTAGES_PHARES, RUBRIQUE_STRIP, trust band, grilles des pages rubrique, listes archives/tags/recherche.
+- Cartes enrichies : soulignement de titre qui se dessine (title-underline), accent tricolore latéral qui grandit (rows), barre tricolore glissante sous l'image (grilles), lien « Lire l'article → » révélé au survol, cercle flèche sur les grandes cartes.
+- Section CITATION : guillemet décoratif géant en arrière-plan + fil tri-flow animé en tête. NEWSLETTER : halos flottants rouge/vert (glow-orb + float). Trust band : icônes cerclées ring + hover lift.
+- Footer : icônes sociales avec lift au survol, puces de rubriques qui s'allongent.
+- FIX CRITIQUE : Stagger avec className="contents" (rubrique/[slug]) = élément sans boîte → IntersectionObserver ne déclenchait jamais whileInView → cartes invisibles. Le Stagger est désormais lui-même la grille.
+- FIX : ref useScroll sans position relative (warning Framer) → relative sur la grille du hero.
+- timeAgoFr ajouté à lib/shared.ts.
+- Vérifié navigateur : desktop 1440 (hero, méga-menu avec vignettes capturé, ticker 82 px/s mesuré, citation, trust band, footer), mobile 390 (menu en cascade, Flash info), 0 erreur console réelle, reveals 4/4 visibles sur /rubrique/societe, lint 0 erreur (warnings residuels = directives no-img), tsc 0 erreur dans src/.
+- Commit : 921af07
+
+Stage Summary:
+- Interface nettement plus riche et vivante : hero cinématique, méga-menu magazine avec vignettes, cascades partout, micro-interactions sur toutes les cartes, citation/newsletter/trust-band ornés
+- Le Flash info défile désormais DANS TOUS LES CAS (même avec animations système réduites) — cause racine du retour utilisateur traitée
+- Menu enrichi sur tous les supports : mega-menu desktop (vignettes, description, compteurs), mobile structuré en deux sections animées
