@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Clock, Eye, Feather, Mail, Newspaper } from 'lucide-react'
+import { Clock, Eye, Feather, Hash, Mail, Newspaper } from 'lucide-react'
 import { db } from '@/lib/db'
 import { getFeaturedArticle, getPublishedArticles, getVisibleCategories, publicVisibilityWhere } from '@/lib/public-queries'
 import { ArticleCard, ArticleCardLarge, ArticleCardRow, CategoryBadge } from '@/components/site/article-card'
@@ -7,8 +7,9 @@ import { Reveal, Stagger, StaggerItem } from '@/components/site/reveal'
 import { HeroUne } from '@/components/site/hero-une'
 import { AnimatedCounter } from '@/components/site/animated-counter'
 import { NewsletterForm } from '@/components/site/newsletter-form'
+import { FlashLive, type FlashItem } from '@/components/site/flash-live'
 import { getSettings } from '@/lib/settings'
-import { formatDateFr, timeAgoFr } from '@/lib/shared'
+import { timeAgoFr } from '@/lib/shared'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,6 +22,14 @@ export default async function HomePage() {
   const latest = await getPublishedArticles({ perPage: 24 })
   const reportages = latest.items.filter((a) => a.format === 'REPORTAGE' || a.format === 'PORTFOLIO')
 
+  // Mots-clés populaires pour le bandeau défilant « Sujets d'actualité »
+  const popularTags = await db.tag.findMany({
+    where: { articles: { some: { article: publicVisibilityWhere() } } },
+    orderBy: { articles: { _count: 'desc' } },
+    take: 14,
+    include: { _count: { select: { articles: true } } },
+  })
+
   const rendered: React.ReactNode[] = []
 
   /* ---------- Flash info — marquee horizontal infini ---------- */
@@ -29,13 +38,13 @@ export default async function HomePage() {
      reste actif même en prefers-reduced-motion (contenu essentiel, cf. CSS). */
   const tickerItems = latest.items.slice(0, 6)
   if (settings.ticker_enabled !== 'false' && tickerItems.length >= 3) {
-    const tickerDur = Math.max(24, tickerItems.length * 8)
+    const tickerDur = Math.max(22, tickerItems.length * 7)
     rendered.push(
       <div key="ticker" className="ticker relative border-b border-border/60 bg-secondary/40">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 md:px-6">
           <span
-            className="sheen-host my-2 flex shrink-0 items-center gap-2 rounded-sm px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] shadow-sm"
-            style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
+            className="sheen-host my-2 flex shrink-0 items-center gap-2 rounded-sm px-2.5 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.18em] shadow-sm"
+            style={{ background: 'var(--brand)', color: '#ffffff' }}
           >
             {/* Point « en direct » pulsant */}
             <span className="live-dot h-1.5 w-1.5 rounded-full bg-white" aria-hidden="true" />
@@ -43,29 +52,33 @@ export default async function HomePage() {
           </span>
           <div className="ticker-mask min-w-0 flex-1 overflow-hidden" aria-label="Derniers titres">
             <div
-              className="ticker-track flex w-max items-center gap-12 py-2"
+              className="ticker-track flex w-max items-center gap-14 py-2.5"
               style={{ '--ticker-dur': `${tickerDur}s` } as React.CSSProperties}
             >
-              {[...tickerItems, ...tickerItems].map((a, i) => (
-                <Link
-                  key={`${a.id}-${i}`}
-                  href={`/article/${a.slug}`}
-                  className="group flex items-center gap-2.5 whitespace-nowrap text-[13px] text-foreground/80 transition-colors hover:text-brand"
-                  aria-hidden={i >= tickerItems.length}
-                  tabIndex={i >= tickerItems.length ? -1 : 0}
-                >
-                  <span
-                    className="h-1.5 w-1.5 shrink-0 rounded-full transition-transform duration-300 group-hover:scale-150"
-                    style={{
-                      background: ['var(--brand)', 'var(--brand-gold)', 'var(--brand-green)'][i % 3],
-                    }}
-                    aria-hidden="true"
-                  />
-                  <span className="font-medium">{a.title}</span>
-                  <span className="text-[11.5px] tabular-nums text-muted-foreground/70">{timeAgoFr(a.publishedAt)}</span>
-                  <span className="ml-6 h-1 w-1 rounded-full bg-border" aria-hidden="true" />
-                </Link>
-              ))}
+              {[...tickerItems, ...tickerItems].map((a, i) => {
+                const cat = a.categories[0]?.category
+                return (
+                  <Link
+                    key={`${a.id}-${i}`}
+                    href={`/article/${a.slug}`}
+                    className="group flex items-center gap-2.5 whitespace-nowrap text-[13.5px] text-foreground/80 transition-colors hover:text-brand"
+                    aria-hidden={i >= tickerItems.length}
+                    tabIndex={i >= tickerItems.length ? -1 : 0}
+                  >
+                    {cat && (
+                      <span
+                        className="rounded-sm px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.14em]"
+                        style={{ color: cat.color || 'var(--brand)', background: `${cat.color || 'var(--brand)'}14` }}
+                      >
+                        {cat.name}
+                      </span>
+                    )}
+                    <span className="font-medium">{a.title}</span>
+                    <span className="text-[11.5px] tabular-nums text-muted-foreground/70">{timeAgoFr(a.publishedAt)}</span>
+                    <span className="ml-8 h-1 w-1 rounded-full bg-border" aria-hidden="true" />
+                  </Link>
+                )
+              })}
             </div>
           </div>
         </div>
@@ -98,34 +111,25 @@ export default async function HomePage() {
     if (block.blockType === 'FIL_ACTU') {
       const items = latest.items
         .filter((a) => a.id !== featured?.id)
-        .slice(0, config.count ?? 6)
+        .slice(0, Math.max(config.count ?? 8, 8))
       if (!items.length) continue
+      // Données sérialisables pour le composant client (rotation + défilé)
+      const flashItems: FlashItem[] = items.map((a) => ({
+        id: a.id,
+        slug: a.slug,
+        title: a.title,
+        cover: a.coverImage,
+        cat: a.categories[0]?.category.name ?? null,
+        catColor: a.categories[0]?.category.color ?? null,
+        publishedAt: a.publishedAt ? a.publishedAt.toISOString() : null,
+      }))
       rendered.push(
-        <section key={block.id} className="border-y border-border/60 bg-secondary/30">
-          <div className="mx-auto max-w-6xl px-4 py-14 md:px-6">
-            <Reveal>
-              <div className="mb-8 flex items-baseline justify-between">
-                <div>
-                  <span className="eyebrow inline-flex items-center gap-2 text-brand">
-                    <span className="live-dot inline-block h-1.5 w-1.5 rounded-full bg-brand" aria-hidden="true" />
-                    En direct
-                  </span>
-                  <h2 className="tri-underline font-display text-2xl font-bold md:text-3xl">{config.title || 'L’actualité'}</h2>
-                </div>
-                <Link href="/archives" className="eyebrow text-muted-foreground transition-colors hover:text-foreground">
-                  Toutes les archives →
-                </Link>
-              </div>
-            </Reveal>
-            <Stagger className="grid gap-x-10 gap-y-6 md:grid-cols-2" gap={0.07}>
-              {items.map((a) => (
-                <StaggerItem key={a.id}>
-                  <ArticleCardRow article={a} />
-                </StaggerItem>
-              ))}
-            </Stagger>
-          </div>
-        </section>,
+        <FlashLive
+          key={block.id}
+          title={config.title || 'L’actualité'}
+          eyebrow={config.eyebrow || 'En direct'}
+          items={flashItems}
+        />,
       )
     }
 
@@ -265,6 +269,55 @@ export default async function HomePage() {
         </section>,
       )
     }
+  }
+
+  /* ---------- Bandeau défilant des mots-clés (sujets d'actualité) ---------- */
+  if (popularTags.length >= 4) {
+    const tagDur = Math.max(30, popularTags.length * 4)
+    const tagChips = popularTags.map((t) => (
+      <Link
+        key={t.id}
+        href={`/tag/${t.slug}`}
+        className="group inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-border/70 bg-card px-4 py-2 text-[13px] font-medium text-foreground/80 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/50 hover:text-brand hover:shadow-[0_10px_24px_-14px_rgba(224,35,16,0.55)]"
+      >
+        <Hash
+          className="h-3.5 w-3.5 transition-transform duration-300 group-hover:scale-125"
+          style={{ color: ['var(--brand)', 'var(--brand-gold)', 'var(--brand-green)'][t.name.length % 3] }}
+          aria-hidden="true"
+        />
+        {t.name}
+        <span className="rounded-full bg-secondary px-1.5 py-0.5 text-[10.5px] tabular-nums text-muted-foreground">
+          {t._count.articles}
+        </span>
+      </Link>
+    ))
+    rendered.push(
+      <section key="tags-marquee" className="relative overflow-hidden py-8" aria-label="Sujets d'actualité">
+        <div className="mx-auto max-w-6xl px-4 md:px-6">
+          <Reveal>
+            <div className="mb-5 flex items-center gap-4">
+              <span className="eyebrow whitespace-nowrap text-muted-foreground">Sujets d’actualité</span>
+              <span className="h-px flex-1 tri-gradient opacity-60" aria-hidden="true" />
+            </div>
+          </Reveal>
+          <div
+            className="marquee-host relative"
+            style={{
+              maskImage: 'linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%)',
+            }}
+          >
+            <div
+              className="marquee-x flex w-max items-center gap-4"
+              style={{ '--marquee-dur': `${tagDur}s` } as React.CSSProperties}
+            >
+              <div className="flex items-center gap-4">{tagChips}</div>
+              <div className="flex items-center gap-4" aria-hidden="true">{tagChips}</div>
+            </div>
+          </div>
+        </div>
+      </section>,
+    )
   }
 
   /* ---------- Bandeau de confiance (pré-footer, réglages §6.9) ---------- */

@@ -4,6 +4,7 @@ import { getSettings } from '@/lib/settings'
 import { getPublishedArticles, getVisibleCategories } from '@/lib/public-queries'
 import { BackToTop } from '@/components/site/back-to-top'
 import { MaintenanceScreen } from '@/components/site/maintenance-screen'
+import { ScrollProgress } from '@/components/site/scroll-progress'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,6 +41,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
   return (
     <div className="flex min-h-screen flex-col">
+      <ScrollProgress />
       <SiteHeader
         siteName={settings.site_name}
         slogan={settings.site_slogan}

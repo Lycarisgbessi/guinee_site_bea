@@ -2,9 +2,33 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, Menu, Search, X } from 'lucide-react'
+import {
+  Archive,
+  ArrowRight,
+  BookOpen,
+  Cpu,
+  GraduationCap,
+  Globe2,
+  HeartPulse,
+  Info,
+  Landmark,
+  LayoutGrid,
+  Leaf,
+  Mail,
+  Map as MapIcon,
+  Menu,
+  Newspaper,
+  Palette,
+  Search,
+  Shield,
+  Tags,
+  TrendingUp,
+  Trophy,
+  Users,
+  X,
+} from 'lucide-react'
 import { siteMonogram } from '@/lib/shared'
 import { ThemeToggle } from './theme-toggle'
 import { CommandPalette } from './command-palette'
@@ -19,6 +43,27 @@ export interface HeaderCategory {
 }
 
 const EASE = [0.21, 0.47, 0.32, 0.98] as const
+
+/* Icône de rubrique : déduite du nom/slug (aucune configuration requise) */
+function categoryIcon(
+  name: string,
+  slug: string,
+): ComponentType<{ className?: string; style?: React.CSSProperties }> {
+  const key = `${name} ${slug}`.toLowerCase()
+  if (/polit|institution|justice|assembl/.test(key)) return Landmark
+  if (/\u00e9con|econ|entreprise|affaire|finance|business/.test(key)) return TrendingUp
+  if (/soci\u00e9t|socie|societe|soci\u00e9/.test(key)) return Users
+  if (/cultur|art|musique|litt\u00e9r/.test(key)) return Palette
+  if (/sport/.test(key)) return Trophy
+  if (/intern|monde|g\u00e9opol|afrique|r\u00e9gion/.test(key)) return Globe2
+  if (/sant\u00e9|sante|m\u00e9dic/.test(key)) return HeartPulse
+  if (/environnement|nature|climat|agri/.test(key)) return Leaf
+  if (/tech|num\u00e9ri|science/.test(key)) return Cpu
+  if (/\u00e9duc|educ|formation|\u00e9cole/.test(key)) return GraduationCap
+  if (/s\u00e9cur|d\u00e9fense|fense/.test(key)) return Shield
+  if (/m\u00e9dia|media|presse/.test(key)) return Newspaper
+  return BookOpen
+}
 
 /* ------------------------------------------------------------------ */
 /* Item de rubrique du nav desktop : hover JS (délai de grâce) +       */
@@ -61,7 +106,6 @@ function CategoryNavItem({ category, active }: { category: HeaderCategory; activ
           aria-hidden="true"
         />
       </Link>
-
       {hasPanel && (
         <AnimatePresence>
           {open && (
@@ -80,7 +124,11 @@ function CategoryNavItem({ category, active }: { category: HeaderCategory; activ
                 <div className="grid grid-cols-[1fr_1.35fr]">
                   {/* Colonne description */}
                   <div className="border-r border-border/60 bg-secondary/30 p-5">
-                    <p className="eyebrow" style={{ color: accent }}>
+                    <p className="eyebrow flex items-center gap-2" style={{ color: accent }}>
+                      {(() => {
+                        const Icon = categoryIcon(category.name, category.slug)
+                        return <Icon className="h-4 w-4" aria-hidden="true" />
+                      })()}
                       {category.name}
                     </p>
                     {category.description && (
@@ -166,6 +214,104 @@ function SimpleNavLink({ href, label, active }: { href: string; label: string; a
         aria-hidden="true"
       />
     </Link>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/* Menu « Explorer » : pages transversales du site (rubriques,          */
+/* archives, mots-clés, plan, newsletter) dans un panneau animé.        */
+/* ------------------------------------------------------------------ */
+const EXPLORER_LINKS = [
+  { href: '/rubriques', label: 'Toutes les rubriques', desc: 'Le sommaire éditorial complet', Icon: LayoutGrid },
+  { href: '/archives', label: 'Archives', desc: 'Parcourir par date et rubrique', Icon: Archive },
+  { href: '/tags', label: 'Mots-clés', desc: 'Explorer par sujet', Icon: Tags },
+  { href: '/plan-du-site', label: 'Plan du site', desc: 'Vue d’ensemble de la plateforme', Icon: MapIcon },
+  { href: '/newsletter', label: 'Newsletter', desc: 'Recevoir nos enquêtes par email', Icon: Mail },
+]
+
+function ExplorerNavItem({ active }: { active: boolean }) {
+  const [open, setOpen] = useState(false)
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const enter = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current)
+    setOpen(true)
+  }
+  const leave = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current)
+    closeTimer.current = setTimeout(() => setOpen(false), 170)
+  }
+  useEffect(() => () => void (closeTimer.current && clearTimeout(closeTimer.current)), [])
+
+  return (
+    <div className="relative" onMouseEnter={enter} onMouseLeave={leave}>
+      <button
+        className={`block rounded-sm px-3 py-2 text-[13.5px] font-medium transition-colors ${
+          active || open ? 'text-foreground' : 'text-foreground/75'
+        }`}
+        onFocus={enter}
+        onBlur={leave}
+        aria-haspopup="menu"
+        aria-expanded={open}
+      >
+        Explorer
+        <span
+          className="absolute inset-x-3 bottom-0 h-0.5 origin-left rounded-full tri-gradient transition-transform duration-300 ease-out"
+          style={{ transform: open ? 'scaleX(1)' : 'scaleX(0)' }}
+          aria-hidden="true"
+        />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.985 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 6, scale: 0.99 }}
+            transition={{ duration: 0.22, ease: EASE }}
+            className="absolute left-1/2 top-full z-50 w-[340px] -translate-x-1/2 pt-3"
+            role="menu"
+            aria-label="Explorer le site"
+          >
+            <div className="overflow-hidden rounded-lg border border-border/70 bg-background shadow-[0_24px_60px_-24px_rgba(0,0,0,0.4)]">
+              <div className="tri-bar h-[3px]" aria-hidden="true" />
+              <motion.div
+                className="p-2"
+                initial="hidden"
+                animate="show"
+                variants={{ hidden: {}, show: { transition: { staggerChildren: 0.045, delayChildren: 0.06 } } }}
+              >
+                {EXPLORER_LINKS.map(({ href, label, desc, Icon }) => (
+                  <motion.div
+                    key={href}
+                    variants={{
+                      hidden: { opacity: 0, x: 12 },
+                      show: { opacity: 1, x: 0, transition: { duration: 0.32, ease: EASE } },
+                    }}
+                  >
+                    <Link
+                      href={href}
+                      className="group flex items-start gap-3 rounded-md p-2.5 transition-colors hover:bg-secondary/60"
+                    >
+                      <span
+                        className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-secondary transition-all duration-300 group-hover:bg-brand/10"
+                        aria-hidden="true"
+                      >
+                        <Icon className="h-4 w-4 text-foreground/70 transition-colors group-hover:text-brand" />
+                      </span>
+                      <span>
+                        <span className="block text-[13.5px] font-semibold text-foreground/90 transition-colors group-hover:text-brand">
+                          {label}
+                        </span>
+                        <span className="block text-[12px] text-muted-foreground">{desc}</span>
+                      </span>
+                    </Link>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }
 
@@ -284,11 +430,21 @@ export function SiteHeader({
 
             {/* Séparateur + liens éditoriaux permanents */}
             <span className="mx-2.5 hidden h-5 w-px bg-border/70 xl:block" aria-hidden="true" />
+            <ExplorerNavItem active={pathname.startsWith('/rubriques') || pathname.startsWith('/archives') || pathname.startsWith('/tags') || pathname.startsWith('/plan-du-site') || pathname.startsWith('/newsletter')} />
             <SimpleNavLink href="/a-propos" label="À propos" active={pathname === '/a-propos'} />
             <SimpleNavLink href="/contact" label="Contact" active={pathname === '/contact'} />
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
+            {/* Bouton S'abonner doré (desktop) */}
+            <Link
+              href="/newsletter"
+              className="sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-bold uppercase tracking-[0.12em] text-[#231a02] shadow-md transition-all duration-300 hover:scale-[1.04] hover:shadow-lg active:scale-95 lg:inline-flex"
+              style={{ background: 'linear-gradient(120deg, var(--brand-gold), var(--brand-gold-deep))' }}
+            >
+              <Mail className="h-3.5 w-3.5" aria-hidden="true" />
+              S’abonner
+            </Link>
             <button
               onClick={() => setPaletteOpen(true)}
               aria-label="Rechercher (Ctrl+K)"
@@ -324,41 +480,49 @@ export function SiteHeader({
                 <p className="eyebrow px-3 pb-1 pt-2 text-muted-foreground">Rubriques</p>
                 <motion.div variants={mobileItem}>
                   <Link href="/" className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium hover:bg-secondary">
-                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'var(--brand)' }} aria-hidden="true" />
+                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-secondary" aria-hidden="true">
+                      <LayoutGrid className="h-3.5 w-3.5 text-foreground/70" />
+                    </span>
                     Accueil
                   </Link>
                 </motion.div>
-                {categories.map((c) => (
-                  <motion.div key={c.slug} variants={mobileItem}>
-                    <Link
-                      href={`/rubrique/${c.slug}`}
-                      className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium hover:bg-secondary"
-                    >
-                      <span
-                        className="h-1.5 w-1.5 rounded-full"
-                        style={{ background: c.color || 'var(--brand)' }}
-                        aria-hidden="true"
-                      />
-                      {c.name}
-                      {typeof c.count === 'number' && (
-                        <span className="ml-auto text-[11px] text-muted-foreground">{c.count}</span>
-                      )}
-                    </Link>
-                  </motion.div>
-                ))}
+                {categories.map((c) => {
+                  const CatIcon = categoryIcon(c.name, c.slug)
+                  return (
+                    <motion.div key={c.slug} variants={mobileItem}>
+                      <Link
+                        href={`/rubrique/${c.slug}`}
+                        className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium hover:bg-secondary"
+                      >
+                        <span
+                          className="flex h-7 w-7 items-center justify-center rounded-md"
+                          style={{ background: `${c.color || 'var(--brand)'}14` }}
+                          aria-hidden="true"
+                        >
+                          <CatIcon className="h-3.5 w-3.5" style={{ color: c.color || 'var(--brand)' }} />
+                        </span>
+                        {c.name}
+                        {typeof c.count === 'number' && (
+                          <span className="ml-auto text-[11px] text-muted-foreground">{c.count}</span>
+                        )}
+                      </Link>
+                    </motion.div>
+                  )
+                })}
 
                 <div className="my-2.5 border-t border-border/60" />
                 <p className="eyebrow px-3 pb-1 pt-1 text-muted-foreground">Explorer</p>
                 {[
-                  { href: '/rubriques', label: 'Toutes les rubriques' },
-                  { href: '/archives', label: 'Archives' },
-                  { href: '/tags', label: 'Mots-clés' },
-                  { href: '/a-propos', label: 'À propos' },
-                  { href: '/contact', label: 'Contact' },
-                ].map((l) => (
-                  <motion.div key={l.href} variants={mobileItem}>
-                    <Link href={l.href} className="block rounded-md px-3 py-2.5 text-sm hover:bg-secondary">
-                      {l.label}
+                  { href: '/rubriques', label: 'Toutes les rubriques', Icon: LayoutGrid },
+                  { href: '/archives', label: 'Archives', Icon: Archive },
+                  { href: '/tags', label: 'Mots-clés', Icon: Tags },
+                  { href: '/a-propos', label: 'À propos', Icon: Info },
+                  { href: '/contact', label: 'Contact', Icon: Mail },
+                ].map(({ href, label, Icon }) => (
+                  <motion.div key={href} variants={mobileItem}>
+                    <Link href={href} className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm hover:bg-secondary">
+                      <Icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                      {label}
                     </Link>
                   </motion.div>
                 ))}

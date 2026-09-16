@@ -309,13 +309,19 @@
   /* EXCEPTION — le ticker Flash info est du CONTENU essentiel, pas une décoration :
      il défile même avec animations réduites, mais deux fois plus lentement, et
      reste pausable au survol/clavier (atténuation WCAG 2.3.3 correcte). */
-  .ticker-track {
-    animation-duration: calc(var(--ticker-dur, 42s) * 2) !important;
+  .ticker-track,
+  .marquee-x,
+  .flash-feed-track {
+    animation-duration: calc(var(--ticker-dur, var(--marquee-dur, var(--feed-dur, 42s))) * 2) !important;
     animation-iteration-count: infinite !important;
     animation-play-state: running !important;
   }
   .ticker:hover .ticker-track,
-  .ticker:focus-within .ticker-track {
+  .ticker:focus-within .ticker-track,
+  .marquee-host:hover .marquee-x,
+  .marquee-host:focus-within .marquee-x,
+  .flash-feed:hover .flash-feed-track,
+  .flash-feed:focus-within .flash-feed-track {
     animation-play-state: paused !important;
   }
 }
@@ -353,10 +359,58 @@
 .ticker:focus-within .ticker-track {
   animation-play-state: paused;
 }
+/* Variante générique horizontale (bandeau de mots-clés, cartes…) */
+.marquee-x {
+  animation: ticker-scroll var(--marquee-dur, 46s) linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+.marquee-host:hover .marquee-x,
+.marquee-host:focus-within .marquee-x {
+  animation-play-state: paused;
+}
+/* Feed vertical « en direct » : défilement continu vers le haut */
+@keyframes feed-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, -50%, 0); }
+}
+.flash-feed-track {
+  animation: feed-scroll var(--feed-dur, 34s) linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+.flash-feed:hover .flash-feed-track,
+.flash-feed:focus-within .flash-feed-track {
+  animation-play-state: paused;
+}
+/* Masque vertical doux (fondu haut/bas du feed) */
+.feed-mask {
+  mask-image: linear-gradient(180deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
 /* Fondu doux des bords du bandeau (masque horizontal) */
 .ticker-mask {
   mask-image: linear-gradient(90deg, transparent 0, #000 3.5%, #000 96.5%, transparent 100%);
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3.5%, #000 96.5%, transparent 100%);
+}
+
+/* ---------- Zoom Ken Burns (image de la carte « Dernière minute ») ---------- */
+@keyframes ken-burns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.14) translate(-1.5%, -2%); }
+}
+.ken-burns {
+  animation: ken-burns var(--kb-dur, 7s) ease-out forwards;
+  will-change: transform;
+}
+
+/* ---------- Barre de progression de la rotation « Dernière minute » ---------- */
+@keyframes flash-progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+.flash-progress {
+  animation: flash-progress var(--flash-dur, 5.5s) linear forwards;
 }
 
 /* ---------- Soulignement animé des titres de cartes ---------- */
