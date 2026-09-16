@@ -148,3 +148,31 @@ Stage Summary:
 - Site entièrement rebrandisé Guinée+ de façon fidèle (logo officiel, palette officielle, coordonnées officielles)
 - Aucune mention de l'ancienne marque dans le rendu
 - À confirmer par l'utilisatrice : fin du slogan (tronqué dans la capture, j'ai mis « en continu »), adresse Facebook exacte, email (contact@guineeplus.com supposé), et si besoin renommer le compte admin
+
+---
+Task ID: 8
+Agent: Super Z (agent principal)
+Task: Guinéanisation complète (contenu + images), palette officielle partout, ticker défilant, menu À propos/Contact, animations premium
+
+Work Log:
+- Recherche d'images réelles de Guinée (skill image-search, 13 requêtes), téléchargement et normalisation PIL (1800px max, JPEG q82) → public/uploads/guinee/ (25 candidats)
+- Vérification visuelle image par image : rejet des hors-sujets (marché indien, école Pacifique, resort européen, rendu 3D, diagrammes, bousculade sensible) et des filigranes lourds → 17 images retenues et créditées (« Photo d'illustration : <source> »)
+- Contenus réécrits en base (scripts/guinee-migrate.js + guinee-data-part1/2.js, idempotents) : 13 articles seed réécrits + 1 créé (Tabaski à Conakry) — titres, chapôs, corps Tiptap complets (inter-titres, citations, listes), SEO, crédits, temps de lecture, featured (bauxite Sangarédi)
+- Rubriques : International→Économie & Mines (economie-mines), Sciences & Tech→Sports, Culture & Médias→Culture ; descriptions, couleurs et covers locales ; doublon d'article (ancien cantine-scolaire) supprimé
+- Tags : 20 nouveaux (Bauxite, Simandou, Conakry, Fouta Djallon, Vie chère, Tabaski…), reliaison par article
+- Pages CMS réécrites : À propos (mission, ligne éditoriale, rédaction Conakry, standards, contact — hero Fouta Djallon), mentions légales et confidentialité adaptées à la Guinée
+- Réglages : ticker_label « Flash info », site_slogan « Toute la Guinée, en continu » (clé site_slogan, pas slogan — piège corrigé), trust_title/subtitle, newsletter_intro ; avatar picsum de l'autrice retiré (fallback conditionnel OK)
+- Médiathèque : 17 médias guinéens (dimensions, taille, alt) remplacent les 8 picsum
+- Palette officielle dans toute l'interface (globals.css refondu) : blanc dominant, --primary rouge profond AA (#E02310 dérivé), --brand-deep/green-deep/gold-deep ajoutés, mode sombre rouge vif ; barre tricolore signature .tri-bar (header, footer, trust band), .tri-underline sous les titres de section, pastilles de couleur des rubriques
+- Ticker Flash info : marquee robuste (translate3d + will-change, 42 s, pause hover), point « en direct » pulsant, puces tricolores alternées — défilement vérifié au navigateur (~71 px/s mesurés, track 6452 px)
+- Menu : À propos + Contact ajoutés au nav desktop (séparateur + underline tricolore animé) et au menu mobile ; états actifs rouges vérifiés sur /a-propos et /contact
+- Animations ajoutées : AnimatedCounter (compteurs trust band, easeOutExpo, respect reduced-motion), card-lift (translation + ombre) sur les cartes, barre tricolore glissante sur les grandes cartes, transition de page (template.tsx), micro-interactions boutons newsletter — en plus des Reveal/zooms/header shrink/reading progress existants
+- Corrections d'affichage : badge « À la une » déplacé dans le flux (fin du chevauchement avec le titre), titre hero clampé à 3 lignes (md:text-4xl), espacement badge/rubrique
+- Qualité : 0 erreur tsc dans src/, 0 erreur lint (scripts/ exclus du scope eslint), traces picsum/Nantes éradiquées du rendu (faux positif « environnantes » documenté)
+- Commit : 7c28383
+
+Stage Summary:
+- Le site est un vrai média guinéen : 14 articles sujets guinéens (bauxite, Simandou, Conakry, Fouta, Îles de Los, Tabaski, Syli féminin…), images réelles créditées, 6 rubriques nationales, pages CMS guinéennes
+- Identité visuelle officielle déployée partout : rouge/or/vert/blanc du logo (barres tricolores signature, soulignements, pastilles, dashboard rouge), blanc premium
+- Flash info défile horizontalement (mesuré), menu complet (À propos + Contact), animations riches partout
+- Scripts réutilisables : scripts/dl-guinee-images.py, guinee-migrate.js (+ données part1/part2) — relançables après un re-seed
