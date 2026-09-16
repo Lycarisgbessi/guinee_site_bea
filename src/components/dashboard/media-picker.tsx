@@ -84,7 +84,7 @@ export function MediaPicker({
                 title={m.alt || m.filename}
               >
                 {m.type === 'IMAGE' ? (
-                  // eslint-disable-next-line @next/next/no-img-element
+                   
                   <img src={m.url} alt={m.alt || ''} className="h-20 w-full object-cover transition-transform group-hover:scale-105" loading="lazy" />
                 ) : (
                   <div className="flex h-20 w-full items-center justify-center bg-secondary text-[11px] font-medium">{m.type}</div>

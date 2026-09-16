@@ -5,7 +5,7 @@
  */
 import { Fragment } from 'react'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type Node = any
 
 function nodeText(node: Node): string {
@@ -79,7 +79,7 @@ function HeadingAnchor({
   keyPrefix,
   children,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   Tag: any
   node: Node
   keyPrefix: string
@@ -149,7 +149,7 @@ function renderNode(node: Node, key: string): React.ReactNode {
       const credit = node.attrs?.credit
       return (
         <figure key={key}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+          { }
           <img src={src} alt={node.attrs?.alt ?? ''} loading="lazy" className="w-full rounded-md" />
           {(caption || credit) && (
             <figcaption>

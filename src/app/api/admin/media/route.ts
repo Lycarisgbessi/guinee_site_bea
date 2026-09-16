@@ -12,7 +12,7 @@ export async function GET(req: Request) {
   const type = searchParams.get('type') || undefined
   const q = searchParams.get('q') || undefined
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const where: any = {}
   if (type) where.type = type
   if (q) where.OR = [{ filename: { contains: `%${q}%` } }, { alt: { contains: `%${q}%` } }]

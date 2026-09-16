@@ -116,7 +116,7 @@ export default function PagesPage() {
     } else toast.error(data.error)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const [editDoc, setEditDoc] = useState<any>(null)
 
   function openEditor(p: PageRow) {
@@ -200,7 +200,7 @@ export default function PagesPage() {
               <div className="flex items-center gap-2">
                 {editing.heroImage ? (
                   <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    { }
                     <img src={editing.heroImage} alt="" className="h-14 w-24 rounded-md object-cover" />
                     <button onClick={() => setEditing({ ...editing, heroImage: '' })} className="text-xs text-destructive hover:underline">
                       Retirer

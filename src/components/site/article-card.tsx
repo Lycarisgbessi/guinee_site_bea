@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Clock } from 'lucide-react'
+import { ArrowRight, Clock } from 'lucide-react'
 
 import { FORMAT_LABELS, formatDateShortFr } from '@/lib/shared'
 import type { ArticleCardData } from '@/lib/public-queries'
@@ -57,15 +57,20 @@ function Meta({ article, className = '' }: { article: ArticleCardData; className
 export function ArticleCardRow({ article }: { article: ArticleCardData }) {
   const cat = firstCategory(article)
   return (
-    <article className="card-lift group grid grid-cols-[110px_1fr] gap-4 rounded-md border-b border-border/60 pb-5 sm:grid-cols-[160px_1fr]">
+    <article className="card-lift group relative grid grid-cols-[110px_1fr] gap-4 rounded-md border-b border-border/60 pb-5 pl-3 sm:grid-cols-[160px_1fr]">
+      {/* Accent tricolore latéral qui grandit au survol */}
+      <span
+        className="absolute left-0 top-1 bottom-4 w-[3px] origin-top scale-y-0 rounded-full tri-gradient transition-transform duration-500 ease-out group-hover:scale-y-100"
+        aria-hidden="true"
+      />
       <Link href={`/article/${article.slug}`} className="block overflow-hidden rounded-md" tabIndex={-1} aria-hidden="true">
         {article.coverImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
+           
           <img
             src={article.coverImage}
             alt=""
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.07]"
             style={{ aspectRatio: '4/3' }}
           />
         ) : (
@@ -75,7 +80,7 @@ export function ArticleCardRow({ article }: { article: ArticleCardData }) {
       <div className="min-w-0">
         {cat && <CategoryBadge {...cat} />}
         <h3 className="mt-1 font-display text-[17px] font-semibold leading-snug">
-          <Link href={`/article/${article.slug}`} className="transition-colors group-hover:text-brand">
+          <Link href={`/article/${article.slug}`} className="title-underline transition-colors group-hover:text-brand">
             {article.title}
           </Link>
         </h3>
@@ -92,22 +97,27 @@ export function ArticleCard({ article, priority = false }: { article: ArticleCar
     <article className="card-lift group flex h-full flex-col rounded-md">
       <Link href={`/article/${article.slug}`} className="relative block overflow-hidden rounded-md" tabIndex={-1} aria-hidden="true">
         {article.coverImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
+           
           <img
             src={article.coverImage}
             alt=""
             loading={priority ? 'eager' : 'lazy'}
-            className="w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+            className="w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
             style={{ aspectRatio: '16/10' }}
           />
         ) : (
           <div className="w-full bg-secondary" style={{ aspectRatio: '16/10' }} />
         )}
+        {/* Barre tricolore qui glisse en bas de l'image */}
+        <span
+          className="absolute inset-x-0 bottom-0 h-[3px] origin-left scale-x-0 tri-gradient transition-transform duration-500 ease-out group-hover:scale-x-100"
+          aria-hidden="true"
+        />
       </Link>
       <div className="flex flex-1 flex-col pt-4">
         {cat && <CategoryBadge {...cat} />}
         <h3 className="mt-1.5 font-display text-[20px] font-semibold leading-snug">
-          <Link href={`/article/${article.slug}`} className="transition-colors group-hover:text-brand">
+          <Link href={`/article/${article.slug}`} className="title-underline transition-colors group-hover:text-brand">
             {article.title}
           </Link>
         </h3>
@@ -115,6 +125,10 @@ export function ArticleCard({ article, priority = false }: { article: ArticleCar
           <p className="mt-2 line-clamp-2 text-[14px] leading-relaxed text-muted-foreground">{article.chapo}</p>
         )}
         <Meta article={article} className="mt-3 pt-1" />
+        {/* Lien « Lire » révélé au survol (desktop) */}
+        <span className="mt-auto inline-flex translate-y-1 items-center gap-1.5 pt-3 text-[12px] font-bold uppercase tracking-[0.14em] text-brand opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          Lire l’article <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
+        </span>
       </div>
     </article>
   )
@@ -131,7 +145,7 @@ export function ArticleCardLarge({ article }: { article: ArticleCardData }) {
         aria-hidden="true"
       />
       {article.coverImage ? (
-        // eslint-disable-next-line @next/next/no-img-element
+         
         <img
           src={article.coverImage}
           alt=""
@@ -149,7 +163,7 @@ export function ArticleCardLarge({ article }: { article: ArticleCardData }) {
           </span>
         )}
         <h3 className="mt-1.5 font-display text-[22px] font-bold leading-tight">
-          <Link href={`/article/${article.slug}`} className="hover:underline">
+          <Link href={`/article/${article.slug}`} className="title-underline">
             {article.title}
           </Link>
         </h3>
@@ -157,6 +171,12 @@ export function ArticleCardLarge({ article }: { article: ArticleCardData }) {
           {article.publishedAt && <time>{formatDateShortFr(article.publishedAt)}</time>}
           <span className="inline-flex items-center gap-1">
             <Clock className="h-3 w-3" /> {article.readingTime} min
+          </span>
+          <span
+            className="ml-auto inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/15 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:translate-x-1 group-hover:bg-white/25 group-hover:opacity-100"
+            aria-hidden="true"
+          >
+            <ArrowRight className="h-4 w-4" />
           </span>
         </div>
       </div>

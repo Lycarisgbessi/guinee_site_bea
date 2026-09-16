@@ -29,14 +29,14 @@ export default async function CmsPage({ params }: Props) {
   const { slug } = await params
   const page = await getPage(slug)
   if (!page) notFound()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const doc = JSON.parse(page.contentJson || '{}')
 
   return (
     <div className="pb-16">
       {page.heroImage && (
         <div className="relative h-[300px] overflow-hidden md:h-[380px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+          { }
           <img src={page.heroImage} alt="" className="absolute inset-0 h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/10" />
           <div className="absolute bottom-0 left-0 right-0">

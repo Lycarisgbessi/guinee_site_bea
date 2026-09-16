@@ -30,7 +30,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         color: c.color,
         description: c.description,
         count: c._count.articles,
-        latest: items.map((a) => ({ title: a.title, slug: a.slug })),
+        latest: items.map((a) => ({ title: a.title, slug: a.slug, image: a.coverImage })),
       }
     }),
   )

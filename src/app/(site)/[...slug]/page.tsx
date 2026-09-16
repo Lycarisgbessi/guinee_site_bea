@@ -24,7 +24,7 @@ export default async function CatchAllPage({ params }: Props) {
   // 2. Page CMS publiée ?
   const page = await db.page.findFirst({ where: { slug: slug[slug.length - 1], published: true } })
   if (page) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const doc = JSON.parse(page.contentJson || '{}')
     return (
       <div className="mx-auto max-w-4xl px-4 py-12 md:px-6">

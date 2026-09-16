@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AboutPage() {
   const page = await db.page.findFirst({ where: { slug: 'a-propos', published: true } })
   if (!page) notFound()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const doc = JSON.parse(page.contentJson || '{}')
 
   return (
@@ -27,7 +27,7 @@ export default async function AboutPage() {
       {/* Hero pleine largeur */}
       {page.heroImage && (
         <div className="relative flex h-[340px] items-end overflow-hidden md:h-[440px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+          { }
           <img src={page.heroImage} alt="" className="absolute inset-0 h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
           <div className="relative mx-auto w-full max-w-6xl px-4 pb-10 md:px-6">

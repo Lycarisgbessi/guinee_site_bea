@@ -135,7 +135,7 @@ export default function HomepageConfigPage() {
 
       <Reorder.Group as="ol" axis="y" values={blocks} onReorder={persist} className="space-y-3">
         {blocks.map((block) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           const config: any = JSON.parse(block.configJson || '{}')
           return (
             <Reorder.Item

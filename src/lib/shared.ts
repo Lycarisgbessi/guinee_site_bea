@@ -36,11 +36,11 @@ export function readingTime(text: string): number {
 }
 
 /** Extrait le texte brut d'un document Tiptap JSON */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export function tiptapToText(doc: any): string {
   if (!doc || typeof doc !== 'object') return ''
   let out = ''
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const walk = (node: any) => {
     if (!node) return
     if (node.type === 'text' && node.text) out += node.text + ' '
@@ -70,6 +70,28 @@ export function formatDateShortFr(date: Date | string | null | undefined): strin
   if (!date) return ''
   const d = typeof date === 'string' ? new Date(date) : date
   return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
+}
+
+/**
+ * Temps relatif en français (« à l'instant », « il y a 2 h », « hier », …).
+ * Utilisé sur le fil d'actualité et le ticker pour donner une sensation « en direct ».
+ * Au-delà de 48 h, on retombe sur la date courte — tout est calculé au rendu (force-dynamic).
+ */
+export function timeAgoFr(date: Date | string | null | undefined): string {
+  if (!date) return ''
+  const d = typeof date === 'string' ? new Date(date) : date
+  const diff = Date.now() - d.getTime()
+  if (diff < 0) return formatDateShortFr(d)
+  const min = Math.floor(diff / 60_000)
+  if (min < 1) return 'à l’instant'
+  if (min < 60) return `il y a ${min} min`
+  const h = Math.floor(min / 60)
+  if (h < 24) return `il y a ${h} h`
+  const days = Math.floor(h / 24)
+  if (days === 1) return 'hier'
+  if (days === 2) return 'avant-hier'
+  if (days < 7) return `il y a ${days} jours`
+  return formatDateShortFr(d)
 }
 
 /** Nom du format d'article */

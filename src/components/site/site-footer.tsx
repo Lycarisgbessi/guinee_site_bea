@@ -39,7 +39,7 @@ export function SiteFooter({ data }: { data: FooterData }) {
         <div>
           <div className="flex items-center gap-2.5">
             {data.logoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
+               
               <img src={data.logoUrl} alt={`${data.siteName} — logo`} className="h-9 w-auto max-w-[180px] object-contain" />
             ) : (
               <span
@@ -61,7 +61,7 @@ export function SiteFooter({ data }: { data: FooterData }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/70 text-foreground/70 transition-colors hover:border-brand hover:text-brand"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/70 text-foreground/70 transition-all duration-300 hover:-translate-y-1 hover:border-brand hover:bg-brand/5 hover:text-brand"
                 >
                   <Icon className="h-4 w-4" />
                 </a>
@@ -75,7 +75,14 @@ export function SiteFooter({ data }: { data: FooterData }) {
           <ul className="space-y-2.5 text-sm">
             {data.categories.map((c) => (
               <li key={c.slug}>
-                <Link href={`/rubrique/${c.slug}`} className="text-foreground/80 transition-colors hover:text-brand">
+                <Link
+                  href={`/rubrique/${c.slug}`}
+                  className="group inline-flex items-center gap-2 text-foreground/80 transition-colors hover:text-brand"
+                >
+                  <span
+                    className="h-1 w-1 rounded-full bg-foreground/30 transition-all duration-300 group-hover:w-3 group-hover:bg-brand"
+                    aria-hidden="true"
+                  />
                   {c.name}
                 </Link>
               </li>
@@ -86,13 +93,13 @@ export function SiteFooter({ data }: { data: FooterData }) {
         <nav aria-label="Liens utiles du footer">
           <h3 className="eyebrow mb-4 text-muted-foreground">Le média</h3>
           <ul className="space-y-2.5 text-sm">
-            <li><Link href="/a-propos" className="text-foreground/80 hover:text-brand">À propos</Link></li>
-            <li><Link href="/contact" className="text-foreground/80 hover:text-brand">Contact & proposer un sujet</Link></li>
-            <li><Link href="/archives" className="text-foreground/80 hover:text-brand">Archives</Link></li>
-            <li><Link href="/tags" className="text-foreground/80 hover:text-brand">Mots-clés</Link></li>
-            <li><Link href="/newsletter" className="text-foreground/80 hover:text-brand">Newsletter</Link></li>
-            <li><a href="/api/rss" className="text-foreground/80 hover:text-brand">Flux RSS</a></li>
-            <li><Link href="/plan-du-site" className="text-foreground/80 hover:text-brand">Plan du site</Link></li>
+            <li><Link href="/a-propos" className="transition-colors hover:text-brand text-foreground/80">À propos</Link></li>
+            <li><Link href="/contact" className="transition-colors hover:text-brand text-foreground/80">Contact & proposer un sujet</Link></li>
+            <li><Link href="/archives" className="transition-colors hover:text-brand text-foreground/80">Archives</Link></li>
+            <li><Link href="/tags" className="transition-colors hover:text-brand text-foreground/80">Mots-clés</Link></li>
+            <li><Link href="/newsletter" className="transition-colors hover:text-brand text-foreground/80">Newsletter</Link></li>
+            <li><a href="/api/rss" className="transition-colors hover:text-brand text-foreground/80">Flux RSS</a></li>
+            <li><Link href="/plan-du-site" className="transition-colors hover:text-brand text-foreground/80">Plan du site</Link></li>
           </ul>
         </nav>
 

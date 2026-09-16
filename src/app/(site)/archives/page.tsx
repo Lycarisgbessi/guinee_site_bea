@@ -6,6 +6,7 @@ import { db } from '@/lib/db'
 import { publicVisibilityWhere } from '@/lib/public-queries'
 import { ArticleCardRow } from '@/components/site/article-card'
 import { Breadcrumb } from '@/components/site/breadcrumb'
+import { Stagger, StaggerItem } from '@/components/site/reveal'
 import { Pagination } from '@/components/site/pagination'
 import { formatDateShortFr } from '@/lib/shared'
 
@@ -123,21 +124,21 @@ export default async function ArchivesPage({ searchParams }: Props) {
         ))}
       </div>
 
-      <div className="mt-8 space-y-6">
+      <Stagger className="mt-8 space-y-6" gap={0.06}>
         {items.map((a) => (
-          <div key={a.id}>
+          <StaggerItem key={a.id}>
             <p className="mb-1.5 text-xs uppercase tracking-[0.14em] text-muted-foreground">
               {a.publishedAt ? formatDateShortFr(a.publishedAt) : ''}
             </p>
             <ArticleCardRow article={a as never} />
-          </div>
+          </StaggerItem>
         ))}
         {items.length === 0 && (
           <p className="rounded-lg border border-dashed border-border p-10 text-center font-display text-xl italic text-muted-foreground">
             Aucun article pour cette période.
           </p>
         )}
-      </div>
+      </Stagger>
 
       <div className="mt-10">
         <Pagination

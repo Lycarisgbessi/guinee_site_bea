@@ -17,7 +17,7 @@ export async function GET(req: Request) {
   const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1)
   const perPage = 20
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const where: any = trash ? { deletedAt: { not: null } } : { deletedAt: null }
   if (status) where.status = status
   if (q) where.OR = [{ title: { contains: `%${q}%` } }, { slug: { contains: `%${q}%` } }]

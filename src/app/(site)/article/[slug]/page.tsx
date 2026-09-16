@@ -69,7 +69,7 @@ export default async function ArticlePage({ params }: Props) {
   const isLong = article.format === 'REPORTAGE' || article.format === 'PORTFOLIO'
   const cat = article.categories[0]?.category
   const related = await getRelatedArticles(article.id, article.categories.map((c) => c.categoryId), 3)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const doc = JSON.parse(article.contentJson || '{}')
   const toc = extractToc(doc)
 
@@ -126,7 +126,7 @@ export default async function ArticlePage({ params }: Props) {
             {article.author?.name && (
               <span className="flex items-center gap-2 font-medium text-foreground/85">
                 {article.author.avatar && (
-                  // eslint-disable-next-line @next/next/no-img-element
+                   
                   <img src={article.author.avatar} alt="" className="h-7 w-7 rounded-full object-cover" />
                 )}
                 {article.author.name}
@@ -151,7 +151,7 @@ export default async function ArticlePage({ params }: Props) {
         {/* Média de une */}
         {article.coverImage && (
           <figure className="mx-auto mt-10 max-w-6xl px-4 md:px-6">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            { }
             <img
               src={article.coverImage}
               alt={article.title}
@@ -205,7 +205,7 @@ export default async function ArticlePage({ params }: Props) {
               {article.author && (
                 <aside className="mt-8 flex flex-col gap-4 rounded-lg border border-border/70 bg-secondary/30 p-5 sm:flex-row sm:items-start">
                   {article.author.avatar ? (
-                    // eslint-disable-next-line @next/next/no-img-element
+                     
                     <img
                       src={article.author.avatar}
                       alt=""

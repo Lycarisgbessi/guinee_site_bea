@@ -185,7 +185,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
                         }`}
                       >
                         {r.coverImage ? (
-                          // eslint-disable-next-line @next/next/no-img-element
+                           
                           <img
                             src={r.coverImage}
                             alt=""

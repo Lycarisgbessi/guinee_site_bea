@@ -40,7 +40,7 @@ export default function EditArticlePage() {
     return <p className="py-16 text-center text-sm text-muted-foreground">Article introuvable.</p>
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const a = article as any
 
   return (

@@ -30,7 +30,7 @@ export default async function CategoriesPage() {
             >
               <div className="relative overflow-hidden">
                 {c.coverImage && (
-                  // eslint-disable-next-line @next/next/no-img-element
+                   
                   <img
                     src={c.coverImage}
                     alt=""

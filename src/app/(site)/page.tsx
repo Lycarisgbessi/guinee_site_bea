@@ -3,11 +3,12 @@ import { Clock, Eye, Feather, Mail, Newspaper } from 'lucide-react'
 import { db } from '@/lib/db'
 import { getFeaturedArticle, getPublishedArticles, getVisibleCategories, publicVisibilityWhere } from '@/lib/public-queries'
 import { ArticleCard, ArticleCardLarge, ArticleCardRow, CategoryBadge } from '@/components/site/article-card'
-import { Reveal } from '@/components/site/reveal'
+import { Reveal, Stagger, StaggerItem } from '@/components/site/reveal'
+import { HeroUne } from '@/components/site/hero-une'
 import { AnimatedCounter } from '@/components/site/animated-counter'
 import { NewsletterForm } from '@/components/site/newsletter-form'
 import { getSettings } from '@/lib/settings'
-import { formatDateFr } from '@/lib/shared'
+import { formatDateFr, timeAgoFr } from '@/lib/shared'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,38 +23,47 @@ export default async function HomePage() {
 
   const rendered: React.ReactNode[] = []
 
-  /* ---------- Fil direct (ticker) — marquee infini ---------- */
+  /* ---------- Flash info — marquee horizontal infini ---------- */
+  /* Durée proportionnelle au contenu (vitesse constante ~55 px/s), fondu
+     des bords, heure relative « en direct », pause au survol. Le défilement
+     reste actif même en prefers-reduced-motion (contenu essentiel, cf. CSS). */
   const tickerItems = latest.items.slice(0, 6)
   if (settings.ticker_enabled !== 'false' && tickerItems.length >= 3) {
+    const tickerDur = Math.max(24, tickerItems.length * 8)
     rendered.push(
       <div key="ticker" className="ticker relative border-b border-border/60 bg-secondary/40">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 md:px-6">
           <span
-            className="my-2 flex shrink-0 items-center gap-2 rounded-sm px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] shadow-sm"
+            className="sheen-host my-2 flex shrink-0 items-center gap-2 rounded-sm px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] shadow-sm"
             style={{ background: 'var(--brand)', color: 'var(--brand-foreground)' }}
           >
             {/* Point « en direct » pulsant */}
             <span className="live-dot h-1.5 w-1.5 rounded-full bg-white" aria-hidden="true" />
             {settings.ticker_label || 'Le fil'}
           </span>
-          <div className="min-w-0 flex-1 overflow-hidden" aria-label="Derniers titres">
-            <div className="ticker-track flex w-max items-center gap-10 py-2">
+          <div className="ticker-mask min-w-0 flex-1 overflow-hidden" aria-label="Derniers titres">
+            <div
+              className="ticker-track flex w-max items-center gap-12 py-2"
+              style={{ '--ticker-dur': `${tickerDur}s` } as React.CSSProperties}
+            >
               {[...tickerItems, ...tickerItems].map((a, i) => (
                 <Link
                   key={`${a.id}-${i}`}
                   href={`/article/${a.slug}`}
-                  className="flex items-center gap-2.5 whitespace-nowrap text-[13px] text-foreground/80 transition-colors hover:text-brand"
+                  className="group flex items-center gap-2.5 whitespace-nowrap text-[13px] text-foreground/80 transition-colors hover:text-brand"
                   aria-hidden={i >= tickerItems.length}
                   tabIndex={i >= tickerItems.length ? -1 : 0}
                 >
                   <span
-                    className="h-1.5 w-1.5 rounded-full"
+                    className="h-1.5 w-1.5 shrink-0 rounded-full transition-transform duration-300 group-hover:scale-150"
                     style={{
                       background: ['var(--brand)', 'var(--brand-gold)', 'var(--brand-green)'][i % 3],
                     }}
                     aria-hidden="true"
                   />
-                  {a.title}
+                  <span className="font-medium">{a.title}</span>
+                  <span className="text-[11.5px] tabular-nums text-muted-foreground/70">{timeAgoFr(a.publishedAt)}</span>
+                  <span className="ml-6 h-1 w-1 rounded-full bg-border" aria-hidden="true" />
                 </Link>
               ))}
             </div>
@@ -64,74 +74,24 @@ export default async function HomePage() {
   }
 
   for (const block of blocks) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const config: any = JSON.parse(block.configJson || '{}')
 
     if (block.blockType === 'HERO_UNE') {
       if (!featured) continue
       const secondary = latest.items.filter((a) => a.id !== featured.id).slice(0, config.secondaryCount ?? 4)
-      const cat = featured.categories[0]?.category
       rendered.push(
         <section key={block.id} className="mx-auto max-w-6xl px-4 pb-14 pt-8 md:px-6">
-          <div className="grid gap-8 lg:grid-cols-[7fr_5fr]">
-            <Reveal>
-              <article className="group relative overflow-hidden rounded-lg">
-                <Link href={`/article/${featured.slug}`} className="block">
-                  <div className="relative">
-                    {featured.coverImage && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={featured.coverImage}
-                        alt={featured.title}
-                        className="w-full object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.03]"
-                        style={{ aspectRatio: '16/9' }}
-                        loading="eager"
-                        fetchPriority="high"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white md:p-8">
-                    {/* Badge À la une (libellé configurable), dans le flux pour éviter tout chevauchement */}
-                    <span
-                      className="mb-3 mr-3 inline-block rounded-sm px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] text-white shadow-lg"
-                      style={{ background: 'var(--brand)' }}
-                    >
-                      {config.heroLabel || 'À la une'}
-                    </span>
-                    {cat && (
-                      <span className="eyebrow" style={{ color: cat.color || '#fff' }}>
-                        {cat.name}
-                      </span>
-                    )}
-                    <h1 className="mt-2 line-clamp-3 max-w-3xl font-display text-3xl font-bold leading-[1.12] md:text-4xl">
-                      {featured.title}
-                    </h1>
-                    {featured.chapo && (
-                      <p className="mt-3 hidden max-w-2xl text-[15px] leading-relaxed text-white/85 md:block line-clamp-2">
-                        {featured.chapo}
-                      </p>
-                    )}
-                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px] text-white/80">
-                      {featured.author?.name && <span>{featured.author.name}</span>}
-                      {featured.publishedAt && <time>{formatDateFr(featured.publishedAt)}</time>}
-                      <span className="inline-flex items-center gap-1.5">
-                        <Clock className="h-3.5 w-3.5" /> {featured.readingTime} min de lecture
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </article>
-            </Reveal>
-            <div className="flex flex-col gap-6">
-              {secondary.map((a, i) => (
-                <Reveal key={a.id} delay={i * 0.08}>
-                  <ArticleCard article={a} />
-                </Reveal>
+          <HeroUne article={featured} heroLabel={config.heroLabel || 'À la une'}>
+            <Stagger gap={0.09} delay={0.45} className="divide-y divide-border/60">
+              {secondary.map((a) => (
+                <StaggerItem key={a.id} className="pb-5 [&:not(:first-child)]:pt-5">
+                  <ArticleCardRow article={a} />
+                </StaggerItem>
               ))}
-            </div>
-          </div>
-        </section>
+            </Stagger>
+          </HeroUne>
+        </section>,
       )
     }
 
@@ -145,21 +105,27 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl px-4 py-14 md:px-6">
             <Reveal>
               <div className="mb-8 flex items-baseline justify-between">
-                <h2 className="tri-underline font-display text-2xl font-bold md:text-3xl">{config.title || 'L’actualité'}</h2>
+                <div>
+                  <span className="eyebrow inline-flex items-center gap-2 text-brand">
+                    <span className="live-dot inline-block h-1.5 w-1.5 rounded-full bg-brand" aria-hidden="true" />
+                    En direct
+                  </span>
+                  <h2 className="tri-underline font-display text-2xl font-bold md:text-3xl">{config.title || 'L’actualité'}</h2>
+                </div>
                 <Link href="/archives" className="eyebrow text-muted-foreground transition-colors hover:text-foreground">
                   Toutes les archives →
                 </Link>
               </div>
             </Reveal>
-            <div className="grid gap-x-10 gap-y-6 md:grid-cols-2">
-              {items.map((a, i) => (
-                <Reveal key={a.id} delay={(i % 3) * 0.06}>
+            <Stagger className="grid gap-x-10 gap-y-6 md:grid-cols-2" gap={0.07}>
+              {items.map((a) => (
+                <StaggerItem key={a.id}>
                   <ArticleCardRow article={a} />
-                </Reveal>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           </div>
-        </section>
+        </section>,
       )
     }
 
@@ -167,21 +133,21 @@ export default async function HomePage() {
       const items = reportages.filter((a) => a.id !== featured?.id).slice(0, config.count ?? 3)
       if (!items.length) continue
       rendered.push(
-        <section key={block.id} className="mx-auto max-w-6xl px-4 py-16 md:px-6">
+        <section key={block.id} className="relative mx-auto max-w-6xl px-4 py-16 md:px-6">
           <Reveal>
             <div className="mb-8">
               <span className="eyebrow text-brand">{config.eyebrow || 'Formats longs'}</span>
               <h2 className="tri-underline mt-1 font-display text-2xl font-bold md:text-3xl">{config.title || 'Reportages phares'}</h2>
             </div>
           </Reveal>
-          <div className="grid gap-5 md:grid-cols-3">
-            {items.map((a, i) => (
-              <Reveal key={a.id} delay={i * 0.1}>
+          <Stagger className="grid gap-5 md:grid-cols-3" gap={0.1}>
+            {items.map((a) => (
+              <StaggerItem key={a.id}>
                 <ArticleCardLarge article={a} />
-              </Reveal>
+              </StaggerItem>
             ))}
-          </div>
-        </section>
+          </Stagger>
+        </section>,
       )
     }
 
@@ -208,15 +174,15 @@ export default async function HomePage() {
                 </Link>
               </div>
             </Reveal>
-            <div className="grid gap-8 md:grid-cols-3">
-              {items.map((a, i) => (
-                <Reveal key={a.id} delay={i * 0.1}>
+            <Stagger className="grid gap-8 md:grid-cols-3" gap={0.1}>
+              {items.map((a) => (
+                <StaggerItem key={a.id}>
                   <ArticleCard article={a} />
-                </Reveal>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           </div>
-        </section>
+        </section>,
       )
     }
 
@@ -229,9 +195,18 @@ export default async function HomePage() {
       if (!customText && !linked?.chapo) continue
       const quoteAuthor = typeof config.quoteAuthor === 'string' ? config.quoteAuthor.trim() : ''
       rendered.push(
-        <section key={block.id} className="border-y border-border/60 bg-secondary/30">
-          <div className="mx-auto max-w-4xl px-6 py-16 text-center">
-            <Reveal>
+        <section key={block.id} className="relative overflow-hidden border-y border-border/60 bg-secondary/30">
+          {/* Guillemet décoratif géant en arrière-plan */}
+          <span
+            className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 select-none font-display text-[220px] leading-none opacity-[0.05]"
+            aria-hidden="true"
+          >
+            «
+          </span>
+          {/* Fil tricolore animé en haut */}
+          <div className="tri-flow h-[3px] w-full" aria-hidden="true" />
+          <div className="relative mx-auto max-w-4xl px-6 py-16 text-center">
+            <Reveal direction="blur">
               {config.eyebrow && <p className="eyebrow mb-4 text-brand">{config.eyebrow}</p>}
               <p className="font-display text-2xl italic leading-snug text-foreground/90 md:text-[28px]">
                 «&nbsp;{customText || linked?.chapo}&nbsp;»
@@ -240,22 +215,33 @@ export default async function HomePage() {
               {linked && (
                 <Link
                   href={`/article/${linked.slug}`}
-                  className="eyebrow mt-5 inline-block text-brand hover:opacity-80"
+                  className="eyebrow mt-5 inline-block text-brand transition-opacity hover:opacity-75"
                 >
                   {config.quoteLinkLabel || linked.title} →
                 </Link>
               )}
             </Reveal>
           </div>
-        </section>
+        </section>,
       )
     }
 
     if (block.blockType === 'NEWSLETTER') {
       rendered.push(
-        <section key={block.id} className="mx-auto max-w-6xl px-4 py-16 md:px-6">
-          <Reveal>
-            <div className="relative overflow-hidden rounded-xl border border-border/70 bg-card p-8 md:p-12">
+        <section key={block.id} className="relative mx-auto max-w-6xl overflow-hidden px-4 py-16 md:px-6">
+          {/* Halos décoratifs flottants (rouge + vert de la marque) */}
+          <div
+            className="glow-orb float-slow absolute -left-16 top-8 h-48 w-48 rounded-full opacity-25"
+            style={{ background: 'var(--brand)' }}
+            aria-hidden="true"
+          />
+          <div
+            className="glow-orb float-slower absolute -right-12 bottom-0 h-40 w-40 rounded-full opacity-20"
+            style={{ background: 'var(--brand-green)' }}
+            aria-hidden="true"
+          />
+          <Reveal direction="scale">
+            <div className="relative overflow-hidden rounded-xl border border-border/70 bg-card p-8 shadow-[0_18px_50px_-30px_rgba(0,0,0,0.3)] md:p-12">
               <div className="paper-texture absolute inset-0" />
               <div className="relative grid items-center gap-8 md:grid-cols-2">
                 <div>
@@ -276,7 +262,7 @@ export default async function HomePage() {
               </div>
             </div>
           </Reveal>
-        </section>
+        </section>,
       )
     }
   }
@@ -312,19 +298,24 @@ export default async function HomePage() {
                 {settings.trust_subtitle}
               </p>
             </Reveal>
-            <div className="mt-9 grid grid-cols-2 gap-6 md:grid-cols-4">
-              {stats.map(({ icon: Icon, value, label }, i) => (
-                <Reveal key={label} delay={i * 0.06}>
-                  <div className="text-center">
-                    <Icon className="mx-auto h-5 w-5 text-white/70" aria-hidden="true" />
-                    <p className="mt-2 font-display text-3xl font-bold text-white">
+            <Stagger className="mt-9 grid grid-cols-2 gap-6 md:grid-cols-4" gap={0.08}>
+              {stats.map(({ icon: Icon, value, label }) => (
+                <StaggerItem key={label}>
+                  <div className="group text-center transition-transform duration-300 hover:-translate-y-1">
+                    <span
+                      className="mx-auto flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-white/25 transition-all duration-300 group-hover:bg-white/10 group-hover:ring-white/50"
+                      aria-hidden="true"
+                    >
+                      <Icon className="h-5 w-5 text-white/80" />
+                    </span>
+                    <p className="mt-2.5 font-display text-3xl font-bold text-white">
                       <AnimatedCounter value={value} />
                     </p>
                     <p className="mt-1 text-[12px] uppercase tracking-wider text-white/70">{label}</p>
                   </div>
-                </Reveal>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           </div>
         </div>
       </section>,

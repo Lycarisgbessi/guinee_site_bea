@@ -280,7 +280,7 @@ export function ArticleEditorForm({ initial, isNew }: { initial: ArticleData; is
           <Section title="Image de une">
             {form.coverImage ? (
               <div className="space-y-2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+                { }
                 <img src={form.coverImage} alt="" className="w-full rounded-md object-cover" style={{ aspectRatio: '16/9' }} />
                 <div className="flex gap-2">
                   <button

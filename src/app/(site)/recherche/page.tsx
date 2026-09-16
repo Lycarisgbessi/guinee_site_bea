@@ -5,6 +5,7 @@ import { db } from '@/lib/db'
 import { articleCardInclude, publicVisibilityWhere } from '@/lib/public-queries'
 import { ArticleCardRow } from '@/components/site/article-card'
 import { Breadcrumb } from '@/components/site/breadcrumb'
+import { Stagger, StaggerItem } from '@/components/site/reveal'
 import { Pagination } from '@/components/site/pagination'
 import { Prisma } from '@prisma/client'
 
@@ -128,11 +129,13 @@ export default async function SearchPage({ searchParams }: Props) {
         )}
 
         {items.length > 0 ? (
-          <div className="space-y-6">
+          <Stagger className="space-y-6" gap={0.06}>
             {items.map((a) => (
-              <ArticleCardRow key={a.id} article={a} />
+              <StaggerItem key={a.id}>
+                <ArticleCardRow article={a} />
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         ) : query ? (
           <div className="rounded-lg border border-dashed border-border p-10 text-center">
             <p className="font-display text-xl italic text-muted-foreground">

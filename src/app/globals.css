@@ -306,6 +306,18 @@
     opacity: 1 !important;
     transform: none !important;
   }
+  /* EXCEPTION — le ticker Flash info est du CONTENU essentiel, pas une décoration :
+     il défile même avec animations réduites, mais deux fois plus lentement, et
+     reste pausable au survol/clavier (atténuation WCAG 2.3.3 correcte). */
+  .ticker-track {
+    animation-duration: calc(var(--ticker-dur, 42s) * 2) !important;
+    animation-iteration-count: infinite !important;
+    animation-play-state: running !important;
+  }
+  .ticker:hover .ticker-track,
+  .ticker:focus-within .ticker-track {
+    animation-play-state: paused !important;
+  }
 }
 
 /* ---------- Filet de sécurité sans JS ---------- */
@@ -325,18 +337,80 @@
 }
 
 /* ---------- Fil direct (ticker) — marquee infini robuste ---------- */
+/* La durée est proportionnelle à la longueur du contenu (var --ticker-dur
+   posée en inline par le composant) : la vitesse reste constante et fluide
+   quel que soit le nombre de titres. */
 @keyframes ticker-scroll {
   from { transform: translate3d(0, 0, 0); }
   to { transform: translate3d(-50%, 0, 0); }
 }
 .ticker-track {
-  animation: ticker-scroll 42s linear infinite;
+  animation: ticker-scroll var(--ticker-dur, 42s) linear infinite;
   will-change: transform;
   backface-visibility: hidden;
 }
 .ticker:hover .ticker-track,
 .ticker:focus-within .ticker-track {
   animation-play-state: paused;
+}
+/* Fondu doux des bords du bandeau (masque horizontal) */
+.ticker-mask {
+  mask-image: linear-gradient(90deg, transparent 0, #000 3.5%, #000 96.5%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3.5%, #000 96.5%, transparent 100%);
+}
+
+/* ---------- Soulignement animé des titres de cartes ---------- */
+.title-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1.5px;
+  background-repeat: no-repeat;
+  background-position: left 96%;
+  transition: background-size 0.4s cubic-bezier(0.21, 0.47, 0.32, 0.98);
+  padding-bottom: 2px;
+}
+.group:hover .title-underline,
+.title-underline:hover {
+  background-size: 100% 1.5px;
+}
+
+/* ---------- Éléments flottants (ornements d'arrière-plan) ---------- */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.float-slow {
+  animation: float-y 9s ease-in-out infinite;
+}
+.float-slower {
+  animation: float-y 13s ease-in-out infinite reverse;
+}
+
+/* ---------- Halo lumineux doux ---------- */
+.glow-orb {
+  filter: blur(52px);
+  pointer-events: none;
+}
+
+/* ---------- Badge à reflet balayant (shimmer) ---------- */
+@keyframes sheen {
+  0% { transform: translateX(-120%) skewX(-18deg); }
+  100% { transform: translateX(220%) skewX(-18deg); }
+}
+.sheen-host {
+  position: relative;
+  overflow: hidden;
+}
+.sheen-host::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+  animation: sheen 3.4s ease-in-out infinite;
+  animation-delay: 1.2s;
+  pointer-events: none;
 }
 
 /* ---------- Sommaire : compensation du header collant ---------- */

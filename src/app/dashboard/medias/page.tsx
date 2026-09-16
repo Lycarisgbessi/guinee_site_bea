@@ -157,7 +157,7 @@ export default function MediaPage() {
             <div key={m.id} className="group overflow-hidden rounded-lg border border-border bg-card transition-shadow hover:shadow-md">
               <div className="relative">
                 {m.type === 'IMAGE' ? (
-                  // eslint-disable-next-line @next/next/no-img-element
+                   
                   <img src={m.url} alt={m.alt || ''} loading="lazy" className="h-32 w-full object-cover" />
                 ) : (
                   <div className="flex h-32 w-full items-center justify-center bg-secondary font-display text-sm font-bold text-muted-foreground">
@@ -209,7 +209,7 @@ export default function MediaPage() {
           {editing && (
             <div className="space-y-3">
               {editing.type === 'IMAGE' && (
-                // eslint-disable-next-line @next/next/no-img-element
+                 
                 <img src={editing.url} alt="" className="max-h-44 w-full rounded-md object-cover" />
               )}
               <div>

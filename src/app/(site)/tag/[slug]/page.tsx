@@ -4,6 +4,7 @@ import { db } from '@/lib/db'
 import { getPublishedArticles } from '@/lib/public-queries'
 import { ArticleCardRow } from '@/components/site/article-card'
 import { Breadcrumb } from '@/components/site/breadcrumb'
+import { Stagger, StaggerItem } from '@/components/site/reveal'
 import { Pagination } from '@/components/site/pagination'
 
 export const dynamic = 'force-dynamic'
@@ -41,16 +42,18 @@ export default async function TagPage({ params, searchParams }: Props) {
       <h1 className="mt-4 font-display text-4xl font-bold">#{tag.name}</h1>
       <p className="mt-2 text-sm text-muted-foreground">{total} article{total > 1 ? 's' : ''} lié{total > 1 ? 's' : ''} à ce mot-clé</p>
 
-      <div className="mt-8 space-y-6">
+      <Stagger className="mt-8 space-y-6" gap={0.06}>
         {items.map((a) => (
-          <ArticleCardRow key={a.id} article={a} />
+          <StaggerItem key={a.id}>
+            <ArticleCardRow article={a} />
+          </StaggerItem>
         ))}
         {items.length === 0 && (
           <p className="rounded-lg border border-dashed border-border p-10 text-center font-display text-xl italic text-muted-foreground">
             Aucun article avec ce mot-clé.
           </p>
         )}
-      </div>
+      </Stagger>
 
       <div className="mt-10">
         <Pagination page={page} totalPages={totalPages} basePath={`/tag/${slug}`} />

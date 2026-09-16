@@ -5,7 +5,7 @@ import type { Metadata } from 'next'
 import { db } from '@/lib/db'
 import { getPublishedArticles } from '@/lib/public-queries'
 import { ArticleCard, ArticleCardRow, CategoryBadge } from '@/components/site/article-card'
-import { Reveal } from '@/components/site/reveal'
+import { Reveal, Stagger, StaggerItem } from '@/components/site/reveal'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { Pagination } from '@/components/site/pagination'
 
@@ -47,7 +47,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     format: format || undefined,
   })
   const totalPages = Math.max(1, Math.ceil(total / perPage))
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const doc = items[0] as any
 
   const formats = [
@@ -64,7 +64,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       {/* En-tête visuel de la rubrique (§5.4) */}
       <div className="relative overflow-hidden border-b border-border/60 bg-secondary/40">
         {category.coverImage && (
-          // eslint-disable-next-line @next/next/no-img-element
+           
           <img src={category.coverImage} alt="" className="absolute inset-0 h-full w-full object-cover opacity-20" />
         )}
         <div className="relative mx-auto max-w-6xl px-4 py-14 md:px-6">
@@ -114,7 +114,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
             <div className="grid gap-8 border-b border-border/60 pb-10 lg:grid-cols-2">
               <Link href={`/article/${items[0].slug}`} className="group block overflow-hidden rounded-lg">
                 {items[0].coverImage && (
-                  // eslint-disable-next-line @next/next/no-img-element
+                   
                   <img
                     src={items[0].coverImage}
                     alt=""
@@ -134,23 +134,23 @@ export default async function CategoryPage({ params, searchParams }: Props) {
               </div>
             </div>
           </Reveal>
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {items.slice(1).map((a, i) => (
-              <Reveal key={a.id} delay={(i % 3) * 0.08}>
+          <Stagger className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3" gap={0.08}>
+            {items.slice(1).map((a) => (
+              <StaggerItem key={a.id}>
                 <ArticleCard article={a} />
-              </Reveal>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       ) : (
         <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((a, i) => (
-              <Reveal key={a.id} delay={(i % 3) * 0.08}>
+          <Stagger className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3" gap={0.08}>
+            {items.map((a) => (
+              <StaggerItem key={a.id}>
                 <ArticleCard article={a} />
-              </Reveal>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       )}
 
