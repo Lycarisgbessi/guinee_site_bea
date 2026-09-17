@@ -413,3 +413,25 @@ Work Log:
 Stage Summary:
 - Le lien exact de l'utilisateur (…/dashboard/) fonctionne désormais
 - Robustesse : plus aucune normalisation de slash côté Next — insensible au comportement de la passerelle
+
+---
+Task ID: 18
+Agent: Super Z (main)
+Task: 3 problèmes remontés par l'utilisatrice — import d'images impossible/lent, rendu mobile incomplet, absence d'espace vidéos YouTube
+
+Work Log:
+- CAUSE RACINE upload : la route /api/admin/media/upload N'EXISTAIT PAS — la médiathèque appelait un endpoint 404, impossible d'importer la moindre image (seule l'ajout par URL marchait) ; l'éditeur d'article ne pouvait donc jamais sélectionner d'images
+- Créé src/app/api/admin/media/upload/route.ts : multipart, whitelist MIME (JPG/PNG/WebP/GIF/AVIF/MP4/MOV/MP3/PDF…), limites 15-80 Mo, optimisation sharp systématique (rotation EXIF auto, max 2400 px, WebP q82), dimensions enregistrées
+- Créé src/lib/upload-client.ts : compression NAVIGATEUR avant envoi (max 2560 px, JPEG 0.85, PNG transparent préservé) — divise le poids envoyé par 10-30 sur connexions mobiles lentes
+- Éditeur d'article : collage Ctrl+V et glisser-déposer d'images → import auto + insertion (toast de progression) ; MediaPicker enrichi d'une zone d'import en tête (glisser-déposer, sélection auto si fichier unique) ; image de une : bouton « Importer depuis l'appareil » en un clic
+- VIDÉOS : champ youtubeUrl ajouté au modèle Article (db push) + API POST/PUT ; helper src/lib/youtube.ts (watch/youtu.be/shorts/live) ; section « Vidéo YouTube » dans l'éditeur avec aperçu miniature ; composant VideoEmbed cliquer-pour-lire (miniature officielle, iframe nocookie au clic — économie de data mobile) affiché en tête d'article
+- Page publique /videos : vidéo à la une (lecteur intégré) + grille cartes (miniature YouTube, badge Vidéo, repli image de couverture si article sans lien) ; bloc accueil VIDEOS (4 cartes + lien « Toutes les vidéos ») ajouté aux blocs autorisés + seedé en base + label dashboard ; lien « Vidéos » en nav desktop + menu mobile
+- AUDIT MOBILE (390×844, agent-browser) : site public sans overflow ; DÉFAUT trouvé — /dashboard/articles débordait de 404 px (tableau 760 px étirait la page entière, colonnes coupées) ; cause : chaîne flex du shell sans min-width:0 ; fix min-w-0 sur shell.tsx → 13/13 pages dashboard re-vérifiées 390 px SANS débordement
+- Tests e2e (scripts/test-upload-video.py) : login → upload PNG 2000×1200 → WebP 4,3 Ko servi 200 → article VIDEO créé → page article (facade + embed nocookie + une + badge) → /videos → bloc accueil → corbeille : TOUT OK
+- Captures preuves dans download/audit-mobile/ (20 captures : site public, dashboard, avant/après fix, dialog import, champ YouTube)
+- Régression : audit-complet.py 80/80 (le seul écart, latence 404 en dev, était un artefact de compile à chaud — résolu après warm-up) ; tsc src/ propre ; commit 600f591
+
+Stage Summary:
+- Import d'images : réparé et accéléré — Ctrl+V, glisser-déposer ou clic depuis l'éditeur ; compression double étage (navigateur + serveur) ; plus besoin de passer par la médiathèque d'abord
+- Vidéos YouTube : coller le lien dans l'éditeur suffit — lecture intégrée sur l'article, page /videos dédiée, bloc accueil, navigation ; le système extrait l'ID et génère miniature + lecteur automatiquement
+- Mobile : le dashboard est désormais 100 % utilisable au téléphone (aucun débordement sur les 13 pages), site public inchangé et sain
