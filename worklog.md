@@ -396,3 +396,20 @@ Stage Summary:
 - Incident résolu : la chaîne sandbox-restart → npm install → client Prisma stale ne peut plus se reproduire (postinstall)
 - Robustesse nouvelle : le système de publicité est désormais incapable de faire tomber une page
 - Le parcours utilisateur (site public + dashboard + partage) validé de bout en bout
+
+---
+Task ID: 17
+Agent: Super Z (main)
+Task: ERR_TOO_MANY_REDIRECTS sur /dashboard/ — cause racine passerelle + correctif
+
+Work Log:
+- curl sur l'URL publique : /dashboard → 307 (passerelle, ajoute le slash) ; /dashboard/ → 308 (Next, retire le slash) = boucle infinie pour un utilisateur authentifié
+- Les autres pages (/archives/, /login/) ne bouclent pas : la passerelle ne rajoute le slash que sur /dashboard
+- Correctif : skipTrailingSlashRedirect: true dans next.config.ts → /dashboard/ servi directement
+- Tests : local /dashboard/ avec session 200 ; login via passerelle publique 200 ; /dashboard/ publique avec session 200 ; navigateur réel (agent-browser) login → atterrissage sur /dashboard/ avec contenu complet
+- Audit complet : 80 OK / 0 échec. Capture 06-dashboard-public-OK.png
+- Commit dans git
+
+Stage Summary:
+- Le lien exact de l'utilisateur (…/dashboard/) fonctionne désormais
+- Robustesse : plus aucune normalisation de slash côté Next — insensible au comportement de la passerelle
