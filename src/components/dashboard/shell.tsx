@@ -136,7 +136,7 @@ export function DashboardShell({
       )}
 
       {/* Contenu */}
-      <div className="flex min-h-screen flex-1 flex-col lg:pl-60">
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col lg:pl-60">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/90 px-4 backdrop-blur md:px-6">
           <button
             className="inline-flex h-10 w-10 items-center justify-center lg:hidden"
@@ -174,7 +174,7 @@ export function DashboardShell({
             </button>
           </div>
         </header>
-        <main className="flex-1 p-4 md:p-6">{children}</main>
+        <main className="min-w-0 flex-1 p-4 md:p-6">{children}</main>
       </div>
     </div>
   )

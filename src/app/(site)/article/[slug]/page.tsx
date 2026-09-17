@@ -13,6 +13,7 @@ import { TocNav } from '@/components/site/toc-nav'
 import { Reveal } from '@/components/site/reveal'
 import { ReadingProgress } from '@/components/site/reading-progress'
 import { CommentsSection } from '@/components/site/comments-section'
+import { VideoEmbed } from '@/components/site/video-embed'
 import { ViewTracker } from '@/components/site/view-tracker'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { FORMAT_LABELS, formatDateFr } from '@/lib/shared'
@@ -180,6 +181,16 @@ export default async function ArticlePage({ params }: Props) {
               <figcaption className="mt-2 text-center text-xs text-muted-foreground">{article.coverCredit}</figcaption>
             )}
           </figure>
+        )}
+
+        {/* Vidéo principale (reportages vidéo — lien YouTube collé dans le dashboard) */}
+        {article.youtubeUrl && (
+          <div className="mx-auto mt-10 max-w-4xl px-4 md:px-6">
+            <VideoEmbed url={article.youtubeUrl} title={article.title} />
+            {article.format === 'VIDEO' && (
+              <p className="mt-2 text-center text-xs text-muted-foreground">Reportage vidéo — cliquez sur l’image pour lire.</p>
+            )}
+          </div>
         )}
 
         {/* Corps de l’article — grille éditoriale : rail partage / contenu / sommaire */}

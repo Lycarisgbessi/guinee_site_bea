@@ -72,6 +72,7 @@ export async function POST(req: Request) {
       authorId: session.userId,
       coverImage: body?.coverImage || null,
       coverCredit: body?.coverCredit || null,
+      youtubeUrl: typeof body?.youtubeUrl === 'string' && body.youtubeUrl.trim() ? body.youtubeUrl.trim() : null,
       seoTitle: body?.seoTitle || null,
       seoDescription: body?.seoDescription || null,
       ogImage: body?.ogImage || null,

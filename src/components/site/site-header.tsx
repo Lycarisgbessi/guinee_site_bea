@@ -21,6 +21,7 @@ import {
   Menu,
   Newspaper,
   Palette,
+  Play,
   Search,
   Shield,
   Tags,
@@ -431,6 +432,7 @@ export function SiteHeader({
             {/* Séparateur + liens éditoriaux permanents */}
             <span className="mx-2.5 hidden h-5 w-px bg-border/70 xl:block" aria-hidden="true" />
             <ExplorerNavItem active={pathname.startsWith('/rubriques') || pathname.startsWith('/archives') || pathname.startsWith('/tags') || pathname.startsWith('/plan-du-site') || pathname.startsWith('/newsletter')} />
+            <SimpleNavLink href="/videos" label="Vidéos" active={pathname === '/videos'} />
             <SimpleNavLink href="/a-propos" label="À propos" active={pathname === '/a-propos'} />
             <SimpleNavLink href="/contact" label="Contact" active={pathname === '/contact'} />
           </nav>
@@ -514,6 +516,7 @@ export function SiteHeader({
                 <p className="eyebrow px-3 pb-1 pt-1 text-muted-foreground">Explorer</p>
                 {[
                   { href: '/rubriques', label: 'Toutes les rubriques', Icon: LayoutGrid },
+                  { href: '/videos', label: 'Vidéos', Icon: Play },
                   { href: '/archives', label: 'Archives', Icon: Archive },
                   { href: '/tags', label: 'Mots-clés', Icon: Tags },
                   { href: '/a-propos', label: 'À propos', Icon: Info },

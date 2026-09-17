@@ -21,6 +21,7 @@ const BLOCK_LABELS: Record<string, string> = {
   REPORTAGES_PHARES: 'Reportages phares (grands visuels)',
   RUBRIQUE_STRIP: 'Bandeau de rubrique (3 articles)',
   CITATION: 'Citation éditoriale',
+  VIDEOS: 'Vidéos (reportages YouTube)',
   NEWSLETTER: 'Encart newsletter',
 }
 

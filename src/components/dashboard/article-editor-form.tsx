@@ -1,14 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Eye, History, ImagePlus, Loader2, Save, Send, X } from 'lucide-react'
+import { Eye, History, ImagePlus, Loader2, Save, Send, UploadCloud, X, Youtube as YoutubeIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { RichEditor } from '@/components/dashboard/rich-editor'
 import { MediaPicker } from '@/components/dashboard/media-picker'
 import { Switch } from '@/components/ui/switch'
 import { FORMAT_LABELS, STATUS_LABELS, formatDateShortFr } from '@/lib/shared'
+import { uploadFile } from '@/lib/upload-client'
+import { youtubeEmbedUrl, youtubeThumb } from '@/lib/youtube'
 
 interface CategoryItem { id: string; name: string; color: string | null; visible: boolean }
 interface TagItem { id: string; name: string; slug: string }
@@ -26,6 +28,7 @@ export interface ArticleData {
   publishedAt?: string | null
   coverImage?: string | null
   coverCredit?: string | null
+  youtubeUrl?: string | null
   seoTitle?: string | null
   seoDescription?: string | null
   featured?: boolean
@@ -56,6 +59,23 @@ export function ArticleEditorForm({ initial, isNew }: { initial: ArticleData; is
   const [saving, setSaving] = useState(false)
   const [pickerOpen, setPickerOpen] = useState(false)
   const [slugEdited, setSlugEdited] = useState(false)
+  const [coverUploading, setCoverUploading] = useState(false)
+  const coverInputRef = useRef<HTMLInputElement>(null)
+
+  async function uploadCover(file: File | undefined | null) {
+    if (!file) return
+    setCoverUploading(true)
+    try {
+      const media = await uploadFile(file)
+      setForm((f) => ({ ...f, coverImage: media.url }))
+      toast.success('Image de une importée.')
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Échec de l'import")
+    } finally {
+      setCoverUploading(false)
+      if (coverInputRef.current) coverInputRef.current.value = ''
+    }
+  }
 
   useEffect(() => {
     fetch('/api/admin/categories').then((r) => r.json()).then((d) => d.categories && setCategories(d.categories.filter((c: CategoryItem & { visible?: boolean }) => c.visible ?? true)))
@@ -285,10 +305,17 @@ export function ArticleEditorForm({ initial, isNew }: { initial: ArticleData; is
                 <div className="flex gap-2">
                   <button
                     type="button"
+                    onClick={() => coverInputRef.current?.click()}
+                    className="flex-1 rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:border-foreground/40"
+                  >
+                    Importer une image
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => setPickerOpen(true)}
                     className="flex-1 rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:border-foreground/40"
                   >
-                    Changer
+                    Médiathèque
                   </button>
                   <button
                     type="button"
@@ -306,15 +333,71 @@ export function ArticleEditorForm({ initial, isNew }: { initial: ArticleData; is
                 />
               </div>
             ) : (
-              <button
-                type="button"
-                onClick={() => setPickerOpen(true)}
-                className="flex h-24 w-full flex-col items-center justify-center gap-1.5 rounded-md border border-dashed border-border text-muted-foreground transition-colors hover:border-brand hover:text-brand"
-              >
-                <ImagePlus className="h-5 w-5" />
-                <span className="text-xs">Choisir depuis la médiathèque</span>
-              </button>
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={() => coverInputRef.current?.click()}
+                  disabled={coverUploading}
+                  className="flex h-24 w-full flex-col items-center justify-center gap-1.5 rounded-md border border-dashed border-border text-muted-foreground transition-colors hover:border-brand hover:text-brand disabled:opacity-60"
+                >
+                  {coverUploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <UploadCloud className="h-5 w-5" />}
+                  <span className="text-xs">Importer depuis l’appareil (ou glisser-déposer)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPickerOpen(true)}
+                  className="w-full rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:border-foreground/40 hover:text-foreground"
+                >
+                  Ou choisir depuis la médiathèque
+                </button>
+              </div>
             )}
+            <input
+              ref={coverInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => uploadCover(e.target.files?.[0])}
+            />
+          </Section>
+
+          <Section title="Vidéo YouTube (reportages vidéo)">
+            <div className="space-y-2">
+              <input
+                value={form.youtubeUrl ?? ''}
+                onChange={(e) => set('youtubeUrl', e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=…"
+                className={inputCls}
+                aria-label="Lien de la vidéo YouTube"
+              />
+              {form.youtubeUrl && youtubeEmbedUrl(form.youtubeUrl) ? (
+                <div className="flex gap-2 rounded-md border border-border p-1.5">
+                  <img
+                    src={youtubeThumb(form.youtubeUrl) ?? ''}
+                    alt="Aperçu vidéo"
+                    className="h-14 w-24 shrink-0 rounded object-cover"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="flex items-center gap-1 text-[12px] font-medium text-[color:var(--brand)]">
+                      <YoutubeIcon className="h-3.5 w-3.5" /> Vidéo reconnue
+                    </p>
+                    <p className="text-[11px] leading-tight text-muted-foreground">Affichée en haut de l’article et dans la page Vidéos.</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => set('youtubeUrl', '')}
+                    className="self-start rounded p-1 text-muted-foreground hover:text-destructive"
+                    aria-label="Retirer la vidéo"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <p className="text-[11px] leading-snug text-muted-foreground">
+                  Collez simplement le lien YouTube de la vidéo (formats watch, youtu.be, shorts…). Le site l’affichera automatiquement au bon format.
+                </p>
+              )}
+            </div>
           </Section>
 
           <Section title="Rubriques">

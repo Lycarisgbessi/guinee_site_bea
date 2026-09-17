@@ -65,7 +65,7 @@ export async function POST(req: Request) {
 
   const body = await req.json().catch(() => null)
   const blockType = typeof body?.blockType === 'string' ? body.blockType : ''
-  const allowed = ['HERO_UNE', 'FIL_ACTU', 'REPORTAGES_PHARES', 'RUBRIQUE_STRIP', 'CITATION', 'NEWSLETTER']
+  const allowed = ['HERO_UNE', 'FIL_ACTU', 'REPORTAGES_PHARES', 'RUBRIQUE_STRIP', 'CITATION', 'VIDEOS', 'NEWSLETTER']
   if (!allowed.includes(blockType)) return NextResponse.json({ error: 'Type de bloc invalide.' }, { status: 400 })
 
   const maxOrder = await db.homepageBlock.aggregate({ _max: { order: true } })

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { uploadFile } from '@/lib/upload-client'
 
 interface MediaRow {
   id: string
@@ -54,15 +55,17 @@ export default function MediaPage() {
   async function upload(files: FileList | null) {
     if (!files?.length) return
     setUploading(true)
+    let ok = 0
     for (const file of Array.from(files)) {
-      const fd = new FormData()
-      fd.append('file', file)
-      const res = await fetch('/api/admin/media/upload', { method: 'POST', body: fd })
-      const data = await res.json()
-      if (!res.ok) toast.error(`${file.name} : ${data.error}`)
+      try {
+        await uploadFile(file)
+        ok++
+      } catch (err) {
+        toast.error(`${file.name} : ${err instanceof Error ? err.message : 'échec'}`)
+      }
     }
     setUploading(false)
-    toast.success('Upload terminé.')
+    if (ok > 0) toast.success(`${ok} média${ok > 1 ? 's' : ''} importé${ok > 1 ? 's' : ''} (optimisation automatique).`)
     load()
   }
 

@@ -65,6 +65,7 @@ model Article {
   author          User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   coverImage      String? // URL image / média de une
   coverCredit     String? // crédit photo de la une
+  youtubeUrl      String? // lien vidéo YouTube principale (reportages vidéo)
   seoTitle        String?
   seoDescription  String?
   ogImage         String?

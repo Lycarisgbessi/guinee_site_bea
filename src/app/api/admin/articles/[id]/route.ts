@@ -89,6 +89,7 @@ export async function PUT(req: Request, { params }: Props) {
       scheduledAt: body.scheduledAt ? new Date(body.scheduledAt) : body.scheduledAt === null ? null : existing.scheduledAt,
       coverImage: body.coverImage !== undefined ? body.coverImage : existing.coverImage,
       coverCredit: body.coverCredit !== undefined ? body.coverCredit : existing.coverCredit,
+      youtubeUrl: body.youtubeUrl !== undefined ? (typeof body.youtubeUrl === 'string' && body.youtubeUrl.trim() ? body.youtubeUrl.trim() : null) : existing.youtubeUrl,
       seoTitle: body.seoTitle !== undefined ? body.seoTitle : existing.seoTitle,
       seoDescription: body.seoDescription !== undefined ? body.seoDescription : existing.seoDescription,
       ogImage: body.ogImage !== undefined ? body.ogImage : existing.ogImage,

@@ -1,18 +1,21 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import LinkExt from '@tiptap/extension-link'
 import ImageExt from '@tiptap/extension-image'
 import Youtube from '@tiptap/extension-youtube'
 import Placeholder from '@tiptap/extension-placeholder'
+import type { Editor } from '@tiptap/react'
 import {
   Bold, Italic, Heading2, Heading3, List, ListOrdered, Quote, Minus,
   Link2, ImagePlus, Youtube as YoutubeIcon, Undo2, Redo2, Trash2,
 } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { toast } from 'sonner'
 import { MediaPicker } from './media-picker'
+import { uploadFile } from '@/lib/upload-client'
 
 // Image étendue avec légende + crédit (§5.5)
 const ImageWithCaption = ImageExt.extend({
@@ -31,6 +34,27 @@ interface RichEditorProps {
   onChange: (json: object) => void
 }
 
+/** Upload + insertion d'un fichier image collé ou déposé dans l'éditeur */
+async function uploadAndInsert(editor: Editor, files: File[]) {
+  const images = files.filter((f) => f.type.startsWith('image/'))
+  if (images.length === 0) return false
+  for (const file of images) {
+    toast.promise(uploadFile(file), {
+      loading: `Import de « ${file.name} »…`,
+      success: (media) => {
+        editor
+          .chain()
+          .focus()
+          .setImage({ src: media.url, alt: media.alt || '', caption: '', credit: '' } as unknown as { src: string })
+          .run()
+        return `« ${file.name} » insérée.`
+      },
+      error: (e) => (e instanceof Error ? e.message : "Échec de l'import"),
+    })
+  }
+  return true
+}
+
 const btnCls =
   'inline-flex h-8 w-8 items-center justify-center rounded-md text-foreground/70 transition-colors hover:bg-secondary hover:text-foreground data-[active=true]:bg-[color:var(--brand)]/10 data-[active=true]:text-[color:var(--brand)]'
 
@@ -41,6 +65,8 @@ export function RichEditor({ value, onChange }: RichEditorProps) {
   const [mediaOpen, setMediaOpen] = useState(false)
   const [ytOpen, setYtOpen] = useState(false)
   const [ytUrl, setYtUrl] = useState('')
+  // Réf pour accéder à l'éditeur depuis les handlers de collage/dépôt (closure du 1er rendu)
+  const editorRef = useRef<Editor | null>(null)
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -54,6 +80,28 @@ export function RichEditor({ value, onChange }: RichEditorProps) {
     content: value ?? { type: 'doc', content: [] },
     editorProps: {
       attributes: { class: 'prose-features min-h-[420px] px-4 py-3 focus:outline-none' },
+      // Collage direct d'image (Ctrl+V) → import auto + insertion
+      handlePaste: (_view, event) => {
+        const files = Array.from(event.clipboardData?.files ?? [])
+        const current = editorRef.current
+        if (files.length === 0 || !current) return false
+        const hasImage = files.some((f) => f.type.startsWith('image/'))
+        if (!hasImage) return false
+        event.preventDefault()
+        void uploadAndInsert(current, files)
+        return true
+      },
+      // Glisser-déposer d'image → import auto + insertion
+      handleDrop: (_view, event) => {
+        const files = Array.from(event.dataTransfer?.files ?? [])
+        const current = editorRef.current
+        if (files.length === 0 || !current) return false
+        const hasImage = files.some((f) => f.type.startsWith('image/'))
+        if (!hasImage) return false
+        event.preventDefault()
+        void uploadAndInsert(current, files)
+        return true
+      },
     },
     onUpdate: ({ editor: e }) => {
       onChange(e.getJSON())
@@ -61,6 +109,7 @@ export function RichEditor({ value, onChange }: RichEditorProps) {
   })
 
   useEffect(() => {
+    editorRef.current = editor ?? null
     return () => {
       editor?.destroy()
     }

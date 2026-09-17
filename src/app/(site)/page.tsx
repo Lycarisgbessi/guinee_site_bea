@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Clock, Eye, Feather, Hash, Mail, Newspaper } from 'lucide-react'
 import { db } from '@/lib/db'
-import { getFeaturedArticle, getPublishedArticles, getVisibleCategories, publicVisibilityWhere } from '@/lib/public-queries'
+import { articleCardInclude, getFeaturedArticle, getPublishedArticles, getVisibleCategories, publicVisibilityWhere } from '@/lib/public-queries'
 import { ArticleCard, ArticleCardLarge, ArticleCardRow, CategoryBadge } from '@/components/site/article-card'
 import { Reveal, Stagger, StaggerItem } from '@/components/site/reveal'
 import { HeroUne } from '@/components/site/hero-une'
@@ -9,6 +9,7 @@ import { AnimatedCounter } from '@/components/site/animated-counter'
 import { NewsletterForm } from '@/components/site/newsletter-form'
 import { FlashLive, type FlashItem } from '@/components/site/flash-live'
 import { AdBanner } from '@/components/site/ad-banner'
+import { VideoCard } from '@/components/site/video-card'
 import { getSettings } from '@/lib/settings'
 import { timeAgoFr } from '@/lib/shared'
 
@@ -22,6 +23,14 @@ export default async function HomePage() {
   const featured = await getFeaturedArticle()
   const latest = await getPublishedArticles({ perPage: 24 })
   const reportages = latest.items.filter((a) => a.format === 'REPORTAGE' || a.format === 'PORTFOLIO')
+
+  // Reportages vidéo (format VIDEO ou lien YouTube renseigné)
+  const videos = await db.article.findMany({
+    where: { ...publicVisibilityWhere(), OR: [{ format: 'VIDEO' }, { youtubeUrl: { not: null } }] },
+    include: articleCardInclude,
+    orderBy: { publishedAt: 'desc' },
+    take: 4,
+  })
 
   // Mots-clés populaires pour le bandeau défilant « Sujets d'actualité »
   const popularTags = await db.tag.findMany({
@@ -227,6 +236,35 @@ export default async function HomePage() {
               )}
             </Reveal>
           </div>
+        </section>,
+      )
+    }
+
+    if (block.blockType === 'VIDEOS') {
+      if (videos.length === 0) continue
+      rendered.push(
+        <section key={block.id} className="mx-auto max-w-6xl px-4 py-14 md:px-6">
+          <Reveal>
+            <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="eyebrow text-brand">{config.eyebrow || 'Reportages vidéo'}</p>
+                <h2 className="mt-1.5 font-display text-3xl font-bold">{config.title || 'Vidéos'}</h2>
+              </div>
+              <Link
+                href="/videos"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[color:var(--brand)] transition-opacity hover:opacity-75"
+              >
+                Toutes les vidéos →
+              </Link>
+            </div>
+          </Reveal>
+          <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" gap={0.08}>
+            {videos.map((a) => (
+              <StaggerItem key={a.id}>
+                <VideoCard article={a} />
+              </StaggerItem>
+            ))}
+          </Stagger>
         </section>,
       )
     }
