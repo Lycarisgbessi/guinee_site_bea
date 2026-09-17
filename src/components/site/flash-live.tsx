@@ -41,6 +41,15 @@ export function FlashLive({
 }) {
   const [idx, setIdx] = useState(0)
   const [clock, setClock] = useState('')
+  // Les temps relatifs (« il y a 3 h ») ne sont calculés qu'APRÈS le montage :
+  // le rendu serveur et le premier rendu client sont alors strictement identiques
+  // (sinon un écart d'heure entre SSR et hydratation casse le match React).
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => setMounted(true), [])
+
+  /** Heure relative stable à l'hydratation (vide avant montage) */
+  const ago = (iso: string | null) => (mounted && iso ? timeAgoFr(new Date(iso)) : '')
 
   // Rotation automatique de la carte « Dernière minute »
   useEffect(() => {
@@ -175,7 +184,7 @@ export function FlashLive({
                       </h3>
                       <span className="mt-3 inline-flex items-center gap-1.5 text-[12.5px] text-white/75">
                         <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-                        {rotating.publishedAt ? timeAgoFr(new Date(rotating.publishedAt)) : ''}
+                        {ago(rotating.publishedAt)}
                         <span className="ml-2 inline-flex items-center gap-1 font-semibold text-white/90">
                           Lire
                           <ArrowRight
@@ -276,7 +285,7 @@ export function FlashLive({
                           </span>
                         </span>
                         <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground/70">
-                          {a.publishedAt ? timeAgoFr(new Date(a.publishedAt)) : ''}
+                          {ago(a.publishedAt)}
                         </span>
                       </Link>
                     ))}

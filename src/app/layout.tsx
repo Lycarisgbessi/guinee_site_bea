@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/site/theme-provider";
 import { MotionConfigProvider } from "@/components/site/motion-config";
 import { getSettings } from "@/lib/settings";
+import { getBaseUrl } from "@/lib/base-url";
 
 const playfair = Playfair_Display({
   variable: "--font-serif-display",
@@ -20,7 +21,12 @@ const inter = Inter({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
+  // Origine publique réelle de la requête : sans elle, Next.js résout les
+  // images Open Graph relatives contre « http://localhost:3000 », invisible
+  // des crawlers (Facebook montrait alors le logo au lieu de l'article).
+  const baseUrl = await getBaseUrl();
   return {
+    metadataBase: new URL(baseUrl),
     title: {
       default: settings.seo_default_title || settings.site_name,
       template: `%s — ${settings.site_name}`,

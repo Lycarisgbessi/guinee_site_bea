@@ -27,6 +27,17 @@ function LoginForm() {
       toast.success(`Bienvenue, ${data.user.name} !`)
       router.push(next)
       router.refresh()
+      // Filet de sécurité : si la session n'est pas conservée (cookies bloqués
+      // dans un encadré de préview multi-origine), l'utilisateur est renvoyé
+      // ici sans savoir pourquoi. On affiche alors un conseil actionnable.
+      setTimeout(() => {
+        if (window.location.pathname === '/login') {
+          toast.info(
+            'La connexion ne tient pas ? Votre navigateur bloque peut-être les cookies dans cet encadré. Ouvrez le site dans un onglet séparé pour accéder au tableau de bord.',
+            { duration: 12000 },
+          )
+        }
+      }, 1800)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Erreur de connexion')
       setLoading(false)
@@ -97,6 +108,11 @@ export default function LoginPage() {
           <br />
           claire@lavigie.fr — admin2026
         </div>
+
+        <p className="mt-4 text-center text-[11px] leading-relaxed text-muted-foreground/80">
+          Site ouvert dans un encadré ou une fenêtre réduite qui empêche la connexion de tenir&nbsp;? Ouvrez
+          l’adresse du site dans un onglet séparé de votre navigateur, puis reconnectez-vous.
+        </p>
       </div>
     </div>
   )

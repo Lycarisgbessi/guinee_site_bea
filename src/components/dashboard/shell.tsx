@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import {
   FileText, FolderTree, Home, Image as ImageIcon, Inbox, LayoutDashboard,
-  LogOut, Mail, Menu, MessageSquare, Moon, Newspaper, Settings, Sun, Tag, X,
+  LogOut, Mail, Megaphone, Menu, MessageSquare, Moon, Newspaper, Settings, Sun, Tag, X,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { toast } from 'sonner'
@@ -22,6 +22,7 @@ const NAV = [
   { href: '/dashboard/commentaires', label: 'Commentaires', icon: MessageSquare },
   { href: '/dashboard/messages', label: 'Messages', icon: Inbox },
   { href: '/dashboard/newsletter', label: 'Newsletter', icon: Mail },
+  { href: '/dashboard/publicites', label: 'Publicités', icon: Megaphone },
   { href: '/dashboard/parametres', label: 'Paramètres', icon: Settings },
 ]
 

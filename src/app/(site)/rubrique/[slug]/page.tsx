@@ -8,6 +8,7 @@ import { ArticleCard, ArticleCardRow, CategoryBadge } from '@/components/site/ar
 import { Reveal, Stagger, StaggerItem } from '@/components/site/reveal'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { Pagination } from '@/components/site/pagination'
+import { AdBanner } from '@/components/site/ad-banner'
 
 export const dynamic = 'force-dynamic'
 
@@ -81,6 +82,11 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           )}
           <p className="mt-4 text-sm text-muted-foreground">{total} article{total > 1 ? 's' : ''} publié{total > 1 ? 's' : ''}</p>
         </div>
+      </div>
+
+      {/* Espace publicitaire en tête de rubrique — audience thématique qualifiée */}
+      <div className="mx-auto max-w-6xl px-4 pt-6 md:px-6">
+        <AdBanner slot="RUBRIQUE_TOP" className="w-full" />
       </div>
 
       {/* Filtres par format */}

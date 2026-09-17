@@ -5,6 +5,7 @@ import { getPublishedArticles, getVisibleCategories } from '@/lib/public-queries
 import { BackToTop } from '@/components/site/back-to-top'
 import { MaintenanceScreen } from '@/components/site/maintenance-screen'
 import { ScrollProgress } from '@/components/site/scroll-progress'
+import { AdBanner } from '@/components/site/ad-banner'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,7 +50,15 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         today={today}
         logoUrl={settings.site_logo || undefined}
       />
+      {/* Bannière publicitaire haute — visibilité maximale, toutes les pages */}
+      <div className="mx-auto w-full max-w-6xl px-4 pt-4 md:px-6">
+        <AdBanner slot="HEADER_LEADERBOARD" className="w-full" />
+      </div>
       <main className="flex-1">{children}</main>
+      {/* Grand billboard de clôture avant le pied de page */}
+      <div className="mx-auto w-full max-w-6xl px-4 pb-6 md:px-6">
+        <AdBanner slot="PREFOOTER" className="w-full" />
+      </div>
       <SiteFooter
         data={{
           siteName: settings.site_name,

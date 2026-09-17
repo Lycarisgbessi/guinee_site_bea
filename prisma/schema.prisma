@@ -238,3 +238,25 @@ model ArticleView {
 
   @@unique([articleId, date])
 }
+
+// ---------- Espaces publicitaires (rotation, planification, statistiques) ----------
+model Ad {
+  id          String    @id @default(cuid())
+  name        String // Nom interne (ex. « Opérateur télécom — bannière haute »)
+  slot        String // Emplacement stratégique (voir AD_SLOTS dans src/lib/ads.ts)
+  kind        String    @default("IMAGE") // IMAGE | HTML
+  imageUrl    String?
+  linkUrl     String?
+  alt         String?
+  html        String? // Code libre (embed fournisseur, script régie…)
+  weight      Int       @default(1) // Poids de rotation (1 = discret, 10 = prioritaire)
+  active      Boolean   @default(true)
+  startsAt    DateTime?
+  endsAt      DateTime?
+  impressions Int       @default(0)
+  clicks      Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([slot, active])
+}

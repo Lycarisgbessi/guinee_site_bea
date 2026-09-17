@@ -8,6 +8,7 @@ import { articleCardInclude, getRelatedArticles, publicVisibilityWhere } from '@
 import { RichContent, extractToc } from '@/components/article/rich-content'
 import { CategoryBadge, ArticleCard } from '@/components/site/article-card'
 import { ShareButtons } from '@/components/site/share-buttons'
+import { AdBanner } from '@/components/site/ad-banner'
 import { TocNav } from '@/components/site/toc-nav'
 import { Reveal } from '@/components/site/reveal'
 import { ReadingProgress } from '@/components/site/reading-progress'
@@ -16,6 +17,7 @@ import { ViewTracker } from '@/components/site/view-tracker'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { FORMAT_LABELS, formatDateFr } from '@/lib/shared'
 import { getSettings } from '@/lib/settings'
+import { getBaseUrl, absoluteUrl, imageSizeOf } from '@/lib/base-url'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,24 +35,40 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getArticle(slug).catch(() => null)
   if (!article) return { title: 'Article introuvable' }
   const settings = await getSettings()
+
+  // Open Graph en URL absolue : les crawlers (Facebook, WhatsApp, LinkedIn…)
+  // ne résolvent pas les chemins relatifs — une URL « localhost » ou relative
+  // était ignorée et Facebook retombait sur le logo du site.
+  const baseUrl = await getBaseUrl()
+  const title = article.seoTitle || article.title
+  const description = article.seoDescription || article.chapo || ''
+  const imgPath = article.ogImage || article.coverImage
+  const img = absoluteUrl(imgPath, baseUrl)
+  const dims = await imageSizeOf(imgPath)
+  const pageUrl = `${baseUrl}/article/${article.slug}`
+
   return {
-    title: article.seoTitle || article.title,
-    description: article.seoDescription || article.chapo || '',
+    title,
+    description,
+    alternates: { canonical: pageUrl },
     openGraph: {
-      title: article.seoTitle || article.title,
-      description: article.seoDescription || article.chapo || '',
+      title,
+      description,
       type: 'article',
+      url: pageUrl,
       publishedTime: article.publishedAt?.toISOString(),
       modifiedTime: article.updatedAt.toISOString(),
-      images: article.ogImage || article.coverImage || undefined,
+      images: img
+        ? [{ url: img, width: dims?.width, height: dims?.height, alt: title }]
+        : undefined,
       siteName: settings.site_name,
       locale: 'fr_FR',
     },
     twitter: {
       card: 'summary_large_image',
-      title: article.seoTitle || article.title,
-      description: article.seoDescription || article.chapo || '',
-      images: article.ogImage || article.coverImage || undefined,
+      title,
+      description,
+      images: img ? [img] : undefined,
     },
   }
 }
@@ -196,6 +214,11 @@ export default async function ArticlePage({ params }: Props) {
                 </div>
               )}
 
+              {/* Espace publicitaire de fin d’article — attention maximale */}
+              <div className="mt-10">
+                <AdBanner slot="ARTICLE_END" className="w-full" />
+              </div>
+
               {/* Partage + encart auteur (mobile : le rail est masqué) */}
               <div className="mt-8 border-t border-border/60 pt-6 xl:hidden">
                 <ShareButtons url={`/article/${article.slug}`} title={article.title} siteName={settings.site_name} />
@@ -232,9 +255,12 @@ export default async function ArticlePage({ params }: Props) {
               )}
             </div>
 
-            {/* Sommaire collant avec suivi de lecture (desktop) */}
+            {/* Sommaire collant + espace publicitaire vertical persistent (desktop) */}
             <div>
               {toc.length >= 3 && <TocNav items={toc} variant="rail" />}
+              <div className="sticky top-56 mt-8 hidden xl:block">
+                <AdBanner slot="ARTICLE_SIDEBAR" className="w-full" />
+              </div>
             </div>
           </div>
         </div>

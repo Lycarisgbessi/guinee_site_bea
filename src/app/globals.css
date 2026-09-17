@@ -584,3 +584,28 @@
 .dark .rt-content blockquote {
   color: oklch(0.85 0.008 85);
 }
+
+/* ---------- Espaces publicitaires (§7) ---------- */
+.ad-slot {
+  container-type: inline-size;
+}
+.ad-slot .ad-label {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  z-index: 2;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.85);
+  background: rgb(0 0 0 / 0.42);
+  backdrop-filter: blur(3px);
+  border-radius: 3px;
+  padding: 1.5px 6px;
+  pointer-events: none;
+}
+.ad-slot:not(:has(img)):not(:has(iframe)) .ad-label {
+  color: var(--muted-foreground, #666);
+  background: rgb(0 0 0 / 0.05);
+}

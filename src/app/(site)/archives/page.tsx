@@ -8,6 +8,7 @@ import { ArticleCardRow } from '@/components/site/article-card'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { Stagger, StaggerItem } from '@/components/site/reveal'
 import { Pagination } from '@/components/site/pagination'
+import { AdBanner } from '@/components/site/ad-banner'
 import { formatDateShortFr } from '@/lib/shared'
 
 export const dynamic = 'force-dynamic'
@@ -87,6 +88,11 @@ export default async function ArchivesPage({ searchParams }: Props) {
       <p className="mt-2 text-sm text-muted-foreground">
         {currentLabel} — {total} article{total > 1 ? 's' : ''}
       </p>
+
+      {/* Espace publicitaire archives */}
+      <div className="mt-6">
+        <AdBanner slot="RUBRIQUE_TOP" className="w-full" />
+      </div>
 
       {/* Navigation mois / année */}
       <div className="mt-6 flex flex-wrap gap-1.5">

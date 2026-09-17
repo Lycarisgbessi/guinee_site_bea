@@ -8,6 +8,7 @@ import { HeroUne } from '@/components/site/hero-une'
 import { AnimatedCounter } from '@/components/site/animated-counter'
 import { NewsletterForm } from '@/components/site/newsletter-form'
 import { FlashLive, type FlashItem } from '@/components/site/flash-live'
+import { AdBanner } from '@/components/site/ad-banner'
 import { getSettings } from '@/lib/settings'
 import { timeAgoFr } from '@/lib/shared'
 
@@ -375,5 +376,19 @@ export default async function HomePage() {
     )
   }
 
-  return <>{rendered}</>
+  // Espaces publicitaires « in-feed » : glissés entre les sections tous les 2 blocs,
+  // dans le rythme naturel de lecture (jamais après la dernière section)
+  const withAds: React.ReactNode[] = []
+  rendered.forEach((node, i) => {
+    withAds.push(node)
+    if ((i + 1) % 2 === 0 && i < rendered.length - 1) {
+      withAds.push(
+        <div key={`ad-mid-${i}`} className="mx-auto max-w-6xl px-4 py-2 md:px-6">
+          <AdBanner slot="HOMEPAGE_MID" className="w-full" />
+        </div>,
+      )
+    }
+  })
+
+  return <>{withAds}</>
 }

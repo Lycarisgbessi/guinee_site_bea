@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify } from 'jose'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
 
@@ -48,13 +48,37 @@ export async function verifySessionToken(token: string): Promise<SessionPayload 
   }
 }
 
+/**
+ * Détecte si la requête arrive en HTTPS (directement ou derrière un proxy,
+ * ex. préview). Utilise x-forwarded-proto puis l'en-tête Origin du navigateur.
+ */
+async function isHttpsRequest(): Promise<boolean> {
+  const h = await headers()
+  const fwd = h.get('x-forwarded-proto')?.split(',')[0]?.trim().toLowerCase()
+  if (fwd) return fwd === 'https'
+  const origin = h.get('origin')
+  if (origin) {
+    try {
+      return new URL(origin).protocol === 'https:'
+    } catch {
+      /* Origin malformé : on ignore */
+    }
+  }
+  return false
+}
+
 export async function setSessionCookie(payload: SessionPayload) {
   const token = await createSessionToken(payload)
   const store = await cookies()
+  const https = await isHttpsRequest()
   store.set(SESSION_COOKIE, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    // En HTTPS (préview, production) : SameSite=None + Secure — indispensable
+    // pour que la session soit conservée quand le site est affiché dans un
+    // encadré multi-origine (iframe), sinon la connexion « ne tient pas ».
+    // En local HTTP : SameSite=Lax (None serait rejeté sans Secure).
+    secure: https,
+    sameSite: https ? 'none' : 'lax',
     maxAge: MAX_AGE,
     path: '/',
   })

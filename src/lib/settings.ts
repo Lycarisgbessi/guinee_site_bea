@@ -31,6 +31,9 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   footer_copyright: 'Tous droits réservés.',
   newsletter_intro: 'Recevez chaque vendredi la sélection de la rédaction : nos meilleurs reportages, enquêtes et interviews, directement dans votre boîte mail. Sans spam, désinscription en un clic.',
   comments_moderation: 'true',
+  // Régie publicitaire interne (§7)
+  ads_enabled: 'true', // Interrupteur général de tous les espaces publicitaires
+  ads_placeholder: 'false', // Afficher « Votre publicité ici » sur les emplacements vides
   // Bandeau « Le fil » (ticker sous le header de l'accueil)
   ticker_enabled: 'true',
   ticker_label: 'Le fil',
