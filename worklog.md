@@ -377,3 +377,22 @@ Stage Summary:
 - Régie pub validée de bout en bout (3 annonces actives, rotation, CTR, dashboard)
 - SEO/OG validé (og:image absolue https, canonical, JSON-LD, sitemap 48 URLs, RSS 13 items)
 - 2 points d'hygiène avant mise en production : retirer l'identifiant démo de /login ; ignorer .env dans git
+
+---
+Task ID: 16
+Agent: Super Z (main)
+Task: Audit « le tableau de bord ne s'affiche pas » — cause racine + correctif critique
+
+Work Log:
+- Symptôme utilisateur : dashboard (et site) inaccessible
+- Diagnostic : accueil en HTTP 500 → dev.log → TypeError « Cannot read properties of undefined (reading 'findMany') » dans pickAd (src/lib/ads.ts:68), db.ad undefined
+- Cause racine : client Prisma généré sur disque PÉRIMÉ (sans le modèle Ad) après redémarrage de sandbox + aucun postinstall pour le régénérer. La bannière HEADER_LEADERBOARD étant rendue dans le header de toutes les pages publiques → 500 global → impression « tout est cassé »
+- Correctifs : ① npx prisma generate (Ad présent) ② package.json : postinstall=prisma generate (prévention définitive) ③ pickAd try/catch fail-safe : panne régie → annonce omise, page jamais cassée
+- Redémarrage serveur (kill + nohup npm run dev)
+- Vérifications : accueil 200 avec bannière, login→session→4 pages dashboard 200, archives/article/rss 200, audit-complet.py → 80 OK / 0 échec
+- Commit 32547e7
+
+Stage Summary:
+- Incident résolu : la chaîne sandbox-restart → npm install → client Prisma stale ne peut plus se reproduire (postinstall)
+- Robustesse nouvelle : le système de publicité est désormais incapable de faire tomber une page
+- Le parcours utilisateur (site public + dashboard + partage) validé de bout en bout
