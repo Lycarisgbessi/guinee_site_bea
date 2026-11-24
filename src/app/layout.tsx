@@ -83,7 +83,7 @@ export default async function RootLayout({
         </noscript>
       </head>
       <body
-        className={`${playfair.variable} ${inter.variable} antialiased bg-background text-foreground font-body`}
+        className={`${playfair.variable} ${inter.variable} antialiased bg-background text-foreground font-body overflow-x-hidden`}
       >
         <ThemeProvider>
           <MotionConfigProvider>

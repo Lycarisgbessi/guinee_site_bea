@@ -52,3 +52,12 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# bases de données locales (PostgreSQL/Neon en production — jamais dans git)
+*.db
+*.db-journal
+/db/
+/prisma/*.db
+
+# staging local des uploads (les médias réels vivent dans public/uploads ou Cloudinary)
+/upload/
