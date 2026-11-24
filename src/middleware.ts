@@ -1,24 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 
-const SECRET = new TextEncoder().encode(
-  process.env.AUTH_SECRET || 'vigie-media-secret-key-change-in-production-2026'
-)
 const SESSION_COOKIE = 'vigie_session'
 
 /**
  * Middleware de sécurité (§8.3, §11) :
  * - /dashboard/*  → redirige vers /login si non authentifié
  * - /api/admin/*  → 401 JSON si non authentifié
+ *
+ * Fail-closed : en production sans AUTH_SECRET, aucune session n'est
+ * considérée valide (impossible de forger un JWT avec un secret public).
  */
+function sessionSecret(): Uint8Array | null {
+  const secret = process.env.AUTH_SECRET
+  if (secret) return new TextEncoder().encode(secret)
+  if (process.env.NODE_ENV === 'production') return null
+  return new TextEncoder().encode('vigie-media-secret-key-change-in-production-2026')
+}
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
   const token = req.cookies.get(SESSION_COOKIE)?.value
+  const secret = sessionSecret()
 
   let authed = false
-  if (token) {
+  if (token && secret) {
     try {
-      await jwtVerify(token, SECRET)
+      await jwtVerify(token, secret)
       authed = true
     } catch {
       authed = false

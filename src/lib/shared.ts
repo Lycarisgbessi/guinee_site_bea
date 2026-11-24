@@ -51,7 +51,10 @@ export function tiptapToText(doc: any): string {
     if (Array.isArray(node.content)) node.content.forEach(walk)
   }
   walk(doc)
-  return out.replace(/\s+/g, ' ').trim()
+  // Anti-saturation : contentText sert d'INDEX de recherche (extrait), pas
+  // d'archive — 5 000 caractères suffisent et allègent chaque ligne par
+  // rapport au JSON complet stocké dans contentJson.
+  return out.replace(/\s+/g, ' ').trim().slice(0, 5000)
 }
 
 /** Formatage dates FR */

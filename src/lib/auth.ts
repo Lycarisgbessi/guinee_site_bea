@@ -3,9 +3,21 @@ import { cookies, headers } from 'next/headers'
 import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
 
-const SECRET = new TextEncoder().encode(
-  process.env.AUTH_SECRET || 'vigie-media-secret-key-change-in-production-2026'
-)
+// Secret de signature des sessions.
+// - production : AUTH_SECRET est OBLIGATOIRE — en son absence, la signature
+//   lève une erreur (fail-closed) plutôt que de retomber sur une valeur
+//   publique codée en dur qui permettrait de forger des sessions.
+// - dev : repli sur une valeur par défaut pour rester utilisable sans config.
+const DEV_FALLBACK_SECRET = 'vigie-media-secret-key-change-in-production-2026'
+
+function sessionSecret(): Uint8Array {
+  const secret = process.env.AUTH_SECRET
+  if (secret) return new TextEncoder().encode(secret)
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('AUTH_SECRET manquant en production — authentification désactivée (fail-closed).')
+  }
+  return new TextEncoder().encode(DEV_FALLBACK_SECRET)
+}
 export const SESSION_COOKIE = 'vigie_session'
 const MAX_AGE = 60 * 60 * 24 * 7 // 7 jours
 
@@ -31,12 +43,12 @@ export async function createSessionToken(payload: SessionPayload): Promise<strin
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(`${MAX_AGE}s`)
-    .sign(SECRET)
+    .sign(sessionSecret())
 }
 
 export async function verifySessionToken(token: string): Promise<SessionPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, SECRET)
+    const { payload } = await jwtVerify(token, sessionSecret())
     return {
       userId: payload.userId as string,
       email: payload.email as string,

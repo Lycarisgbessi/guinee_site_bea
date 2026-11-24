@@ -20,7 +20,7 @@ export async function GET(req: Request) {
    
   const where: any = trash ? { deletedAt: { not: null } } : { deletedAt: null }
   if (status) where.status = status
-  if (q) where.OR = [{ title: { contains: `%${q}%` } }, { slug: { contains: `%${q}%` } }]
+  if (q) where.OR = [{ title: { contains: q, mode: 'insensitive' } }, { slug: { contains: q, mode: 'insensitive' } }]
   if (category) where.categories = { some: { category: { slug: category } } }
 
   const [items, total] = await Promise.all([

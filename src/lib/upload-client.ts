@@ -94,6 +94,24 @@ export async function uploadFile(file: File, opts: { compress?: boolean } = {}):
   const { compress = true } = opts
   const payload = compress && file.size > 200 * 1024 ? await compressImage(file) : file
 
+  // Gros fichiers : upload DIRECT navigateur → Cloudinary (signé), pour
+  // contourner la limite ~4,5 Mo du corps de requête serverless (Vercel).
+  // Repli transparent sur l'upload serveur si l'import direct n'est pas
+  // disponible (dev sans Cloudinary, petite taille…).
+  if (payload.size > 4 * 1024 * 1024) {
+    try {
+      return await uploadDirectCloudinary(payload)
+    } catch (err) {
+      // Pas de Cloudinary configuré, ou fichier finalement passable par le
+      // serveur : on tente la voie normale (le serveur donnera l'erreur juste)
+      if (payload.size <= 4.4 * 1024 * 1024) return await uploadViaServer(payload)
+      throw err
+    }
+  }
+  return await uploadViaServer(payload)
+}
+
+async function uploadViaServer(payload: File): Promise<UploadedMedia> {
   const fd = new FormData()
   fd.append('file', payload)
   const res = await fetch(UPLOAD_ENDPOINT, { method: 'POST', body: fd })
@@ -101,5 +119,51 @@ export async function uploadFile(file: File, opts: { compress?: boolean } = {}):
   if (!res.ok) {
     throw new Error(data?.error || `Échec de l'envoi (${res.status})`)
   }
+  return data.media as UploadedMedia
+}
+
+/** Mapping format Cloudinary → type interne */
+const FORMAT_TYPE: Record<string, string> = {
+  jpg: 'IMAGE', jpeg: 'IMAGE', png: 'IMAGE', webp: 'IMAGE', gif: 'IMAGE', avif: 'IMAGE', svg: 'IMAGE',
+  mp4: 'VIDEO', webm: 'VIDEO', mov: 'VIDEO',
+  pdf: 'PDF', mp3: 'AUDIO', wav: 'AUDIO', m4a: 'AUDIO',
+}
+
+async function uploadDirectCloudinary(payload: File): Promise<UploadedMedia> {
+  // 1. Paramètres signés par le serveur (jamais d'api_secret côté navigateur)
+  const signRes = await fetch('/api/admin/media/sign')
+  if (!signRes.ok) throw new Error('Import direct indisponible (stockage non configuré).')
+  const sign = await signRes.json()
+
+  // 2. Envoi direct du fichier à Cloudinary
+  const fd = new FormData()
+  fd.append('file', payload)
+  fd.append('api_key', sign.apiKey)
+  fd.append('timestamp', String(sign.timestamp))
+  fd.append('folder', sign.folder)
+  fd.append('signature', sign.signature)
+  const upRes = await fetch(sign.uploadUrl, { method: 'POST', body: fd })
+  if (!upRes.ok) {
+    const detail = await upRes.text().catch(() => '')
+    throw new Error(`Cloudinary a refusé le fichier (${upRes.status}). ${detail.slice(0, 120)}`)
+  }
+  const uploaded = await upRes.json()
+
+  // 3. Enregistrement du média en base
+  const regRes = await fetch('/api/admin/media', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      source: 'cloudinary-direct',
+      url: uploaded.secure_url,
+      filename: payload.name,
+      type: FORMAT_TYPE[(uploaded.format || '').toLowerCase()] || 'DOC',
+      size: uploaded.bytes ?? payload.size,
+      width: uploaded.width ?? null,
+      height: uploaded.height ?? null,
+    }),
+  })
+  const data = await regRes.json().catch(() => null)
+  if (!regRes.ok) throw new Error(data?.error || 'Enregistrement du média impossible.')
   return data.media as UploadedMedia
 }

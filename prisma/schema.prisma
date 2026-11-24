@@ -1,6 +1,6 @@
 // ============================================================
 // PLATEFORME MÉDIA DIGITALE — Modèle de données (§7 du CDC)
-// SQLite adaptation (serverless-compatible via Prisma)
+// PostgreSQL (Neon en production, conteneur local en dev)
 // ============================================================
 
 generator client {
@@ -8,8 +8,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // connexion poolée (Neon -pooler / local)
+  directUrl = env("DIRECT_URL") // connexion directe pour les migrations
 }
 
 // ---------- Comptes du tableau de bord ----------
@@ -81,6 +82,7 @@ model Article {
   versions        ArticleVersion[]
   comments        Comment[]
   dailyViews      ArticleView[]
+  monthlyViews    ArticleViewMonthly[]
 
   @@index([status, publishedAt])
   @@index([slug])
@@ -238,6 +240,20 @@ model ArticleView {
   count     Int      @default(0)
 
   @@unique([articleId, date])
+}
+
+// ---------- Statistiques de vues (agrégation mensuelle) ----------
+// Anti-saturation : le cron compresse les vues quotidiennes de plus de
+// 90 jours en une ligne par article et par mois (÷30 la taille).
+model ArticleViewMonthly {
+  id        String  @id @default(cuid())
+  articleId String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  month     String // YYYY-MM
+  count     Int     @default(0)
+
+  @@unique([articleId, month])
+  @@index([month])
 }
 
 // ---------- Espaces publicitaires (rotation, planification, statistiques) ----------

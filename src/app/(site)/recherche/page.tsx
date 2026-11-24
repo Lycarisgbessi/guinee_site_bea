@@ -28,7 +28,7 @@ export default async function SearchPage({ searchParams }: Props) {
 
   async function fetchResults() {
     const now = new Date()
-    const like = `%${query.replace(/[%_]/g, '')}%`
+    const like = query.replace(/[%_]/g, '')
     const where: Prisma.ArticleWhereInput = {
       ...publicVisibilityWhere(),
       ...(rubrique ? { categories: { some: { category: { slug: rubrique, visible: true } } } } : {}),
@@ -36,10 +36,10 @@ export default async function SearchPage({ searchParams }: Props) {
       ...(query
         ? {
             OR: [
-              { title: { contains: like } },
-              { chapo: { contains: like } },
-              { contentText: { contains: like } },
-              { subtitle: { contains: like } },
+              { title: { contains: like, mode: 'insensitive' } },
+              { chapo: { contains: like, mode: 'insensitive' } },
+              { contentText: { contains: like, mode: 'insensitive' } },
+              { subtitle: { contains: like, mode: 'insensitive' } },
             ],
           }
         : {}),

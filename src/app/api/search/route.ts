@@ -14,14 +14,14 @@ export async function GET(req: Request) {
   const rl = rateLimit(`search:${ip}`, 30, 60_000)
   if (!rl.ok) return NextResponse.json({ error: 'Trop de requêtes, patientez un instant.' }, { status: 429 })
 
-  const like = `%${q.replace(/[%_]/g, '')}%`
+  const like = q.replace(/[%_]/g, '')
   const results = await db.article.findMany({
     where: {
       ...publicVisibilityWhere(),
       OR: [
-        { title: { contains: like } },
-        { chapo: { contains: like } },
-        { contentText: { contains: like } },
+        { title: { contains: like, mode: 'insensitive' } },
+        { chapo: { contains: like, mode: 'insensitive' } },
+        { contentText: { contains: like, mode: 'insensitive' } },
       ],
     },
     select: { slug: true, title: true, chapo: true, coverImage: true, publishedAt: true, format: true },

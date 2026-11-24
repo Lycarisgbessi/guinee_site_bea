@@ -15,7 +15,7 @@ export async function GET(req: Request) {
    
   const where: any = {}
   if (type) where.type = type
-  if (q) where.OR = [{ filename: { contains: `%${q}%` } }, { alt: { contains: `%${q}%` } }]
+  if (q) where.OR = [{ filename: { contains: q, mode: 'insensitive' } }, { alt: { contains: q, mode: 'insensitive' } }]
 
   const items = await db.media.findMany({
     where,
@@ -26,36 +26,45 @@ export async function GET(req: Request) {
   return NextResponse.json({ items })
 }
 
-// ---------- POST /api/admin/media — ajout d’un média par URL externe ----------
+// ---------- POST /api/admin/media — ajout d’un média ----------
+// Soit par URL externe, soit enregistrement d'un upload DIRECT Cloudinary
+// (le fichier est déjà chez Cloudinary ; le client transmet ses métadonnées).
 export async function POST(req: Request) {
   const session = await requireAdmin()
   if (!session) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
 
   const body = await req.json().catch(() => null)
   const url = typeof body?.url === 'string' ? body.url.trim() : ''
+  const isCloudinary = /^https:\/\/res\.cloudinary\.com\//.test(url)
   if (!/^https?:\/\/.+/.test(url) && !url.startsWith('/uploads/')) {
     return NextResponse.json({ error: 'URL invalide.' }, { status: 400 })
   }
-  const filename = url.split('/').pop() || 'media'
+  // Sécurité : les métadonnées (taille/dimensions) ne sont acceptées que
+  // pour les URLs Cloudinary issues de l'upload direct signé.
+  const fromDirect = body?.source === 'cloudinary-direct' && isCloudinary
+  const filename = body?.filename || url.split('/').pop() || 'media'
   const ext = filename.split('.').pop()?.toLowerCase() || ''
   const typeMap: Record<string, string> = {
     jpg: 'IMAGE', jpeg: 'IMAGE', png: 'IMAGE', webp: 'IMAGE', avif: 'IMAGE', gif: 'IMAGE', svg: 'IMAGE',
     mp4: 'VIDEO', webm: 'VIDEO', mov: 'VIDEO',
     pdf: 'PDF', mp3: 'AUDIO', wav: 'AUDIO',
   }
-  const type = typeMap[ext] || 'DOC'
+  const type = (fromDirect && typeof body?.type === 'string' ? body.type : typeMap[ext]) || 'DOC'
 
   const media = await db.media.create({
     data: {
       url,
       filename,
       type,
+      size: fromDirect && Number.isFinite(body?.size) ? Number(body.size) : null,
+      width: fromDirect && Number.isFinite(body?.width) ? Number(body.width) : null,
+      height: fromDirect && Number.isFinite(body?.height) ? Number(body.height) : null,
       alt: body?.alt || null,
       caption: body?.caption || null,
       credit: body?.credit || null,
       uploadedById: session.userId,
     },
   })
-  await logActivity('MEDIA_ADD', media.filename, 'Ajout par URL')
+  await logActivity('MEDIA_ADD', media.filename, fromDirect ? 'Import direct Cloudinary' : 'Ajout par URL')
   return NextResponse.json({ media })
 }

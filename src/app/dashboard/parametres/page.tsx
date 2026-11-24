@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { Activity, Loader2, Palette, Plus, Save, Trash2 } from 'lucide-react'
+import { Activity, Database, Loader2, Palette, Plus, Save, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
@@ -22,6 +22,15 @@ function Field({ label, children, hint }: { label: string; children: React.React
 interface RedirectRow { id: string; fromPath: string; toPath: string; statusCode: number }
 interface LogRow { id: string; action: string; target: string | null; detail: string | null; createdAt: string; user?: { name?: string } | null }
 
+interface DbSizeInfo {
+  engine: string
+  sizeBytes?: number
+  quotaBytes?: number
+  percent?: number
+  alert?: boolean
+  tables?: { table: string; sizeBytes: number; rows: number }[]
+}
+
 /** Paramètres généraux du site (§6.9) + profil + journal d’activité (§11) */
 export default function SettingsPage() {
   const [settings, setSettings] = useState<Record<string, string>>({})
@@ -32,6 +41,35 @@ export default function SettingsPage() {
   const [logs, setLogs] = useState<LogRow[]>([])
   const [profile, setProfile] = useState<{ name?: string; bio?: string; currentPassword?: string; newPassword?: string }>({})
   const [savingProfile, setSavingProfile] = useState(false)
+  const [dbSize, setDbSize] = useState<DbSizeInfo | null>(null)
+  const [runningMaintenance, setRunningMaintenance] = useState(false)
+
+  const fmtBytes = (n: number) => {
+    if (n >= 1024 * 1024 * 1024) return `${(n / 1024 / 1024 / 1024).toFixed(2)} Go`
+    if (n >= 1024 * 1024) return `${(n / 1024 / 1024).toFixed(1)} Mo`
+    return `${Math.max(1, Math.round(n / 1024))} Ko`
+  }
+
+  const loadDbSize = useCallback(async () => {
+    const res = await fetch('/api/admin/db-size')
+    if (res.ok) setDbSize(await res.json())
+  }, [])
+
+  const runMaintenanceNow = useCallback(async () => {
+    setRunningMaintenance(true)
+    try {
+      const res = await fetch('/api/cron/maintenance')
+      const data = await res.json()
+      if (res.ok) {
+        toast.success(
+          `Maintenance terminée en ${(data.durationMs / 1000).toFixed(1)} s — ${data.versionsKept} versions purgées, ${data.viewsRolledUp} vues compressées.`,
+        )
+        loadDbSize()
+      } else toast.error(data.error || 'Échec de la maintenance')
+    } finally {
+      setRunningMaintenance(false)
+    }
+  }, [loadDbSize])
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -46,8 +84,9 @@ export default function SettingsPage() {
     if (rRes.ok) setRedirects(rData.items)
     const lData = await lRes.json()
     if (lRes.ok) setLogs(lData.items)
+    loadDbSize()
     setLoading(false)
-  }, [])
+  }, [loadDbSize])
 
   useEffect(() => {
     const raf = requestAnimationFrame(load)
@@ -371,6 +410,64 @@ export default function SettingsPage() {
               </Field>
             </div>
             <div className="mt-4">{saveBtn(['maintenance_mode', 'maintenance_message'])}</div>
+          </div>
+
+          {/* Santé de la base — suivi du quota (anti-saturation Neon) */}
+          <div className="mt-4 rounded-lg border border-border bg-card p-5">
+            <p className="flex items-center gap-2 text-sm font-semibold">
+              <Database className="h-4 w-4 text-brand" /> Santé de la base de données
+            </p>
+            {dbSize?.engine === 'postgresql' ? (
+              <>
+                <div className="mt-3 flex items-baseline justify-between text-[13px]">
+                  <span className="text-muted-foreground">
+                    {fmtBytes(dbSize.sizeBytes ?? 0)} utilisés sur {fmtBytes(dbSize.quotaBytes ?? 0)} (plan gratuit)
+                  </span>
+                  <span className={`font-semibold ${dbSize.alert ? 'text-red-600' : 'text-emerald-600'}`}>
+                    {dbSize.percent} %
+                  </span>
+                </div>
+                <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-secondary">
+                  <div
+                    className={`h-full rounded-full transition-all ${dbSize.alert ? 'bg-red-500' : 'bg-emerald-500'}`}
+                    style={{ width: `${Math.min(100, dbSize.percent ?? 0)}%` }}
+                  />
+                </div>
+                {dbSize.alert && (
+                  <p className="mt-2 text-[12.5px] font-medium text-red-600">
+                    ⚠ Plus de 70 % du quota consommé — exportez ou purgez du contenu avant la saturation.
+                  </p>
+                )}
+                {dbSize.tables && dbSize.tables.length > 0 && (
+                  <ul className="mt-3 space-y-1 text-[12px] text-muted-foreground">
+                    {dbSize.tables.slice(0, 5).map((t) => (
+                      <li key={t.table} className="flex justify-between gap-3">
+                        <span className="truncate font-mono">{t.table}</span>
+                        <span className="shrink-0">{fmtBytes(t.sizeBytes)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            ) : (
+              <p className="mt-2 text-[12.5px] text-muted-foreground">
+                Suivi du quota disponible uniquement sur PostgreSQL (Neon en production).
+              </p>
+            )}
+            <div className="mt-4 border-t border-border/60 pt-4">
+              <p className="text-[12.5px] text-muted-foreground">
+                Maintenance automatique chaque nuit à 03:00 UTC (purge des anciennes versions, journal &gt; 90 j,
+                corbeille &gt; 30 j, compression des vues anciennes). Vous pouvez la déclencher immédiatement :
+              </p>
+              <button
+                onClick={runMaintenanceNow}
+                disabled={runningMaintenance}
+                className="mt-2 inline-flex h-9 items-center gap-2 rounded-md bg-secondary px-4 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-60"
+              >
+                {runningMaintenance ? <Loader2 className="h-4 w-4 animate-spin" /> : <Activity className="h-4 w-4" />}
+                Lancer la maintenance maintenant
+              </button>
+            </div>
           </div>
         </TabsContent>
 

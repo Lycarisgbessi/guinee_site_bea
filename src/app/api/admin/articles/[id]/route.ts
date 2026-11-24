@@ -106,8 +106,12 @@ export async function PUT(req: Request, { params }: Props) {
     },
   })
 
-  // Historique des versions (§6.4)
-  if (JSON.stringify(contentJson) !== JSON.stringify(existing.contentJson) || body.title !== existing.title) {
+  // Historique des versions (§6.4) — UNIQUEMENT si le contenu ou le titre a
+  // réellement changé (sinon chaque sauvegarde de statut/métadonnée créerait
+  // une copie complète du contenu → saturation de la base).
+  const contentChanged = contentJson !== existing.contentJson
+  const titleChanged = typeof body.title === 'string' && body.title !== existing.title
+  if (contentChanged || titleChanged) {
     await db.articleVersion.create({ data: { articleId: id, title: article.title, contentJson, editorId: session.userId } })
   }
 

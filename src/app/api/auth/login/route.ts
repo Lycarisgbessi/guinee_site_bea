@@ -21,7 +21,9 @@ export async function POST(req: Request) {
     }
     await logActivity('LOGIN', session.email, 'Connexion au tableau de bord')
     return NextResponse.json({ ok: true, user: session })
-  } catch {
-    return NextResponse.json({ error: 'Erreur serveur.' }, { status: 500 })
+  } catch (err) {
+    // Fail-closed : AUTH_SECRET absent en production → message explicite
+    const msg = err instanceof Error && err.message.includes('AUTH_SECRET') ? err.message : 'Erreur serveur.'
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server'
-import { mkdir, writeFile } from 'fs/promises'
-import path from 'path'
-import { randomUUID } from 'crypto'
 import sharp from 'sharp'
 import { db } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
 import { logActivity } from '@/lib/activity'
+import { saveMedia } from '@/lib/storage'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 // ---------- Limites et types acceptés ----------
+// NB : sur Vercel serverless, le corps de requête est limité (~4,5 Mo) ; les
+// images compressées côté navigateur passent toujours. Les fichiers plus
+// lourds (vidéos…) transitent par l'upload direct navigateur → Cloudinary
+// (voir /api/admin/media/sign + upload-client.ts) et ne passent pas ici.
 const MAX_SIZE: Record<string, number> = {
   IMAGE: 15 * 1024 * 1024, // 15 Mo
   VIDEO: 80 * 1024 * 1024, // 80 Mo
@@ -19,7 +21,9 @@ const MAX_SIZE: Record<string, number> = {
   DOC: 25 * 1024 * 1024,
 }
 
-const MIME_MAP: Record<string, string> = {
+type MediaType = 'IMAGE' | 'VIDEO' | 'AUDIO' | 'PDF' | 'DOC'
+
+const MIME_MAP: Record<string, MediaType> = {
   'image/jpeg': 'IMAGE',
   'image/png': 'IMAGE',
   'image/webp': 'IMAGE',
@@ -75,7 +79,10 @@ export async function POST(req: Request) {
   try {
     form = await req.formData()
   } catch {
-    return NextResponse.json({ error: 'Requête invalide (fichier attendu).' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'Fichier trop lourd ou requête invalide (limite serveur ~4,5 Mo). Utilisez l’import direct pour les gros fichiers.' },
+      { status: 400 },
+    )
   }
 
   const file = form.get('file')
@@ -102,17 +109,11 @@ export async function POST(req: Request) {
   }
 
   const buffer = Buffer.from(await file.arrayBuffer())
-  const now = new Date()
-  const yyyy = now.getFullYear()
-  const mm = String(now.getMonth() + 1).padStart(2, '0')
-  const dirRel = path.posix.join('uploads', String(yyyy), mm)
-  const dirAbs = path.join(process.cwd(), 'public', dirRel)
-  await mkdir(dirAbs, { recursive: true })
 
-  let outName: string
-  let outBuffer: Buffer<ArrayBufferLike> = buffer
+  let ext: string
   let width: number | null = null
   let height: number | null = null
+  let outBuffer: Buffer = buffer
 
   try {
     if (type === 'IMAGE' && mime !== 'image/gif' && mime !== 'image/svg+xml') {
@@ -125,34 +126,32 @@ export async function POST(req: Request) {
       outBuffer = optimized.data
       width = optimized.info.width
       height = optimized.info.height
-      outName = `${randomUUID()}.webp`
+      ext = 'webp'
     } else {
-      const ext = EXT_BY_MIME[mime] || (file.name.split('.').pop()?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'bin')
-      outName = `${randomUUID()}.${ext}`
+      ext = EXT_BY_MIME[mime] || (file.name.split('.').pop()?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'bin')
     }
   } catch {
     // Image illisible par sharp : on stocke l'original tel quel plutôt que d'échouer
-    const ext = EXT_BY_MIME[mime] || 'jpg'
-    outName = `${randomUUID()}.${ext}`
+    ext = EXT_BY_MIME[mime] || 'jpg'
   }
 
-  await writeFile(path.join(dirAbs, outName), outBuffer)
-  const url = `/${dirRel}/${outName}`
+  // Cloudinary en production, disque local en dev sans configuration
+  const stored = await saveMedia(outBuffer, { type, ext, width, height })
 
   const media = await db.media.create({
     data: {
-      url,
+      url: stored.url,
       filename: safeName(file.name),
       type,
-      size: outBuffer.length,
-      width,
-      height,
+      size: stored.size,
+      width: stored.width,
+      height: stored.height,
       alt: typeof form.get('alt') === 'string' ? (form.get('alt') as string) || null : null,
       uploadedById: session.userId,
     },
   })
 
-  await logActivity('MEDIA_UPLOAD', media.filename, `${type} · ${(outBuffer.length / 1024).toFixed(0)} Ko`)
+  await logActivity('MEDIA_UPLOAD', media.filename, `${type} · ${(stored.size / 1024).toFixed(0)} Ko · ${stored.storage}`)
 
   return NextResponse.json({ media })
 }
