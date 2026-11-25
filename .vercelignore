@@ -1,0 +1,20 @@
+# N'est PAS déployé sur Vercel — allège l'upload (42 Mo → ~12 Mo)
+# Le build n'a besoin que de : src, public, prisma, package*.json, configs.
+# (ne JAMAIS mettre *.png ici : public/brand contient logos + favicon)
+.zshots
+.zscripts
+download
+upload
+db
+examples
+tests
+mini-services
+skills
+scripts
+Caddyfile
+*.log
+*.db
+*.pid
+worklog.md
+CLAUDE.md
+AGENTS.md
