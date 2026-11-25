@@ -171,20 +171,23 @@ function renderNode(node: Node, key: string): React.ReactNode {
         </figure>
       )
     }
+    case 'youtube': // nom de nœud Tiptap v3 (l'ancien 'youTube' reste accepté)
     case 'youTube': {
       const url: string = node.attrs?.src ?? ''
-      const m = url.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{11})/)
+      const m = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/|live\/)([\w-]{11})/)
       const vid = m ? m[1] : null
       if (!vid) return null
       return (
-        <iframe
-          key={key}
-          src={`https://www.youtube-nocookie.com/embed/${vid}`}
-          title="Vidéo YouTube"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          loading="lazy"
-        />
+        <div key={key} className="my-6 aspect-video w-full overflow-hidden rounded-lg bg-black/90">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${vid}`}
+            title="Vidéo YouTube"
+            className="h-full w-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            loading="lazy"
+          />
+        </div>
       )
     }
     default:

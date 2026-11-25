@@ -1,0 +1,122 @@
+[
+  {
+    "id": "1.1 accès admin : login → dashboard",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "2.1 KPI stats présents",
+    "ok": true,
+    "detail": "totalViews=33723, publiés=14"
+  },
+  {
+    "id": "2.2 graphe audience alimenté (repli 30 j actifs)",
+    "ok": true,
+    "detail": "1 jours de données"
+  },
+  {
+    "id": "3.x éditeur bouton « Gras »",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "3.x éditeur bouton « Italique »",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "3.x éditeur bouton « Souligné »",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "3.x éditeur bouton « Barré »",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "3.x éditeur bouton « Surligné »",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "3.x éditeur bouton « Lien »",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "3.x éditeur bouton « Image depuis la médiathèque »",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "3.x éditeur bouton « Vidéo YouTube »",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "4.1 création article complet (API éditeur)",
+    "ok": true,
+    "detail": "slug=test-verification-mise-en-forme-complete"
+  },
+  {
+    "id": "4.2 rendu public des marques",
+    "ok": true,
+    "detail": "{\"strong\":1,\"em\":1,\"u\":1,\"s\":1,\"mark\":1,\"link\":1,\"figures\":8,\"youtube\":0}"
+  },
+  {
+    "id": "4.3 deux images dans l’article",
+    "ok": true,
+    "detail": "8 images"
+  },
+  {
+    "id": "4.4 vidéo intégrée",
+    "ok": false,
+    "detail": ""
+  },
+  {
+    "id": "5.1 boutons de partage présents",
+    "ok": true,
+    "detail": "16 cibles : Facebook, X (Twitter), LinkedIn, WhatsApp, Telegram, Instagram, TikTok, Copier le lien, Facebook, X (Twitter), LinkedIn, WhatsApp, Telegram, Instagram, TikTok, Copier le lien"
+  },
+  {
+    "id": "5.2 URL de partage Facebook réelle",
+    "ok": true,
+    "detail": "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fg"
+  },
+  {
+    "id": "5.3 URL de partage WhatsApp réelle",
+    "ok": true,
+    "detail": "https://wa.me/?text=TEST%20v%C3%A9rification%20%E2%80%94%20m"
+  },
+  {
+    "id": "6.1 modification d’article répercutée",
+    "ok": true,
+    "detail": "H1 = « TEST vérification — titre modifié »"
+  },
+  {
+    "id": "7.1 suppression (corbeille) → page publique 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "7.2 purge définitive de l’article de test",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "8.1 création pub VIDEO (API + dashboard)",
+    "ok": true,
+    "detail": "kind=VIDEO, slot=HOMEPAGE_MID"
+  },
+  {
+    "id": "8.2 rendu <video> dans l’emplacement publicitaire",
+    "ok": true,
+    "detail": "{\"videos\":5,\"inAdSlot\":5}"
+  },
+  {
+    "id": "8.3 purge de la pub de test",
+    "ok": true,
+    "detail": ""
+  }
+]
