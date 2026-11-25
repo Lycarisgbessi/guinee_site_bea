@@ -1,4 +1,7 @@
 {
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "installCommand": "bun install",
   "crons": [
     {
       "path": "/api/cron/maintenance",

@@ -62,3 +62,4 @@ server.log
 # staging local des uploads (les médias réels vivent dans public/uploads ou Cloudinary)
 /upload/
 .vercel
+.vercel/
