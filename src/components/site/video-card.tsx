@@ -37,7 +37,8 @@ export function VideoCard({ article }: { article: ArticleCardData }) {
         )}
       </div>
       <div className="p-4">
-        {cat && <CategoryBadge {...cat} />}
+        {/* Carte entière = <Link> → badge en span (jamais de <a> imbriqué) */}
+        {cat && <CategoryBadge {...cat} linked={false} />}
         <h3 className="mt-1.5 font-display text-[15px] font-bold leading-snug">{article.title}</h3>
         <p className="mt-2 flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
           {article.author?.name && <span>{article.author.name}</span>}

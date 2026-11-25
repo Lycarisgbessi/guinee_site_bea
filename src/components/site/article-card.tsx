@@ -8,29 +8,41 @@ function firstCategory(article: ArticleCardData) {
   return article.categories[0]?.category ?? null
 }
 
-/** Badge rubrique coloré avec pastille de couleur */
+/** Badge de rubrique. `linked={false}` rend un <span> — obligatoire quand la
+ * carte entière est déjà un <Link> (sinon <a> imbriqué = erreur d'hydratation,
+ * détectée en console pendant l'audit responsive). */
 export function CategoryBadge({
   name,
   slug,
   color,
   size = 'sm',
+  linked = true,
 }: {
   name: string
   slug: string
   color?: string | null
   size?: 'sm' | 'lg'
+  linked?: boolean
 }) {
+  const cls = `eyebrow inline-flex items-center gap-1.5 transition-opacity hover:opacity-75 ${size === 'lg' ? 'text-xs' : ''}`
+  const dot = (
+    <span
+      className="h-1.5 w-1.5 rounded-full"
+      style={{ background: color || 'var(--brand)' }}
+      aria-hidden="true"
+    />
+  )
+  if (!linked) {
+    return (
+      <span className={cls} style={{ color: color || 'var(--brand)' }}>
+        {dot}
+        {name}
+      </span>
+    )
+  }
   return (
-    <Link
-      href={`/rubrique/${slug}`}
-      className={`eyebrow inline-flex items-center gap-1.5 transition-opacity hover:opacity-75 ${size === 'lg' ? 'text-xs' : ''}`}
-      style={{ color: color || 'var(--brand)' }}
-    >
-      <span
-        className="h-1.5 w-1.5 rounded-full"
-        style={{ background: color || 'var(--brand)' }}
-        aria-hidden="true"
-      />
+    <Link href={`/rubrique/${slug}`} className={cls} style={{ color: color || 'var(--brand)' }}>
+      {dot}
       {name}
     </Link>
   )

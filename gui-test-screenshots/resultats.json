@@ -1,0 +1,1195 @@
+{
+  "results": [
+    {
+      "id": "accueil",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\accueil_mobile-390.png",
+      "url": "/"
+    },
+    {
+      "id": "article",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\article_mobile-390.png",
+      "url": "/article/ok"
+    },
+    {
+      "id": "rubriques",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\rubriques_mobile-390.png",
+      "url": "/rubriques"
+    },
+    {
+      "id": "rubrique",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\rubrique_mobile-390.png",
+      "url": "/rubrique/politique"
+    },
+    {
+      "id": "videos",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\videos_mobile-390.png",
+      "url": "/videos"
+    },
+    {
+      "id": "recherche",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\recherche_mobile-390.png",
+      "url": "/recherche?q=guin"
+    },
+    {
+      "id": "archives",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\archives_mobile-390.png",
+      "url": "/archives"
+    },
+    {
+      "id": "contact",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\contact_mobile-390.png",
+      "url": "/contact"
+    },
+    {
+      "id": "a-propos",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\a-propos_mobile-390.png",
+      "url": "/a-propos"
+    },
+    {
+      "id": "plan-du-site",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\plan-du-site_mobile-390.png",
+      "url": "/plan-du-site"
+    },
+    {
+      "id": "login",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\login_mobile-390.png",
+      "url": "/login"
+    },
+    {
+      "id": "dash-accueil",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-accueil_mobile-390.png",
+      "url": "/dashboard"
+    },
+    {
+      "id": "dash-articles",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-articles_mobile-390.png",
+      "url": "/dashboard/articles"
+    },
+    {
+      "id": "dash-editeur",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-editeur_mobile-390.png",
+      "url": "/dashboard/articles/nouveau"
+    },
+    {
+      "id": "dash-medias",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-medias_mobile-390.png",
+      "url": "/dashboard/medias"
+    },
+    {
+      "id": "dash-parametres",
+      "vp": "mobile-390",
+      "vw": 390,
+      "sw": 390,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-parametres_mobile-390.png",
+      "url": "/dashboard/parametres"
+    },
+    {
+      "id": "accueil",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\accueil_tablette-768.png",
+      "url": "/"
+    },
+    {
+      "id": "article",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\article_tablette-768.png",
+      "url": "/article/ok"
+    },
+    {
+      "id": "rubriques",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\rubriques_tablette-768.png",
+      "url": "/rubriques"
+    },
+    {
+      "id": "rubrique",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\rubrique_tablette-768.png",
+      "url": "/rubrique/politique"
+    },
+    {
+      "id": "videos",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\videos_tablette-768.png",
+      "url": "/videos"
+    },
+    {
+      "id": "recherche",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\recherche_tablette-768.png",
+      "url": "/recherche?q=guin"
+    },
+    {
+      "id": "archives",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\archives_tablette-768.png",
+      "url": "/archives"
+    },
+    {
+      "id": "contact",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\contact_tablette-768.png",
+      "url": "/contact"
+    },
+    {
+      "id": "a-propos",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\a-propos_tablette-768.png",
+      "url": "/a-propos"
+    },
+    {
+      "id": "plan-du-site",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\plan-du-site_tablette-768.png",
+      "url": "/plan-du-site"
+    },
+    {
+      "id": "login",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\login_tablette-768.png",
+      "url": "/login"
+    },
+    {
+      "id": "dash-accueil",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-accueil_tablette-768.png",
+      "url": "/dashboard"
+    },
+    {
+      "id": "dash-articles",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-articles_tablette-768.png",
+      "url": "/dashboard/articles"
+    },
+    {
+      "id": "dash-editeur",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-editeur_tablette-768.png",
+      "url": "/dashboard/articles/nouveau"
+    },
+    {
+      "id": "dash-medias",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-medias_tablette-768.png",
+      "url": "/dashboard/medias"
+    },
+    {
+      "id": "dash-parametres",
+      "vp": "tablette-768",
+      "vw": 768,
+      "sw": 768,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-parametres_tablette-768.png",
+      "url": "/dashboard/parametres"
+    },
+    {
+      "id": "accueil",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1590,
+      "overflow": 150,
+      "offenders": [
+        {
+          "tag": "div",
+          "cls": "ml-auto flex items-center gap-2",
+          "right": 1590,
+          "left": 1324,
+          "w": 266
+        },
+        {
+          "tag": "a",
+          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
+          "right": 1453,
+          "left": 1324,
+          "w": 129
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
+          "right": 1548,
+          "left": 1461,
+          "w": 87
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1489,
+          "left": 1474,
+          "w": 15
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1487,
+          "left": 1485,
+          "w": 3
+        },
+        {
+          "tag": "circle",
+          "cls": "",
+          "right": 1486,
+          "left": 1476,
+          "w": 10
+        },
+        {
+          "tag": "kbd",
+          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
+          "right": 1539,
+          "left": 1497,
+          "w": 42
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
+          "right": 1590,
+          "left": 1556,
+          "w": 34
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1581,
+          "left": 1565,
+          "w": 16
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1579,
+          "left": 1567,
+          "w": 12
+        }
+      ],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\accueil_desktop-1440.png",
+      "url": "/"
+    },
+    {
+      "id": "article",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1590,
+      "overflow": 150,
+      "offenders": [
+        {
+          "tag": "div",
+          "cls": "ml-auto flex items-center gap-2",
+          "right": 1590,
+          "left": 1324,
+          "w": 266
+        },
+        {
+          "tag": "a",
+          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
+          "right": 1453,
+          "left": 1324,
+          "w": 129
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
+          "right": 1548,
+          "left": 1461,
+          "w": 87
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1489,
+          "left": 1474,
+          "w": 15
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1487,
+          "left": 1485,
+          "w": 3
+        },
+        {
+          "tag": "circle",
+          "cls": "",
+          "right": 1486,
+          "left": 1476,
+          "w": 10
+        },
+        {
+          "tag": "kbd",
+          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
+          "right": 1539,
+          "left": 1497,
+          "w": 42
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
+          "right": 1590,
+          "left": 1556,
+          "w": 34
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1581,
+          "left": 1565,
+          "w": 16
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1579,
+          "left": 1567,
+          "w": 12
+        }
+      ],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\article_desktop-1440.png",
+      "url": "/article/ok"
+    },
+    {
+      "id": "rubriques",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1590,
+      "overflow": 150,
+      "offenders": [
+        {
+          "tag": "div",
+          "cls": "ml-auto flex items-center gap-2",
+          "right": 1590,
+          "left": 1324,
+          "w": 266
+        },
+        {
+          "tag": "a",
+          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
+          "right": 1453,
+          "left": 1324,
+          "w": 129
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
+          "right": 1548,
+          "left": 1461,
+          "w": 87
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1489,
+          "left": 1474,
+          "w": 15
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1487,
+          "left": 1485,
+          "w": 3
+        },
+        {
+          "tag": "circle",
+          "cls": "",
+          "right": 1486,
+          "left": 1476,
+          "w": 10
+        },
+        {
+          "tag": "kbd",
+          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
+          "right": 1539,
+          "left": 1497,
+          "w": 42
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
+          "right": 1590,
+          "left": 1556,
+          "w": 34
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1581,
+          "left": 1565,
+          "w": 16
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1579,
+          "left": 1567,
+          "w": 12
+        }
+      ],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\rubriques_desktop-1440.png",
+      "url": "/rubriques"
+    },
+    {
+      "id": "rubrique",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1590,
+      "overflow": 150,
+      "offenders": [
+        {
+          "tag": "div",
+          "cls": "ml-auto flex items-center gap-2",
+          "right": 1590,
+          "left": 1324,
+          "w": 266
+        },
+        {
+          "tag": "a",
+          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
+          "right": 1453,
+          "left": 1324,
+          "w": 129
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
+          "right": 1548,
+          "left": 1461,
+          "w": 87
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1489,
+          "left": 1474,
+          "w": 15
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1487,
+          "left": 1485,
+          "w": 3
+        },
+        {
+          "tag": "circle",
+          "cls": "",
+          "right": 1486,
+          "left": 1476,
+          "w": 10
+        },
+        {
+          "tag": "kbd",
+          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
+          "right": 1539,
+          "left": 1497,
+          "w": 42
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
+          "right": 1590,
+          "left": 1556,
+          "w": 34
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1581,
+          "left": 1565,
+          "w": 16
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1579,
+          "left": 1567,
+          "w": 12
+        }
+      ],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\rubrique_desktop-1440.png",
+      "url": "/rubrique/politique"
+    },
+    {
+      "id": "videos",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1590,
+      "overflow": 150,
+      "offenders": [
+        {
+          "tag": "div",
+          "cls": "ml-auto flex items-center gap-2",
+          "right": 1590,
+          "left": 1324,
+          "w": 266
+        },
+        {
+          "tag": "a",
+          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
+          "right": 1453,
+          "left": 1324,
+          "w": 129
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
+          "right": 1548,
+          "left": 1461,
+          "w": 87
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1489,
+          "left": 1474,
+          "w": 15
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1487,
+          "left": 1485,
+          "w": 3
+        },
+        {
+          "tag": "circle",
+          "cls": "",
+          "right": 1486,
+          "left": 1476,
+          "w": 10
+        },
+        {
+          "tag": "kbd",
+          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
+          "right": 1539,
+          "left": 1497,
+          "w": 42
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
+          "right": 1590,
+          "left": 1556,
+          "w": 34
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1581,
+          "left": 1565,
+          "w": 16
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1579,
+          "left": 1567,
+          "w": 12
+        }
+      ],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\videos_desktop-1440.png",
+      "url": "/videos"
+    },
+    {
+      "id": "recherche",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1590,
+      "overflow": 150,
+      "offenders": [
+        {
+          "tag": "div",
+          "cls": "ml-auto flex items-center gap-2",
+          "right": 1590,
+          "left": 1324,
+          "w": 266
+        },
+        {
+          "tag": "a",
+          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
+          "right": 1453,
+          "left": 1324,
+          "w": 129
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
+          "right": 1548,
+          "left": 1461,
+          "w": 87
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1489,
+          "left": 1474,
+          "w": 15
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1487,
+          "left": 1485,
+          "w": 3
+        },
+        {
+          "tag": "circle",
+          "cls": "",
+          "right": 1486,
+          "left": 1476,
+          "w": 10
+        },
+        {
+          "tag": "kbd",
+          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
+          "right": 1539,
+          "left": 1497,
+          "w": 42
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
+          "right": 1590,
+          "left": 1556,
+          "w": 34
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1581,
+          "left": 1565,
+          "w": 16
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1579,
+          "left": 1567,
+          "w": 12
+        }
+      ],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\recherche_desktop-1440.png",
+      "url": "/recherche?q=guin"
+    },
+    {
+      "id": "archives",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1590,
+      "overflow": 150,
+      "offenders": [
+        {
+          "tag": "div",
+          "cls": "ml-auto flex items-center gap-2",
+          "right": 1590,
+          "left": 1324,
+          "w": 266
+        },
+        {
+          "tag": "a",
+          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
+          "right": 1453,
+          "left": 1324,
+          "w": 129
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
+          "right": 1548,
+          "left": 1461,
+          "w": 87
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1489,
+          "left": 1474,
+          "w": 15
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1487,
+          "left": 1485,
+          "w": 3
+        },
+        {
+          "tag": "circle",
+          "cls": "",
+          "right": 1486,
+          "left": 1476,
+          "w": 10
+        },
+        {
+          "tag": "kbd",
+          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
+          "right": 1539,
+          "left": 1497,
+          "w": 42
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
+          "right": 1590,
+          "left": 1556,
+          "w": 34
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1581,
+          "left": 1565,
+          "w": 16
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1579,
+          "left": 1567,
+          "w": 12
+        }
+      ],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\archives_desktop-1440.png",
+      "url": "/archives"
+    },
+    {
+      "id": "contact",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1590,
+      "overflow": 150,
+      "offenders": [
+        {
+          "tag": "div",
+          "cls": "ml-auto flex items-center gap-2",
+          "right": 1590,
+          "left": 1324,
+          "w": 266
+        },
+        {
+          "tag": "a",
+          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
+          "right": 1453,
+          "left": 1324,
+          "w": 129
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
+          "right": 1548,
+          "left": 1461,
+          "w": 87
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1489,
+          "left": 1474,
+          "w": 15
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1487,
+          "left": 1485,
+          "w": 3
+        },
+        {
+          "tag": "circle",
+          "cls": "",
+          "right": 1486,
+          "left": 1476,
+          "w": 10
+        },
+        {
+          "tag": "kbd",
+          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
+          "right": 1539,
+          "left": 1497,
+          "w": 42
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
+          "right": 1590,
+          "left": 1556,
+          "w": 34
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1581,
+          "left": 1565,
+          "w": 16
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1579,
+          "left": 1567,
+          "w": 12
+        }
+      ],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\contact_desktop-1440.png",
+      "url": "/contact"
+    },
+    {
+      "id": "a-propos",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1590,
+      "overflow": 150,
+      "offenders": [
+        {
+          "tag": "div",
+          "cls": "ml-auto flex items-center gap-2",
+          "right": 1590,
+          "left": 1324,
+          "w": 266
+        },
+        {
+          "tag": "a",
+          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
+          "right": 1453,
+          "left": 1324,
+          "w": 129
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
+          "right": 1548,
+          "left": 1461,
+          "w": 87
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1489,
+          "left": 1474,
+          "w": 15
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1487,
+          "left": 1485,
+          "w": 3
+        },
+        {
+          "tag": "circle",
+          "cls": "",
+          "right": 1486,
+          "left": 1476,
+          "w": 10
+        },
+        {
+          "tag": "kbd",
+          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
+          "right": 1539,
+          "left": 1497,
+          "w": 42
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
+          "right": 1590,
+          "left": 1556,
+          "w": 34
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1581,
+          "left": 1565,
+          "w": 16
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1579,
+          "left": 1567,
+          "w": 12
+        }
+      ],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\a-propos_desktop-1440.png",
+      "url": "/a-propos"
+    },
+    {
+      "id": "plan-du-site",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1590,
+      "overflow": 150,
+      "offenders": [
+        {
+          "tag": "div",
+          "cls": "ml-auto flex items-center gap-2",
+          "right": 1590,
+          "left": 1324,
+          "w": 266
+        },
+        {
+          "tag": "a",
+          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
+          "right": 1453,
+          "left": 1324,
+          "w": 129
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
+          "right": 1548,
+          "left": 1461,
+          "w": 87
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1489,
+          "left": 1474,
+          "w": 15
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1487,
+          "left": 1485,
+          "w": 3
+        },
+        {
+          "tag": "circle",
+          "cls": "",
+          "right": 1486,
+          "left": 1476,
+          "w": 10
+        },
+        {
+          "tag": "kbd",
+          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
+          "right": 1539,
+          "left": 1497,
+          "w": 42
+        },
+        {
+          "tag": "button",
+          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
+          "right": 1590,
+          "left": 1556,
+          "w": 34
+        },
+        {
+          "tag": "svg",
+          "cls": "",
+          "right": 1581,
+          "left": 1565,
+          "w": 16
+        },
+        {
+          "tag": "path",
+          "cls": "",
+          "right": 1579,
+          "left": 1567,
+          "w": 12
+        }
+      ],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\plan-du-site_desktop-1440.png",
+      "url": "/plan-du-site"
+    },
+    {
+      "id": "login",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\login_desktop-1440.png",
+      "url": "/login"
+    },
+    {
+      "id": "dash-accueil",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-accueil_desktop-1440.png",
+      "url": "/dashboard"
+    },
+    {
+      "id": "dash-articles",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-articles_desktop-1440.png",
+      "url": "/dashboard/articles"
+    },
+    {
+      "id": "dash-editeur",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-editeur_desktop-1440.png",
+      "url": "/dashboard/articles/nouveau"
+    },
+    {
+      "id": "dash-medias",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-medias_desktop-1440.png",
+      "url": "/dashboard/medias"
+    },
+    {
+      "id": "dash-parametres",
+      "vp": "desktop-1440",
+      "vw": 1440,
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
+      "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\dash-parametres_desktop-1440.png",
+      "url": "/dashboard/parametres"
+    }
+  ],
+  "consoleErrors": []
+}

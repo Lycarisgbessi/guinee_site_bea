@@ -88,10 +88,10 @@ function CategoryNavItem({ category, active }: { category: HeaderCategory; activ
   const accent = category.color || 'var(--brand)'
 
   return (
-    <div className="relative" onMouseEnter={enter} onMouseLeave={leave}>
+    <div className="relative shrink-0" onMouseEnter={enter} onMouseLeave={leave}>
       <Link
         href={`/rubrique/${category.slug}`}
-        className={`block rounded-sm px-3 py-2 text-[13.5px] font-medium transition-colors ${
+        className={`block rounded-sm px-2.5 py-2 text-[13px] font-medium transition-colors ${
           active || open ? 'text-foreground' : 'text-foreground/75'
         }`}
         onFocus={enter}
@@ -115,7 +115,7 @@ function CategoryNavItem({ category, active }: { category: HeaderCategory; activ
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 0.99 }}
               transition={{ duration: 0.22, ease: EASE }}
-              className="absolute left-1/2 top-full z-50 w-[560px] -translate-x-1/2 pt-3"
+              className="absolute left-1/2 top-full z-50 hidden w-[560px] -translate-x-1/2 pt-3 xl:block"
               role="menu"
               aria-label={`Rubrique ${category.name}`}
             >
@@ -201,11 +201,11 @@ function CategoryNavItem({ category, active }: { category: HeaderCategory; activ
 /* ------------------------------------------------------------------ */
 /* Lien simple du nav (À propos, Contact) — soulignement tricolore     */
 /* ------------------------------------------------------------------ */
-function SimpleNavLink({ href, label, active }: { href: string; label: string; active: boolean }) {
+function SimpleNavLink({ href, label, active, className = '' }: { href: string; label: string; active: boolean; className?: string }) {
   return (
     <Link
       href={href}
-      className={`group relative block rounded-sm px-3 py-2 text-[13.5px] font-medium transition-colors hover:text-foreground ${
+      className={`group relative block rounded-sm px-2.5 py-2 text-[13px] font-medium transition-colors hover:text-foreground ${className} ${
         active ? 'text-brand' : 'text-foreground/75'
       }`}
     >
@@ -228,6 +228,8 @@ const EXPLORER_LINKS = [
   { href: '/tags', label: 'Mots-clés', desc: 'Explorer par sujet', Icon: Tags },
   { href: '/plan-du-site', label: 'Plan du site', desc: 'Vue d’ensemble de la plateforme', Icon: MapIcon },
   { href: '/newsletter', label: 'Newsletter', desc: 'Recevoir nos enquêtes par email', Icon: Mail },
+  { href: '/a-propos', label: 'À propos', desc: 'La charte et l’équipe de la rédaction', Icon: Info },
+  { href: '/contact', label: 'Contact', desc: 'Nous écrire ou proposer un sujet', Icon: Mail },
 ]
 
 function ExplorerNavItem({ active }: { active: boolean }) {
@@ -244,9 +246,9 @@ function ExplorerNavItem({ active }: { active: boolean }) {
   useEffect(() => () => void (closeTimer.current && clearTimeout(closeTimer.current)), [])
 
   return (
-    <div className="relative" onMouseEnter={enter} onMouseLeave={leave}>
+    <div className="relative shrink-0" onMouseEnter={enter} onMouseLeave={leave}>
       <button
-        className={`block rounded-sm px-3 py-2 text-[13.5px] font-medium transition-colors ${
+        className={`block rounded-sm px-2.5 py-2 text-[13px] font-medium transition-colors ${
           active || open ? 'text-foreground' : 'text-foreground/75'
         }`}
         onFocus={enter}
@@ -268,7 +270,7 @@ function ExplorerNavItem({ active }: { active: boolean }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.99 }}
             transition={{ duration: 0.22, ease: EASE }}
-            className="absolute left-1/2 top-full z-50 w-[340px] -translate-x-1/2 pt-3"
+            className="absolute left-1/2 top-full z-50 hidden w-[340px] -translate-x-1/2 pt-3 xl:block"
             role="menu"
             aria-label="Explorer le site"
           >
@@ -387,7 +389,7 @@ export function SiteHeader({
       </div>
 
       <header
-        className={`sticky top-0 z-50 border-b border-border/60 backdrop-blur-md transition-all duration-300 ${
+        className={`sticky top-0 z-50 overflow-x-clip border-b border-border/60 backdrop-blur-md transition-all duration-300 ${
           scrolled ? 'bg-background/95 shadow-[0_2px_24px_-10px_rgba(0,0,0,0.22)]' : 'bg-background/85'
         }`}
       >
@@ -423,18 +425,26 @@ export function SiteHeader({
             <span className="font-display text-[25px] font-bold leading-none tracking-tight">{siteName}</span>
           </Link>
 
-          {/* Navigation desktop : rubriques (méga-menu) + liens éditoriaux */}
-          <nav className="ml-4 hidden flex-1 items-center gap-0.5 lg:flex" aria-label="Rubriques">
+          {/* Navigation desktop : rubriques (méga-menu) + liens éditoriaux.
+              Budget de largeur (ligne max-w-6xl = 1152 px) : logo ~150 +
+              actions ~270 → la nav doit rester ≤ ~680 px. Les rubriques seules
+              tiennent dès lg ; Explorer/Vidéos n'apparaissent qu'à partir de
+              xl ; À propos/Contact vivent dans le panneau Explorer (et le
+              footer + menu mobile) — jamais de débordement horizontal. */}
+          <nav
+            className="ml-4 hidden min-w-0 flex-1 items-center gap-0.5 overflow-x-auto scrollbar-none overscroll-x-contain lg:flex xl:overflow-visible"
+            aria-label="Rubriques"
+          >
             {categories.map((c) => (
               <CategoryNavItem key={c.slug} category={c} active={pathname === `/rubrique/${c.slug}`} />
             ))}
 
-            {/* Séparateur + liens éditoriaux permanents */}
-            <span className="mx-2.5 hidden h-5 w-px bg-border/70 xl:block" aria-hidden="true" />
-            <ExplorerNavItem active={pathname.startsWith('/rubriques') || pathname.startsWith('/archives') || pathname.startsWith('/tags') || pathname.startsWith('/plan-du-site') || pathname.startsWith('/newsletter')} />
-            <SimpleNavLink href="/videos" label="Vidéos" active={pathname === '/videos'} />
-            <SimpleNavLink href="/a-propos" label="À propos" active={pathname === '/a-propos'} />
-            <SimpleNavLink href="/contact" label="Contact" active={pathname === '/contact'} />
+            {/* Séparateur + liens éditoriaux (xl uniquement) */}
+            <span className="mx-2.5 hidden h-5 w-px shrink-0 bg-border/70 xl:block" aria-hidden="true" />
+            <span className="hidden xl:block">
+              <ExplorerNavItem active={pathname.startsWith('/rubriques') || pathname.startsWith('/archives') || pathname.startsWith('/tags') || pathname.startsWith('/plan-du-site') || pathname.startsWith('/newsletter')} />
+            </span>
+            <SimpleNavLink href="/videos" label="Vidéos" active={pathname === '/videos'} className="hidden xl:block" />
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
@@ -454,7 +464,7 @@ export function SiteHeader({
               className="inline-flex h-9 items-center gap-2 rounded-full border border-border/60 pl-3 pr-2 text-foreground/70 transition-all hover:scale-105 hover:text-foreground active:scale-95"
             >
               <Search className="h-4 w-4" />
-              <kbd className="hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text-[10px] text-muted-foreground lg:block">
+              <kbd className="hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text-[10px] text-muted-foreground xl:block">
                 Ctrl K
               </kbd>
             </button>

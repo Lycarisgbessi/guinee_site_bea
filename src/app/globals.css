@@ -217,6 +217,15 @@
   background: oklch(0.42 0.01 75);
 }
 
+/* ---------- Nav desktop : strip défilant invisible (sécurité lg) ---------- */
+.scrollbar-none {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* ancien Edge */
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 /* ---------- Texture papier subtile ---------- */
 .paper-texture {
   background-image: radial-gradient(oklch(0.9 0.006 85 / 0.55) 1px, transparent 1px);
