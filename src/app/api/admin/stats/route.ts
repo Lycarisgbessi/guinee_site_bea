@@ -29,22 +29,22 @@ export async function GET() {
   // Vues des 30 derniers jours (tous articles). Si la fenêtre récente est
   // vide — site jeune ou pause éditoriale — repli sur les 30 derniers jours
   // ACTIFS pour que le graphe du dashboard reste toujours informatif.
-  let dailyViews: { date: string; _sum: { count: number | null } }[] = await db.articleView.groupBy({
-    by: ['date'],
-    where: { date: { gte: d30.toISOString().slice(0, 10) } },
-    _sum: { count: true },
-    orderBy: { date: 'asc' },
-  })
+  // (fonction dédiée : évite que le typage contextuel ne brise l'inférence
+  //  du groupBy Prisma à la réaffectation)
+  const dailyViewsSince = (gte: string) =>
+    db.articleView.groupBy({
+      by: ['date'],
+      where: { date: { gte } },
+      _sum: { count: true },
+      orderBy: { date: 'asc' },
+    })
+
+  let dailyViews = await dailyViewsSince(d30.toISOString().slice(0, 10))
   if (dailyViews.length === 0) {
     const latest = await db.articleView.findFirst({ orderBy: { date: 'desc' }, select: { date: true } })
     if (latest) {
       const gte = new Date(new Date(latest.date).getTime() - 29 * 86400000).toISOString().slice(0, 10)
-      dailyViews = await db.articleView.groupBy({
-        by: ['date'],
-        where: { date: { gte } },
-        _sum: { count: true },
-        orderBy: { date: 'asc' },
-      })
+      dailyViews = await dailyViewsSince(gte)
     }
   }
 
