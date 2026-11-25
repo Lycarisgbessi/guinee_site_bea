@@ -3,6 +3,7 @@
 # (ne JAMAIS mettre *.png ici : public/brand contient logos + favicon)
 .zshots
 .zscripts
+gui-test-screenshots
 download
 upload
 db

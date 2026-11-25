@@ -324,80 +324,9 @@
       "id": "accueil",
       "vp": "desktop-1440",
       "vw": 1440,
-      "sw": 1590,
-      "overflow": 150,
-      "offenders": [
-        {
-          "tag": "div",
-          "cls": "ml-auto flex items-center gap-2",
-          "right": 1590,
-          "left": 1324,
-          "w": 266
-        },
-        {
-          "tag": "a",
-          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
-          "right": 1453,
-          "left": 1324,
-          "w": 129
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
-          "right": 1548,
-          "left": 1461,
-          "w": 87
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1489,
-          "left": 1474,
-          "w": 15
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1487,
-          "left": 1485,
-          "w": 3
-        },
-        {
-          "tag": "circle",
-          "cls": "",
-          "right": 1486,
-          "left": 1476,
-          "w": 10
-        },
-        {
-          "tag": "kbd",
-          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
-          "right": 1539,
-          "left": 1497,
-          "w": 42
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
-          "right": 1590,
-          "left": 1556,
-          "w": 34
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1581,
-          "left": 1565,
-          "w": 16
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1579,
-          "left": 1567,
-          "w": 12
-        }
-      ],
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
       "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\accueil_desktop-1440.png",
       "url": "/"
     },
@@ -405,80 +334,9 @@
       "id": "article",
       "vp": "desktop-1440",
       "vw": 1440,
-      "sw": 1590,
-      "overflow": 150,
-      "offenders": [
-        {
-          "tag": "div",
-          "cls": "ml-auto flex items-center gap-2",
-          "right": 1590,
-          "left": 1324,
-          "w": 266
-        },
-        {
-          "tag": "a",
-          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
-          "right": 1453,
-          "left": 1324,
-          "w": 129
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
-          "right": 1548,
-          "left": 1461,
-          "w": 87
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1489,
-          "left": 1474,
-          "w": 15
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1487,
-          "left": 1485,
-          "w": 3
-        },
-        {
-          "tag": "circle",
-          "cls": "",
-          "right": 1486,
-          "left": 1476,
-          "w": 10
-        },
-        {
-          "tag": "kbd",
-          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
-          "right": 1539,
-          "left": 1497,
-          "w": 42
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
-          "right": 1590,
-          "left": 1556,
-          "w": 34
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1581,
-          "left": 1565,
-          "w": 16
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1579,
-          "left": 1567,
-          "w": 12
-        }
-      ],
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
       "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\article_desktop-1440.png",
       "url": "/article/ok"
     },
@@ -486,80 +344,9 @@
       "id": "rubriques",
       "vp": "desktop-1440",
       "vw": 1440,
-      "sw": 1590,
-      "overflow": 150,
-      "offenders": [
-        {
-          "tag": "div",
-          "cls": "ml-auto flex items-center gap-2",
-          "right": 1590,
-          "left": 1324,
-          "w": 266
-        },
-        {
-          "tag": "a",
-          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
-          "right": 1453,
-          "left": 1324,
-          "w": 129
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
-          "right": 1548,
-          "left": 1461,
-          "w": 87
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1489,
-          "left": 1474,
-          "w": 15
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1487,
-          "left": 1485,
-          "w": 3
-        },
-        {
-          "tag": "circle",
-          "cls": "",
-          "right": 1486,
-          "left": 1476,
-          "w": 10
-        },
-        {
-          "tag": "kbd",
-          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
-          "right": 1539,
-          "left": 1497,
-          "w": 42
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
-          "right": 1590,
-          "left": 1556,
-          "w": 34
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1581,
-          "left": 1565,
-          "w": 16
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1579,
-          "left": 1567,
-          "w": 12
-        }
-      ],
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
       "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\rubriques_desktop-1440.png",
       "url": "/rubriques"
     },
@@ -567,80 +354,9 @@
       "id": "rubrique",
       "vp": "desktop-1440",
       "vw": 1440,
-      "sw": 1590,
-      "overflow": 150,
-      "offenders": [
-        {
-          "tag": "div",
-          "cls": "ml-auto flex items-center gap-2",
-          "right": 1590,
-          "left": 1324,
-          "w": 266
-        },
-        {
-          "tag": "a",
-          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
-          "right": 1453,
-          "left": 1324,
-          "w": 129
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
-          "right": 1548,
-          "left": 1461,
-          "w": 87
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1489,
-          "left": 1474,
-          "w": 15
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1487,
-          "left": 1485,
-          "w": 3
-        },
-        {
-          "tag": "circle",
-          "cls": "",
-          "right": 1486,
-          "left": 1476,
-          "w": 10
-        },
-        {
-          "tag": "kbd",
-          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
-          "right": 1539,
-          "left": 1497,
-          "w": 42
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
-          "right": 1590,
-          "left": 1556,
-          "w": 34
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1581,
-          "left": 1565,
-          "w": 16
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1579,
-          "left": 1567,
-          "w": 12
-        }
-      ],
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
       "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\rubrique_desktop-1440.png",
       "url": "/rubrique/politique"
     },
@@ -648,80 +364,9 @@
       "id": "videos",
       "vp": "desktop-1440",
       "vw": 1440,
-      "sw": 1590,
-      "overflow": 150,
-      "offenders": [
-        {
-          "tag": "div",
-          "cls": "ml-auto flex items-center gap-2",
-          "right": 1590,
-          "left": 1324,
-          "w": 266
-        },
-        {
-          "tag": "a",
-          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
-          "right": 1453,
-          "left": 1324,
-          "w": 129
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
-          "right": 1548,
-          "left": 1461,
-          "w": 87
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1489,
-          "left": 1474,
-          "w": 15
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1487,
-          "left": 1485,
-          "w": 3
-        },
-        {
-          "tag": "circle",
-          "cls": "",
-          "right": 1486,
-          "left": 1476,
-          "w": 10
-        },
-        {
-          "tag": "kbd",
-          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
-          "right": 1539,
-          "left": 1497,
-          "w": 42
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
-          "right": 1590,
-          "left": 1556,
-          "w": 34
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1581,
-          "left": 1565,
-          "w": 16
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1579,
-          "left": 1567,
-          "w": 12
-        }
-      ],
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
       "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\videos_desktop-1440.png",
       "url": "/videos"
     },
@@ -729,80 +374,9 @@
       "id": "recherche",
       "vp": "desktop-1440",
       "vw": 1440,
-      "sw": 1590,
-      "overflow": 150,
-      "offenders": [
-        {
-          "tag": "div",
-          "cls": "ml-auto flex items-center gap-2",
-          "right": 1590,
-          "left": 1324,
-          "w": 266
-        },
-        {
-          "tag": "a",
-          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
-          "right": 1453,
-          "left": 1324,
-          "w": 129
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
-          "right": 1548,
-          "left": 1461,
-          "w": 87
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1489,
-          "left": 1474,
-          "w": 15
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1487,
-          "left": 1485,
-          "w": 3
-        },
-        {
-          "tag": "circle",
-          "cls": "",
-          "right": 1486,
-          "left": 1476,
-          "w": 10
-        },
-        {
-          "tag": "kbd",
-          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
-          "right": 1539,
-          "left": 1497,
-          "w": 42
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
-          "right": 1590,
-          "left": 1556,
-          "w": 34
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1581,
-          "left": 1565,
-          "w": 16
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1579,
-          "left": 1567,
-          "w": 12
-        }
-      ],
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
       "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\recherche_desktop-1440.png",
       "url": "/recherche?q=guin"
     },
@@ -810,80 +384,9 @@
       "id": "archives",
       "vp": "desktop-1440",
       "vw": 1440,
-      "sw": 1590,
-      "overflow": 150,
-      "offenders": [
-        {
-          "tag": "div",
-          "cls": "ml-auto flex items-center gap-2",
-          "right": 1590,
-          "left": 1324,
-          "w": 266
-        },
-        {
-          "tag": "a",
-          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
-          "right": 1453,
-          "left": 1324,
-          "w": 129
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
-          "right": 1548,
-          "left": 1461,
-          "w": 87
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1489,
-          "left": 1474,
-          "w": 15
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1487,
-          "left": 1485,
-          "w": 3
-        },
-        {
-          "tag": "circle",
-          "cls": "",
-          "right": 1486,
-          "left": 1476,
-          "w": 10
-        },
-        {
-          "tag": "kbd",
-          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
-          "right": 1539,
-          "left": 1497,
-          "w": 42
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
-          "right": 1590,
-          "left": 1556,
-          "w": 34
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1581,
-          "left": 1565,
-          "w": 16
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1579,
-          "left": 1567,
-          "w": 12
-        }
-      ],
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
       "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\archives_desktop-1440.png",
       "url": "/archives"
     },
@@ -891,80 +394,9 @@
       "id": "contact",
       "vp": "desktop-1440",
       "vw": 1440,
-      "sw": 1590,
-      "overflow": 150,
-      "offenders": [
-        {
-          "tag": "div",
-          "cls": "ml-auto flex items-center gap-2",
-          "right": 1590,
-          "left": 1324,
-          "w": 266
-        },
-        {
-          "tag": "a",
-          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
-          "right": 1453,
-          "left": 1324,
-          "w": 129
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
-          "right": 1548,
-          "left": 1461,
-          "w": 87
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1489,
-          "left": 1474,
-          "w": 15
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1487,
-          "left": 1485,
-          "w": 3
-        },
-        {
-          "tag": "circle",
-          "cls": "",
-          "right": 1486,
-          "left": 1476,
-          "w": 10
-        },
-        {
-          "tag": "kbd",
-          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
-          "right": 1539,
-          "left": 1497,
-          "w": 42
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
-          "right": 1590,
-          "left": 1556,
-          "w": 34
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1581,
-          "left": 1565,
-          "w": 16
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1579,
-          "left": 1567,
-          "w": 12
-        }
-      ],
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
       "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\contact_desktop-1440.png",
       "url": "/contact"
     },
@@ -972,80 +404,9 @@
       "id": "a-propos",
       "vp": "desktop-1440",
       "vw": 1440,
-      "sw": 1590,
-      "overflow": 150,
-      "offenders": [
-        {
-          "tag": "div",
-          "cls": "ml-auto flex items-center gap-2",
-          "right": 1590,
-          "left": 1324,
-          "w": 266
-        },
-        {
-          "tag": "a",
-          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
-          "right": 1453,
-          "left": 1324,
-          "w": 129
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
-          "right": 1548,
-          "left": 1461,
-          "w": 87
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1489,
-          "left": 1474,
-          "w": 15
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1487,
-          "left": 1485,
-          "w": 3
-        },
-        {
-          "tag": "circle",
-          "cls": "",
-          "right": 1486,
-          "left": 1476,
-          "w": 10
-        },
-        {
-          "tag": "kbd",
-          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
-          "right": 1539,
-          "left": 1497,
-          "w": 42
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
-          "right": 1590,
-          "left": 1556,
-          "w": 34
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1581,
-          "left": 1565,
-          "w": 16
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1579,
-          "left": 1567,
-          "w": 12
-        }
-      ],
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
       "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\a-propos_desktop-1440.png",
       "url": "/a-propos"
     },
@@ -1053,80 +414,9 @@
       "id": "plan-du-site",
       "vp": "desktop-1440",
       "vw": 1440,
-      "sw": 1590,
-      "overflow": 150,
-      "offenders": [
-        {
-          "tag": "div",
-          "cls": "ml-auto flex items-center gap-2",
-          "right": 1590,
-          "left": 1324,
-          "w": 266
-        },
-        {
-          "tag": "a",
-          "cls": "sheen-host hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12",
-          "right": 1453,
-          "left": 1324,
-          "w": 129
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 items-center gap-2 rounded-full border border-border/6",
-          "right": 1548,
-          "left": 1461,
-          "w": 87
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1489,
-          "left": 1474,
-          "w": 15
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1487,
-          "left": 1485,
-          "w": 3
-        },
-        {
-          "tag": "circle",
-          "cls": "",
-          "right": 1486,
-          "left": 1476,
-          "w": 10
-        },
-        {
-          "tag": "kbd",
-          "cls": "hidden rounded border border-border/60 bg-secondary px-1.5 py-0.5 text",
-          "right": 1539,
-          "left": 1497,
-          "w": 42
-        },
-        {
-          "tag": "button",
-          "cls": "inline-flex h-9 w-9 items-center justify-center rounded-full border bo",
-          "right": 1590,
-          "left": 1556,
-          "w": 34
-        },
-        {
-          "tag": "svg",
-          "cls": "",
-          "right": 1581,
-          "left": 1565,
-          "w": 16
-        },
-        {
-          "tag": "path",
-          "cls": "",
-          "right": 1579,
-          "left": 1567,
-          "w": 12
-        }
-      ],
+      "sw": 1440,
+      "overflow": 0,
+      "offenders": [],
       "file": "C:\\Users\\GBESSI\\Downloads\\SITE GUINEE\\gui-test-screenshots\\plan-du-site_desktop-1440.png",
       "url": "/plan-du-site"
     },
