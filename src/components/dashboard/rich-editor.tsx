@@ -7,9 +7,11 @@ import LinkExt from '@tiptap/extension-link'
 import ImageExt from '@tiptap/extension-image'
 import Youtube from '@tiptap/extension-youtube'
 import Placeholder from '@tiptap/extension-placeholder'
+import UnderlineExt from '@tiptap/extension-underline'
+import HighlightExt from '@tiptap/extension-highlight'
 import type { Editor } from '@tiptap/react'
 import {
-  Bold, Italic, Heading2, Heading3, List, ListOrdered, Quote, Minus,
+  Bold, Italic, Underline, Strikethrough, Highlighter, Heading2, Heading3, List, ListOrdered, Quote, Minus,
   Link2, ImagePlus, Youtube as YoutubeIcon, Undo2, Redo2, Trash2,
 } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -75,6 +77,8 @@ export function RichEditor({ value, onChange }: RichEditorProps) {
       LinkExt.configure({ openOnClick: false, HTMLAttributes: { rel: 'noopener noreferrer' } }),
       ImageWithCaption,
       Youtube.configure({ nocookie: true, controls: true }),
+      UnderlineExt,
+      HighlightExt,
       Placeholder.configure({ placeholder: 'Rédigez votre article ici… Le texte, les images et les vidéos se composent comme dans un traitement de texte.' }),
     ],
     content: value ?? { type: 'doc', content: [] },
@@ -139,6 +143,24 @@ export function RichEditor({ value, onChange }: RichEditorProps) {
           onClick={() => editor.chain().focus().toggleItalic().run()}
         >
           <Italic className="h-4 w-4" />
+        </button>
+        <button
+          type="button" aria-label="Souligné" className={btnCls} data-active={editor.isActive('underline')}
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+        >
+          <Underline className="h-4 w-4" />
+        </button>
+        <button
+          type="button" aria-label="Barré" className={btnCls} data-active={editor.isActive('strike')}
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+        >
+          <Strikethrough className="h-4 w-4" />
+        </button>
+        <button
+          type="button" aria-label="Surligné" className={btnCls} data-active={editor.isActive('highlight')}
+          onClick={() => editor.chain().focus().toggleHighlight().run()}
+        >
+          <Highlighter className="h-4 w-4" />
         </button>
         <span className="mx-1 h-5 w-px bg-border" />
         <button

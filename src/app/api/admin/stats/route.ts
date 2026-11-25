@@ -11,7 +11,7 @@ export async function GET() {
   await autoPublishScheduled()
 
   const now = new Date()
-  const d14 = new Date(now.getTime() - 14 * 86400000)
+  const d30 = new Date(now.getTime() - 30 * 86400000)
 
   const [publishedCount, draftCount, scheduledCount, reviewCount, trashCount, totalViews, pendingComments, unreadMessages, pendingSubscribers] =
     await Promise.all([
@@ -26,13 +26,27 @@ export async function GET() {
       db.newsletterSubscriber.count({ where: { status: 'PENDING' } }),
     ])
 
-  // Vues des 14 derniers jours (tous articles)
-  const dailyViews = await db.articleView.groupBy({
+  // Vues des 30 derniers jours (tous articles). Si la fenêtre récente est
+  // vide — site jeune ou pause éditoriale — repli sur les 30 derniers jours
+  // ACTIFS pour que le graphe du dashboard reste toujours informatif.
+  let dailyViews: { date: string; _sum: { count: number | null } }[] = await db.articleView.groupBy({
     by: ['date'],
-    where: { date: { gte: d14.toISOString().slice(0, 10) } },
+    where: { date: { gte: d30.toISOString().slice(0, 10) } },
     _sum: { count: true },
     orderBy: { date: 'asc' },
   })
+  if (dailyViews.length === 0) {
+    const latest = await db.articleView.findFirst({ orderBy: { date: 'desc' }, select: { date: true } })
+    if (latest) {
+      const gte = new Date(new Date(latest.date).getTime() - 29 * 86400000).toISOString().slice(0, 10)
+      dailyViews = await db.articleView.groupBy({
+        by: ['date'],
+        where: { date: { gte } },
+        _sum: { count: true },
+        orderBy: { date: 'asc' },
+      })
+    }
+  }
 
   // Top articles par vues
   const topArticles = await db.article.findMany({

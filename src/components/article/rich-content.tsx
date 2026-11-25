@@ -60,6 +60,17 @@ function renderMarks(node: Node, keyPrefix: string): React.ReactNode {
   const marks: string[] = (node.marks ?? []).map((m: Node) => m.type)
   if (marks.includes('bold')) content = <strong key={`b-${keyPrefix}`}>{content}</strong>
   if (marks.includes('italic')) content = <em key={`i-${keyPrefix}`}>{content}</em>
+  if (marks.includes('underline')) content = <u key={`u-${keyPrefix}`}>{content}</u>
+  if (marks.includes('strike')) content = <s key={`s-${keyPrefix}`}>{content}</s>
+  if (marks.includes('highlight'))
+    content = (
+      <mark
+        key={`h-${keyPrefix}`}
+        className="rounded-[3px] bg-[color:var(--brand)]/20 px-1 text-inherit [box-decoration-break:clone]"
+      >
+        {content}
+      </mark>
+    )
   if (marks.includes('code')) content = <code key={`c-${keyPrefix}`} className="rounded bg-secondary px-1.5 py-0.5 text-[0.9em]">{content}</code>
   const link = (node.marks ?? []).find((m: Node) => m.type === 'link')
   if (link) {

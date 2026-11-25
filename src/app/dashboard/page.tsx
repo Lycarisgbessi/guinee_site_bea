@@ -123,10 +123,10 @@ export default function DashboardHome() {
       )}
 
       <div className="grid gap-4 lg:grid-cols-3">
-        {/* Vues des 14 derniers jours */}
+        {/* Vues des 30 derniers jours (repli auto sur la dernière période active) */}
         <Card className="lg:col-span-2">
           <CardHeader className="pb-2">
-            <CardTitle className="font-display text-lg">Audience — 14 derniers jours</CardTitle>
+            <CardTitle className="font-display text-lg">Audience — 30 derniers jours</CardTitle>
           </CardHeader>
           <CardContent className="h-[280px] p-4 pt-2">
             <ResponsiveContainer width="100%" height="100%">

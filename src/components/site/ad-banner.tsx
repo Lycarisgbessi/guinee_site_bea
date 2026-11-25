@@ -42,6 +42,19 @@ export async function AdBanner({
   const inner =
     ad.kind === 'HTML' && ad.html ? (
       <div className="absolute inset-0 [&_iframe]:h-full [&_iframe]:w-full" dangerouslySetInnerHTML={{ __html: ad.html }} />
+    ) : ad.kind === 'VIDEO' && ad.imageUrl ? (
+      // Vidéo publicitaire : lecture automatique en boucle, sans son
+      // (formats mobile-friendly), dimensionnée par le ratio de l'emplacement.
+      <video
+        src={ad.imageUrl}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-label={ad.alt || ad.name}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
     ) : ad.imageUrl ? (
       <img
         src={ad.imageUrl}
@@ -61,7 +74,7 @@ export async function AdBanner({
   const meta = AD_SLOTS.find((s) => s.key === slot)
   const frame = `ad-slot group relative overflow-hidden rounded-lg border border-border/60 bg-card shadow-[0_18px_44px_-30px_rgba(0,0,0,0.5)] ${meta?.ratio ?? 'aspect-[6/1]'} ${className}`
 
-  if (ad.linkUrl && ad.kind === 'IMAGE') {
+  if (ad.linkUrl && (ad.kind === 'IMAGE' || ad.kind === 'VIDEO')) {
     return (
       <aside className={frame} aria-label="Publicité">
         <a

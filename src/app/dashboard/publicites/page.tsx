@@ -14,6 +14,7 @@ import {
   RotateCcw,
   Save,
   Trash2,
+  Video,
   X,
 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -51,7 +52,7 @@ interface FormState {
   id?: string
   name: string
   slot: string
-  kind: 'IMAGE' | 'HTML'
+  kind: 'IMAGE' | 'VIDEO' | 'HTML'
   imageUrl: string
   linkUrl: string
   alt: string
@@ -134,7 +135,7 @@ export default function AdsPage() {
       id: ad.id,
       name: ad.name,
       slot: ad.slot,
-      kind: ad.kind === 'HTML' ? 'HTML' : 'IMAGE',
+      kind: ad.kind === 'HTML' ? 'HTML' : ad.kind === 'VIDEO' ? 'VIDEO' : 'IMAGE',
       imageUrl: ad.imageUrl ?? '',
       linkUrl: ad.linkUrl ?? '',
       alt: ad.alt ?? '',
@@ -150,6 +151,10 @@ export default function AdsPage() {
     if (!form) return
     if (form.kind === 'IMAGE' && !form.imageUrl.trim()) {
       toast.error('Choisissez une image pour cette annonce.')
+      return
+    }
+    if (form.kind === 'VIDEO' && !form.imageUrl.trim()) {
+      toast.error('Renseignez l’URL de la vidéo (MP4/WebM, médiathèque ou lien direct).')
       return
     }
     if (form.kind === 'HTML' && !form.html.trim()) {
@@ -318,8 +323,8 @@ export default function AdsPage() {
           </div>
 
           {/* Type d'annonce */}
-          <div className="mt-4 flex gap-2">
-            {(['IMAGE', 'HTML'] as const).map((k) => (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {(['IMAGE', 'VIDEO', 'HTML'] as const).map((k) => (
               <button
                 key={k}
                 onClick={() => setForm({ ...form, kind: k })}
@@ -327,21 +332,23 @@ export default function AdsPage() {
                   form.kind === k ? 'border-brand bg-brand/5 text-brand' : 'border-border text-muted-foreground hover:border-foreground/30'
                 }`}
               >
-                {k === 'IMAGE' ? <ImageIcon className="h-4 w-4" /> : <Code2 className="h-4 w-4" />}
-                {k === 'IMAGE' ? 'Image + lien' : 'Code HTML (régie)'}
+                {k === 'IMAGE' ? <ImageIcon className="h-4 w-4" /> : k === 'VIDEO' ? <Video className="h-4 w-4" /> : <Code2 className="h-4 w-4" />}
+                {k === 'IMAGE' ? 'Image / GIF + lien' : k === 'VIDEO' ? 'Vidéo (lecture auto)' : 'Code HTML (régie)'}
               </button>
             ))}
           </div>
 
-          {form.kind === 'IMAGE' ? (
+          {form.kind === 'IMAGE' || form.kind === 'VIDEO' ? (
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               <div>
-                <label className="mb-1 block text-[13px] font-medium">Image de l’annonce *</label>
+                <label className="mb-1 block text-[13px] font-medium">
+                  {form.kind === 'VIDEO' ? 'URL de la vidéo (MP4/WebM) *' : 'Image de l’annonce *'}
+                </label>
                 <div className="flex gap-2">
                   <input
                     value={form.imageUrl}
                     onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                    placeholder="https://… ou /uploads/…"
+                    placeholder={form.kind === 'VIDEO' ? 'https://…/annonce.mp4 ou médiathèque' : 'https://… ou /uploads/…'}
                     className={inputCls}
                   />
                   <button
@@ -351,12 +358,27 @@ export default function AdsPage() {
                     <ImageIcon className="h-4 w-4" /> Médiathèque
                   </button>
                 </div>
-                {form.imageUrl && (
+                {form.imageUrl && form.kind === 'IMAGE' && (
                   <img
                     src={form.imageUrl}
                     alt=""
                     className="mt-2 max-h-24 rounded-md border border-border object-cover"
                   />
+                )}
+                {form.imageUrl && form.kind === 'VIDEO' && (
+                  <video
+                    src={form.imageUrl}
+                    muted
+                    loop
+                    autoPlay
+                    playsInline
+                    className="mt-2 max-h-24 rounded-md border border-border object-cover"
+                  />
+                )}
+                {form.kind === 'VIDEO' && (
+                  <p className="mt-1 text-[11.5px] text-muted-foreground">
+                    La vidéo tourne en boucle, sans son, dans l’emplacement choisi.
+                  </p>
                 )}
               </div>
               <div className="space-y-4">
@@ -484,6 +506,10 @@ export default function AdsPage() {
                           alt=""
                           className="h-11 w-20 shrink-0 rounded-md border border-border object-cover"
                         />
+                      ) : ad.kind === 'VIDEO' ? (
+                        <span className="flex h-11 w-20 shrink-0 items-center justify-center rounded-md border border-border bg-secondary">
+                          <Video className="h-4 w-4 text-muted-foreground" />
+                        </span>
                       ) : (
                         <span className="flex h-11 w-20 shrink-0 items-center justify-center rounded-md border border-border bg-secondary">
                           <Code2 className="h-4 w-4 text-muted-foreground" />
@@ -492,7 +518,7 @@ export default function AdsPage() {
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-[14px] font-medium">{ad.name}</p>
                         <p className="mt-0.5 text-[12px] text-muted-foreground">
-                          {ad.kind === 'HTML' ? 'Code régie' : 'Image'}
+                          {ad.kind === 'HTML' ? 'Code régie' : ad.kind === 'VIDEO' ? 'Vidéo' : 'Image'}
                           {ad.linkUrl ? ' · lien cliquable' : ''}
                           {' · '}poids {ad.weight}
                           {ad.startsAt ? ` · du ${formatDateFr(ad.startsAt)}` : ''}

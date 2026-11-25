@@ -14,7 +14,7 @@ function payload(body: Record<string, unknown>) {
   return {
     name: typeof body?.name === 'string' && body.name.trim() ? body.name.trim() : 'Annonce sans titre',
     slot: cleanSlot(body?.slot),
-    kind: body?.kind === 'HTML' ? 'HTML' : 'IMAGE',
+    kind: body?.kind === 'HTML' ? 'HTML' : body?.kind === 'VIDEO' ? 'VIDEO' : 'IMAGE',
     imageUrl: typeof body?.imageUrl === 'string' && body.imageUrl.trim() ? body.imageUrl.trim() : null,
     linkUrl: typeof body?.linkUrl === 'string' && body.linkUrl.trim() ? body.linkUrl.trim() : null,
     alt: typeof body?.alt === 'string' && body.alt.trim() ? body.alt.trim() : null,
